@@ -51,7 +51,7 @@
                 <input type="reset" value="Limpar" class="botao">
             </form>
             <div class="ordLivros">
-                <h3>Ordenar:</h3>
+                <h3>Classificar</h3>
                 <form action="<?php $_SERVER['PHP_SELF']?>?busca=ordenar&tipo=livro" method="get">
                     <div class="tipoLivros">
                         <label for="tipo">Nome:</label>
@@ -60,8 +60,8 @@
                             <option value="autor">Autor</option>
                         </select>
                         <select name="ordem" id="">
-                        <option value="ASC">Crescente</option>
-                        <option value="DESC">Decrescente</option>
+                            <option value="ASC">Crescente</option>
+                            <option value="DESC">Decrescente</option>
                         </select>
                     </div>
                     <label for="letra">Nome</label>

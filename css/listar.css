@@ -25,6 +25,7 @@ h1 {
 main {
     width: 100%;
     height: 1440px;
+    background-color: none;
     /*border: 1px solid #000;*/
 }
 
@@ -45,6 +46,10 @@ li {
 
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 .identidade {
     margin-top: -18px;
     padding-right: 200px;
@@ -59,8 +64,7 @@ section {
     /*border: 1px solid #000;*/
 }
 .livros > h3, .revistas > h3 {
-    text-align: center;
-    margin: 15px 0px -25px 0px;
+    margin: 15px 0px -25px 35px;
 }
 
 section.livros, section.revistas {
@@ -78,11 +82,11 @@ form label {
     margin-bottom: 5px;
 }
 
-.ordLivros > form {
+.ordLivros > form, .ordRevistas > form {
     padding-top: 10px;
 }
 
-form input, .ordLivros > form > input {
+form input, .ordLivros > form > input, .ordRevistas > form > input {
     width: 250px;
     height: 20px;
 }
@@ -104,8 +108,7 @@ form input.botao {
 }*/
 
 div.ordLivros > h3, div.ordRevistas > h3 {
-    text-align: center;
-    margin: 30px 0px 0px 0px; 
+    margin: 30px 0px 0px 35px;
 }
 
 /*button {
@@ -134,12 +137,12 @@ p.ordNome {
     padding-top: 10px;
 }
 
-.tipoLivros> label {
+.tipoLivros > label, .tipoRevistas > label {
     padding-right: 5px;
     display: inline-block;
 }
 
-.tipoLivros > select {
+.tipoLivros > select, .tipoRevistas > select {
     width: 85px;
     height: 20px;
 }
@@ -153,6 +156,10 @@ section.tblLivros, section.tblRevistas {
     width: 60vw;
     text-align: center;
     background-image: url("imagens/estante.jpg");
+}
+
+.tblLivros > h2, .tblRevistas > h2 {
+    text-shadow: 2px 2px 3px #ffffff;
 }
 
 table {
@@ -188,11 +195,13 @@ tr:nth-child(even) { /* Todas as linhas ímpares da tabela*/
 }
 
 tr:nth-child(odd) { 
-    background-color: #cacaca96;
+    background-color: #4444449f;
+    color:#ffffff;
 }
 
 th {
     height: 50px;
+    color: #000000;    
 }
 
 td.nomes {

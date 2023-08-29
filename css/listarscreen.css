@@ -8,7 +8,7 @@
 
     main {
         height: 800px;
-        background-image: url("/imagens/estante.jpg");
+        background-image: url("imagens/estante.jpg");
     }
 
     ul {
@@ -30,14 +30,14 @@
 
     .livros > h3, .revistas > h3 {
         font-size: 1em;
-        margin: 15px 0px -45px 0px;
+        margin: 15px 0px -45px 15px;
     }
     
     form {
         font-size: .75em;
     }
 
-    form input, .ordLivros > form > input {
+    form input, .ordLivros > form > input, .ordRevistas > form > input {
         width: 150px;
         height: 20px;
         font-size: .75em;
@@ -50,12 +50,17 @@
         margin: 25px 0px 10px 10px
     }
 
-    .tipoLivros> label {
+    div.ordLivros > h3, div.ordRevistas > h3 {
+        font-size: 1em;
+        margin: 15px 0px 0px 15px;
+    }
+
+    .tipoLivros> label, .tipoRevistas > label {
         padding-right: 2px;
         display: inline-block;
     }
 
-    .tipoLivros > select {
+    .tipoLivros > select, .tipoRevistas > select {
         font-size: .75em;
         width: 50px;
         height: 20px;
@@ -66,8 +71,8 @@
     }
 
     section.tblLivros, section.tblRevistas {
+        background-image: none;
         width: 75%;
-        background-image: none
     }
 
     table {
@@ -105,6 +110,10 @@
         height: 80px;
     }
 
+    main {
+        background-image: url("imagens/estante.jpg");
+    }
+
     h1 {
         padding-top: 10px;
         font-size: 2.5em;
@@ -112,11 +121,11 @@
 
     menu {
         height: 20px;
-        font-size: .7em;
+        font-size: .9em;
     }
 
     ul {
-        padding: 3px 0px 0px 10px;
+        padding: 1px 0px 0px 10px;
     }
 
     .identidade {
@@ -134,7 +143,11 @@
     }
 
     .livros > h3, .revistas > h3 {
-        margin: 15px 0px -50px 0px;
+        margin: 15px 0px -50px 15px;
+    }
+
+    div.ordLivros > h3, div.ordRevistas > h3 {
+        margin: 15px 0px 0px 15px;
     }
 
     .tblLivros > h2, .tblRevistas > h2 {
