@@ -6,7 +6,7 @@
     margin: 0px;
     font-family: Arial, Helvetica, sans-serif;
 }
-
+/* formatação do cabeçalho*/
 header {
     width: 100%;
     height: 120px;
@@ -21,7 +21,7 @@ h1 {
     color: #5968f3;
     text-shadow: 4px 6px 1px #3f3f3f44;
 }
-
+/* formatação do corpo*/
 main {
     width: 100%;
     height: 1440px;
@@ -55,7 +55,7 @@ a:hover {
     padding-right: 200px;
     text-align: right;
 }
-
+/*Formatação da área de exibição da lista dos livros e revistas*/
 section {
     float: left;
     position: relative;
@@ -65,6 +65,12 @@ section {
 }
 .livros > h3, .revistas > h3 {
     margin: 15px 0px -25px 35px;
+}
+
+#idObrig {
+    margin: 5px 0px -25px 35px;
+    font-size: 0.8em;
+    color: #aa0101;
 }
 
 section.livros, section.revistas {
@@ -82,6 +88,12 @@ form label {
     margin-bottom: 5px;
 }
 
+.obrig::after {
+    content: "*";
+    color: #aa0101;
+}
+
+/*formatação da busca dos livros e revistas*/
 .ordLivros > form, .ordRevistas > form {
     padding-top: 10px;
 }
@@ -89,52 +101,31 @@ form label {
 form input, .ordLivros > form > input, .ordRevistas > form > input {
     width: 250px;
     height: 20px;
+    border-radius: 15px;
+    padding-left: 10px;
 }
 
 form input.botao {
-    margin: 25px 0px 15px 15px;
     width: 100px;
+    height: 30px;
+    margin: 25px 0px 15px 15px;
+    padding: 0px;
     border-radius: 15px;
 }
 
-/*div.ordLivros, div.ordRevistas {
-    display: inline-block;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    margin: 15px -10px 0px 40px;
-    padding-top: 10px;
-    border: 1px solid #000;
-    
-}*/
+.arq {
+    display: inline-flex;
+}
+
+.arq > input.arqmorto {
+    width: 20px;
+    height: 45px;
+    margin: center;
+    margin-right: 15px;
+}
 
 div.ordLivros > h3, div.ordRevistas > h3 {
     margin: 30px 0px 0px 35px;
-}
-
-/*button {
-    background: none;
-    border: none;
-}
-
-button.ascendente {
-    float: left;
-    padding-top: 35px;
-}
-
-button.descendente {
-    float: right;
-    position: relative;
-    top: -45px;
-}*/
-
-p.ord {
-    padding-left: 75px;
-    padding-top: 10px;
-}
-
-p.ordNome {
-    padding-left: 33px;
-    padding-top: 10px;
 }
 
 .tipoLivros > label, .tipoRevistas > label {
@@ -144,18 +135,22 @@ p.ordNome {
 
 .tipoLivros > select, .tipoRevistas > select {
     width: 85px;
-    height: 20px;
+    height: 25px;
+    border-radius: 15px;
 }
 
 #idTipo {
     margin-right: 20px;
 }
 
+/*formatação da área que exibe a lista dos livros e revistas*/
 section.tblLivros, section.tblRevistas {
     display: block;
     width: 60vw;
     text-align: center;
-    background-image: url("imagens/estante.jpg");
+    background: none;
+    /*background-image: url("imagens/estante.jpg");*/
+    background-position: center;
 }
 
 .tblLivros > h2, .tblRevistas > h2 {
@@ -190,13 +185,21 @@ img {
     margin: auto;
 }
 
-tr:nth-child(even) { /* Todas as linhas ímpares da tabela*/
-    background-color: #ffffffea;
+.lista:nth-child(even) { /* Todas as linhas ímpares da tabela*/
+    background-color: #ffffffd0;
 }
 
-tr:nth-child(odd) { 
-    background-color: #4444449f;
-    color:#ffffff;
+.lista:nth-child(odd) { 
+    background-color: #b3b0b0c5;
+    
+}
+
+.nomes > a:link {
+    color:#000000;
+}
+
+.nomes > a:visited {
+    color:#8e2ce9;
 }
 
 th {
@@ -220,7 +223,7 @@ h2 {
 h3 {
     margin-top: 200px;
 }
-
+ /*formatação do rodapé listar e editar livros e revistas*/
 footer {
     position: relative;
     left: 10vw;
@@ -234,4 +237,96 @@ footer {
 
 .design {
     padding: 20px 0px 0px 0px;
+}
+/*Formatação da exibição do livro e revista no editar*/
+#idEditLivro {
+    text-align: center;
+    margin: 20px 0px 10px 0px;
+}
+
+.tbledicao {
+    margin: 15px 5px 0px 10px;
+}
+
+.visual > td, .visual > th {
+    padding-top: 30px;
+    border: none;
+    height: 35px;
+}
+
+#idCapa {
+    width: 50px;
+    text-align: left;
+}
+
+.visual > th {
+    text-align: right;
+}
+
+.visual > td {
+    text-align: left;
+}
+
+.estante {
+    text-align: center;
+    color: #940000;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.titulo {
+    padding-right: 10px;
+}
+
+.edicao {
+    display: inline-block;
+    position: relative;
+    top: 50px;
+    width: 900px;
+    height: 900px;    
+    background-color: #a8a8a88c;
+    border: 1px solid #000000;
+    margin: center;
+    padding: 0px 35px 30px 35px;
+}
+/*formatação do formulario da edição dos livras e revistas*/
+fieldset {
+    float: left;
+    position: relative;
+    padding: 0px 35px 30px 35px;
+    border: none;
+}
+
+fieldset > label {
+    margin-top: 30px;
+    color: #bf15f3;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 3px #000000;
+    text-align: left;
+}
+
+fieldset > input {
+    width: 350px;
+    height: 30px;
+    border-radius: 15px;
+    padding-left: 10px;
+    font-size: 1.2em;
+}
+
+fieldset > textarea {
+    resize: none;
+    width: 350px;
+    font-size: 1.2em;
+}
+
+fieldset > #idCapa {
+    width: 350px;
+}
+
+div > .botao {
+    display: inline-block;
+    width: 100px;
+    height: 25px;
+    padding: 0px;
+    border-radius: 15px;    
 }

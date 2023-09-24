@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1280px) {
 
     h1 {
         font-size: 3.5em;
@@ -129,7 +129,7 @@
     }
 
     .identidade {
-        margin-top: -12px;
+        margin-top: -14px;
         padding-right: 10px;
     }
 
@@ -138,8 +138,9 @@
     }
     
     section.tblLivros, section.tblRevistas {
-        width: 62.5%;
-        background-image: none
+        width:fit-content;
+        background-image: none;
+        padding-left: 7px;
     }
 
     .livros > h3, .revistas > h3 {
@@ -153,5 +154,7 @@
     .tblLivros > h2, .tblRevistas > h2 {
         margin: 15px 0px 15px 0px;
     }
+
+    
     
 }
