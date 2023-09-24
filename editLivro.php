@@ -99,7 +99,6 @@
             }
 
             $capa = $tblEditar["capa"];
-            //print_r($tblEditar);
         ?>
         <section class="livros">
             <h2 id="idEditLivro">Dados do Livro</h2>

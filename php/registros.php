@@ -356,7 +356,6 @@
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
-            //return $this->getSql();
         }
 
         public function alterar($cod) {
