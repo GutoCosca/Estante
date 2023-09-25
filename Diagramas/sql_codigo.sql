@@ -6,7 +6,7 @@ USE biblioteca;
 
 CREATE TABLE IF NOT EXISTS usuarios (
     id_usuarios int PRIMARY KEY AUTO_INCREMENT,
-    usuario varchar(50) NOT NULL
+    usuario varchar(50) NOT NULL,
     nome varchar(180) NOT NULL,
     senha varchar(250) NOT NULL,
     email varchar(120) NOT NULL,
