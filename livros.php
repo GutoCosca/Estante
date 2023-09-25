@@ -37,14 +37,15 @@
             <p class="identidade"><?=$usuario?></p>
         </menu>
         <section class="livros"> <!-- Formulário Livros -->
-            <h3>Adicionar Livros</h3>
+            <h3>Adicionar Livros</h3></br>
+            <p id="idObrig">*campos obrigatórios</p>
             <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data">
-                <label for="livro">Nome do Livro:</label>
-                <input type="text" name="livro" id="idLivro">
-                <label for="autor">Nome do Autor:</label>
-                <input type="text" name="autor" id="idAutor">
-                <label for="editora">Editora:</label>
-                <input type="text" name="editora" id="idEditora">
+                <label for="livro" class="obrig">Nome do Livro:</label>
+                <input type="text" name="livro" id="idLivro" required>
+                <label for="autor" class="obrig">Nome do Autor:</label>
+                <input type="text" name="autor" id="idAutor" required>
+                <label for="editora" class="obrig">Editora:</label>
+                <input type="text" name="editora" id="idEditora" required>
                 <label for="compra">Data de Aquisição:</label>
                 <input type="date" name="compra" id="idCompra">
                 <input type="submit" value="Adicionar" class="botao">
@@ -52,7 +53,11 @@
             </form>
             <div class="ordLivros">
                 <h3>Classificar</h3>
-                <form action="<?php $_SERVER['PHP_SELF']?>?busca=ordenar&tipo=livro" method="get">
+                <form action="<?php $_SERVER['PHP_SELF']?>" method="get">
+                    <div class="arq">
+                        <input type="checkbox" name="arq" id="" class="arqmorto">
+                        <label for="arq" class="arqmorto">Exibir os livros fora da estante</label>
+                    </div>
                     <div class="tipoLivros">
                         <label for="tipo">Nome:</label>
                         <select name="tipo" id="idTipo">
@@ -75,8 +80,13 @@
             <h2>Sua Estante de Livros</h2>
             <?php
                 if (isset($_SESSION['user']))  {
+                    $arq = 0;
+                    if (isset($_REQUEST['arq'])) {
+                        $arq = 1;
+                    }
+                    
                     if (isset($_REQUEST['tipo']))  {
-                        $lista = new Registros($_SESSION['id_user'],"livros", $_GET['tipo'], $_GET['letra'], $_GET['ordem']);
+                        $lista = new Registros($_SESSION['id_user'],"livros", $_GET['tipo'], $_GET['letra'], $_GET['ordem'], $arq);
                     }
                     else if (isset($_REQUEST['acao']) && $_REQUEST["acao"] == 'addLivro'){
                         $add = new Editar (
@@ -87,14 +97,15 @@
                             $_POST['editora'],
                             "", "", "",
                             $_POST['compra'],
-                            "", "", "");
+                            "", "", "", "", "", $arq);
                         $add->addLivros();
-                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "");
+                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "", $arq);
                     }
                     else {
-                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "");
-                        $lista->lista();
+                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "", $arq);
                     }
+                    $lista->lista();
+                
                     if($lista->getTbl() != null){
             ?>
             <table>
@@ -116,7 +127,7 @@
                         $compra = $tblLista['compra'];
                         
                         if ($compra != null){
-                            $compraBR = mesBR($compra);
+                            $compraBR = mesBR($compra)[0];
                         }
                         else {
                             $compraBR = "";
@@ -124,7 +135,7 @@
                         
                         $capa = $tblLista["capa"];
                 ?>
-                    <tr>
+                    <tr class="lista">
                         <td class="capa"><img src="capas/<?=$capa?>" alt="<?=$capa?>"></td>
                         <td class="nomes"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$codigo?>"><?=$livro?></td>
                         <td class="nomes"><?=$autor?></a></td>
@@ -140,7 +151,7 @@
                 }
                 else {
                     echo "<h3>Sua estante está vazia<br>Adicione novos livros</h3>";
-                }               
+                }
             ?>
         </section>
     </main>

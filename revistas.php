@@ -37,14 +37,15 @@
             <p class="identidade"><?=$usuario?></p>
         </menu>
         <section class="revistas"> <!-- Formulário Revistas -->
-            <h3>Adicionar Revistas</h3>
+            <h3>Adicionar Revistas</h3></br>
+            <p id="idObrig">*campos obrigatórios</p>
             <form action="<?php $_SERVER['PHP_SELF']?>?acao=addRevista" method="post" enctype="multipart/form-data">
-                <label for="revista">Nome do Revista:</label>
-                <input type="text" name="revista" id="idRevista">
-                <label for="numero">Número:</label>
-                <input type="text" name="numero" id="idNumero">
-                <label for="título">Título:</label>
-                <input type="text" name="título" id="idTítulo">
+                <label for="revista" class="obrig">Nome do Revista:</label>
+                <input type="text" name="revista" id="idRevista" required>
+                <label for="numero" class="obrig">Número:</label>
+                <input type="text" name="numero" id="idNumero" required>
+                <label for="título" class="obrig">Título:</label>
+                <input type="text" name="título" id="idTítulo" required>
                 <!--<label for="autor">Autor:</label>
                 <input type="text" name="autor" id="iAutor">
                 <label for="editora">Editora:</label>
@@ -62,13 +63,16 @@
             </form>
             <div class="ordRevistas">
                 <h3>Classificar</h3>
-                <form action="<?php $_SERVER['PHP_SELF']?>?busca=ordenar&tipo=revista" method="get">
+                <form action="<?php $_SERVER['PHP_SELF']?>" method="get">
+                    <div class="arq">
+                        <input type="checkbox" name="arq" id="" class="arqmorto">
+                        <label for="arq" class="arqmorto">Exibir as revistas fora da estante</label>
+                    </div>
                     <div class="tipoRevistas">
                         <label for="tipo">Nome:</label>
                         <select name="tipo" id="idTipo">
                             <option value="revista">Revista</option>
                             <option value="titulo">Título</option>
-                            <option value="autor">Autor</option>
                         </select>
                         <select name="ordem" id="">
                             <option value="ASC">Crescente</option>
@@ -86,8 +90,13 @@
             <h2>Sua Estante de Revistas</h2>
             <?php
                 if (isset($_SESSION['user']))  {
+                    $arq = 0;
+                    if (isset($_REQUEST['arq'])) {
+                        $arq = 1;
+                    }
+
                     if (isset($_REQUEST['tipo'])) {
-                        $lista = new Registros($_SESSION['id_user'],"revistas", $_GET['tipo'], $_GET['letra'], $_GET['ordem']);
+                        $lista = new Registros($_SESSION['id_user'],"revistas", $_GET['tipo'], $_GET['letra'], $_GET['ordem'], $arq);
                     }
                     else if (isset($_REQUEST['acao']) && $_REQUEST["acao"] == 'addRevista'){
                         $add = new Editar (
@@ -102,12 +111,13 @@
                             $_POST['compra'],
                             "", "", "");
                         $add->adicionar();
-                        $lista = new Registros($_SESSION['id_user'],"revistas", "revista", "", "");
+                        $lista = new Registros($_SESSION['id_user'],"revistas", "revista", "", "", $arq);
                     }
                     else {
-                        $lista = new Registros($_SESSION['id_user'],"revistas", "revista", "", "");
-                        $lista->lista();
+                        $lista = new Registros($_SESSION['id_user'],"revistas", "revista", "", "", $arq);
                     }
+                    $lista->lista();
+                
                     if($lista->getTbl() != null){
             ?>
             <table>
@@ -131,7 +141,7 @@
                         $compra = $tblLista['compra'];
                         
                         if ($compra != null){
-                            $compraBR = mesBR($compra);
+                            $compraBR = mesBR($compra)[0];
                         }
                         else {
                             $compraBR = "";
@@ -139,10 +149,10 @@
                         
                         $capa = $tblLista["capa"];
                 ?>
-                    <tr>
+                    <tr class="lista">
                         <td class="capa"><img src="capas/<?=$capa?>" alt="<?=$capa?>"></td>
                         <td class="nomes"><a href="editar.php?acao=editarRevista&buscaCodigo=<?=$codigo?>"><?=$revista?></a></td>
-                        <td class="nomes"><?=$numero?></td>
+                        <td class=""><?=$numero?></td>
                         <td class="nomes"><?=$titulo?></td>
                         <td class="data"><?=$compraBR?></td>
                     </tr>

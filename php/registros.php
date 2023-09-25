@@ -10,12 +10,19 @@
         private $tipo;
         private $letra;
         private $ordem;
+        private $arqMorto;
         private $id_user;
 
-        public function __construct($user, $tb, $tp, $lt, $od) {
+        public function __construct($user, $tb, $tp, $lt, $od, $arq) {
             $this->setId_user($user);
             $this->setTabela($tb);
             $this->setTipo($tp);
+            if ($arq != null) {
+                $this->setArqMorto($arq);
+            }
+            else {
+                $this->setArqMorto(0);
+            }
             if ($lt != null) {
                 $this->setLetra($lt);
             }
@@ -93,29 +100,37 @@
             $this->ordem = $ordem;
         }
 
+        public function getArqMorto() {
+            return $this->arqMorto;
+        }
+
+        public function setArqMorto($arq) {
+            $this->arqMorto = $arq;
+        }
+
         public function lista() {
             if ($this->getLetra() != null) {
                 if ($this->getTipo() == "livro" || $this->getTipo() == "autor") {
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  ano ".$this->getOrdem());
+                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqmorto = ".$this->getArqMorto()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  ano ".$this->getOrdem());
                 }
                 else if ($this->getTipo() == "revista" || $this->getTipo() == "titulo") {
                     
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  numero ".$this->getOrdem());
+                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqmorto = ".$this->getArqMorto()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  numero ".$this->getOrdem());
                 }
             }
             else {
                 if ($this->getTipo() == "livro" || $this->getTipo() == "autor") {
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", ano ".$this->getOrdem());
+                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqmorto = ".$this->getArqMorto()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", ano ".$this->getOrdem());
                 }
                 elseif ($this->getTipo() == "revista" || $this->getTipo() == "titulo"){
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", numero ".$this->getOrdem());
+                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqmorto = ".$this->getArqMorto()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", numero ".$this->getOrdem());
                 }
             }
             
             $conect = new Conexao($this->getSql());
             $conect->conectar();
             $this->setTbl($conect->getResult());
-            //return $this->getSql();
+            return $this->getSql();
         }
 
         public function buscar($busCod) {
@@ -139,12 +154,15 @@
         private $ano;
         private $isbn;
         private $compra;
+        private $sinopse;
+        private $opiniao;
+        private $arqMorto;
         private $capaTemp;
         private $capaSize;
         private $capaExt;
         private $capaNome;
 
-        public function __construct($user,$tb, $li, $au, $ed, $edi, $ano, $isbn, $dtComp, $cT, $cS, $cX) {
+        public function __construct($user,$tb, $li, $au, $ed, $edi, $ano, $isbn, $dtComp, $cT, $cS, $cX, $res, $opn, $arq) {
             $this->setId_user($user);
             $this->setTabela($tb);
             $this->setLivro(addslashes($li));
@@ -154,6 +172,9 @@
             $this->setAno($ano);
             $this->setIsbn($isbn);
             $this->setCompra($dtComp);
+            $this->setSinopse(addslashes($res));
+            $this->SetOpiniao(addslashes($opn));
+            $this->setArqMorto($arq);
             $this->setCapaTemp($cT);
             $this->setCapaSize($cS);
             $this->setCapaExt(strtolower($cX));
@@ -254,6 +275,30 @@
         public function setCapaNome($cN) {
                 $this->capaNome = $cN;
         }
+        
+        public function getArqMorto() {
+            return $this->arqMorto;
+        }
+
+        public function setArqMorto($arq) {
+            $this->arqMorto = $arq;
+        }
+        
+        public function getSinopse() {
+            return $this->sinopse;
+        }
+
+        public function setSinopse($res) {
+            $this->sinopse = $res;
+        }
+        
+        public function getOpiniao() {
+            return $this->opiniao;
+        }
+
+        public function setOpiniao($opn) {
+            $this->opiniao = $opn;
+        }
 
         private function instrucoes() {
             $instAnoColum = "";
@@ -301,12 +346,16 @@
         public function addLivros () {
             $instrucao = $this->instrucoes();
 
-            $this->setSql("INSERT INTO ".$this->getTabela()." (id_usuarios, livro, autor, editora, edicao".$instrucao[0].", isbn".$instrucao[2].$instrucao[5].") VALUES (".$this->getId_user().", '".$this->getLivro()."', '".$this->getAutor()."', '".$this->getEditora()."', '".$this->getEdicao()."'".$instrucao[1].", '".$this->getIsbn()."'".$instrucao[3].$instrucao[6].")");
-            
+            if ($this->getTabela() === "livros") {
+                $this->setSql("INSERT INTO ".$this->getTabela()." (id_usuarios, livro, autor, editora, edicao".$instrucao[0].", isbn".$instrucao[2].$instrucao[5].", sinopse, opiniao, arqmorto) VALUES (".$this->getId_user().", '".$this->getLivro()."', '".$this->getAutor()."', '".$this->getEditora()."', '".$this->getEdicao()."'".$instrucao[1].", '".$this->getIsbn()."'".$instrucao[3].$instrucao[6].", '".$this->getSinopse()."', '".$this->getOpiniao()."', ".$this->getArqMorto().")");
+            }
+            elseif ($this->getTabela() === "revistas"){
+
+            }
+
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
-            return $this->getSql();
         }
 
         public function alterar($cod) {
@@ -325,11 +374,12 @@
                 }
             }
 
-            $this->setSql("UPDATE ".$this->getTabela()." SET livro = '".$this->getLivro()."', autor = '".$this->getAutor()."', editora = '".$this->getEditora()."', edicao = '".$this->getEdicao()."'".$instrucao[0].$instrucao[7].$instrucao[10].", isbn = '".$this->getIsbn()."'".$instrucao[2].$instrucao[8].$instrucao[11].$instrucao[5].$instrucao[9].$instrucao[12]." WHERE id_livros = ".$this->getCodigo());
+            $this->setSql("UPDATE ".$this->getTabela()." SET livro = '".$this->getLivro()."', autor = '".$this->getAutor()."', editora = '".$this->getEditora()."', edicao = '".$this->getEdicao()."'".$instrucao[0].$instrucao[7].$instrucao[10].", isbn = '".$this->getIsbn()."'".$instrucao[2].$instrucao[8].$instrucao[11].$instrucao[5].$instrucao[9].$instrucao[12].", sinopse = '".$this->getSinopse()."', opiniao = '".$this->getOpiniao()."', arqmorto = ".$this->getArqMorto()." WHERE id_livros = ".$this->getCodigo());
 
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
+            return $this->getSql();
         }
         
     }

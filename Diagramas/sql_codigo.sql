@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS livros (
     edicao varchar(10),
     ano int(4),
     isbn varchar(20),
+    sinopse varchar(1000),
+    opiniao varchar(1000),
+    arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20),
     id_usuarios int
@@ -42,6 +45,9 @@ CREATE TABLE IF NOT EXISTS revistas (
     editora varchar(30),
     ano int(4),
     issn varchar(20),
+    sinopse varchar(1000),
+    opiniao varchar(1000),
+    arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20),
     id_usuarios int

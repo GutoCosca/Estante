@@ -123,9 +123,11 @@
                 else {
                     $mensagem = "Usuário e senha inválidas";
                 }
-        }
+            }
             return $mensagem;
         }
+
+        
 
     }
 ?>

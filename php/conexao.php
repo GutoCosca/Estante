@@ -10,7 +10,6 @@ use Conexao as GlobalConexao;
         private $db;
         private $sql;
         private $result;
-        private $teste;
 
         public function __construct($sql) {
             $this->setServidor("localhost");

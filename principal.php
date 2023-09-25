@@ -17,12 +17,13 @@
     if (isset($_SESSION['user'])) {
         $usuario = "Bem vindo ".$_SESSION['id_user']."-".$_SESSION['user'];
     }
-
+    
+    $login = registro($_SESSION['id_user']);
 ?>
 <body>
     <header>
         <h1>Estante Virtual</h1>
-        <p><?=$usuario?></p>
+        <p><?=$usuario?> <?= $login?></p>
     </header>
     <main>
         <menu>
