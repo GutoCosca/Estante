@@ -1,5 +1,7 @@
 <?php 
     include_once ('conexao.php');
+    date_default_timezone_set('America/Sao_Paulo');
+    
 
     // FAZ O CADASTRO E O LOGIN DO USUÁRIO
     
@@ -115,6 +117,8 @@
                         session_start();
                         $_SESSION['user'] = $this->getUsuario();
                         $_SESSION['id_user'] = $tblValida['id_usuarios'];
+                        $_SESSION['dataIn'] = date('d/m/Y');
+                        $_SESSION['horaIn'] = date('H:i:s');
                     }
                     else {
                         $mensagem = "Usuário e senha inválidas";
@@ -126,8 +130,29 @@
             }
             return $mensagem;
         }
+    }
 
+    class Monitor{
+        private $idusuario;
+
+        public function __construct($iduser) {
+            $this->setId_user($iduser);
+        }
+
+        public function getId_user() {
+                return $this->idusuario;
+        }
+
+        public function setId_user($iduser) {
+                $this->idusuario = $iduser;
+        }
         
-
+        public function acesso() {
+            $data = date('d/m/Y');
+            $hora = date ('H:i:s');
+            $sql = "INSERT INTO logins (diaIn, horaIn, diaOut, horaOut, id_usuarios) VALUES ('".$_SESSION['dataIn']."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
+            $conect = new Conexao($sql);
+            $conect->conectar();
+        }
     }
 ?>

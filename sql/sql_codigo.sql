@@ -1,4 +1,4 @@
---Criação do BD Biblioteca e suas tabelas e atributos
+-- Criação do BD Biblioteca e suas tabelas e atributos
 -- MySQL
 CREATE DATABASE IF NOT EXISTS biblioteca;
 
@@ -6,7 +6,7 @@ USE biblioteca;
 
 CREATE TABLE IF NOT EXISTS usuarios (
     id_usuarios int PRIMARY KEY AUTO_INCREMENT,
-    usuario varchar(50) NOT NULL
+    usuario varchar(50) NOT NULL,
     nome varchar(180) NOT NULL,
     senha varchar(250) NOT NULL,
     email varchar(120) NOT NULL,
@@ -15,9 +15,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 CREATE TABLE IF NOT EXISTS logins (
     id_logins int PRIMARY KEY AUTO_INCREMENT,
-    dia date,
-    hora time,
-    id_usuarios int
+    id_usuarios int,
+    dataIn varchar(10),
+    horaIn varchar(8),
+    dataOut varchar(10),
+    horaOut varchar(8)
 );
 
 CREATE TABLE IF NOT EXISTS livros (
@@ -57,4 +59,6 @@ ALTER TABLE logins ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios
 ALTER TABLE livros ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE revistas ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios)
 
---POSTRGREE
+CREATE VIEW IF NOT EXISTS acessos (id_logins, id_usuarios, usuarios, dataIn, horaIn, dataOut horaOut) AS
+SELECT logins.id_logins, logins.id_usuarios, usuarios.usuario, logins.dataIn, logins.horaIn, logins.dataOut, logins.horaOut FROM logins
+INNER JOIN usuarios ON logins.id_usuarios = usuarios.id_usuarios

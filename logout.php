@@ -9,7 +9,12 @@
     <title>Estante Virtual</title>
 </head>
 <?php
+    require_once ('php/usuarios.php');
     session_start();
+    if (isset ($_SESSION['id_user'])) {
+        $logout = new Monitor($_SESSION['id_user']);
+        $logout->acesso();
+    }
     session_destroy();
 ?>
 <body>

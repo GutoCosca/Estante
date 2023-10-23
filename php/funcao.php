@@ -13,7 +13,7 @@
         date_default_timezone_set('America/Sao_Paulo');
         $data = date('d/m/Y');
         $hora = date('H:i:s');
-        $sql = "INSERT INTO logins(dia, hora, id_usuarios) VALUES ($data, $hora, $idusuario)";
+        $sql = "INSERT INTO logins(dia, hora, estado, id_usuarios) VALUES ('$data', '$hora', 'in', '$idusuario')";
         $conect = new Conexao($sql);
         $conect->conectar();
         return $sql;

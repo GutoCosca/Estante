@@ -40,7 +40,7 @@
                                             $_POST['usuarioLog'],
                                             $_POST['senhaLog'],
                                         );
-                                        print_r( $usuario->validar());
+                                        $usuario->validar();
                                     }
                                     
                                 ?>

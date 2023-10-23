@@ -5,25 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/listar.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0" />
     <title>Estante Virtual</title>
 </head>
 <?php
     require_once ('php/registros.php');
-    require_once ('php/funcao.php');
+    require_once ('php/usuarios.php');
     session_start();
     $usuario = "";
 
     if (isset($_SESSION['user'])) {
-        $usuario = "Bem vindo ".$_SESSION['id_user']."-".$_SESSION['user'];
+        $user = "Bem vindo ".$_SESSION['id_user']."-".$_SESSION['user'];
+        $usuario = "Bem vindo ".$_SESSION['user'];
     }
-    
-    $login = registro($_SESSION['id_user']);
 ?>
 <body>
     <header>
         <h1>Estante Virtual</h1>
-        <p><?=$usuario?> <?= $login?></p>
+        <p><?=$user?></p>
     </header>
     <main>
         <menu>
@@ -34,6 +32,7 @@
                 <li><a href="#">Forum</a></li>
                 <li><a href="logout.php">Sair</a></li>
             </ul>
+            <p class="identidade"><?=$usuario?></p>
         </menu>
         <section class="livros">
         </section>

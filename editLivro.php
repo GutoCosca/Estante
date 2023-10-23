@@ -14,14 +14,12 @@
     $usuario = "";
     
     if (isset($_SESSION['user'])) {
-        $user = "Bem vindo ".$_SESSION['id_user']."-".$_SESSION['user'];
         $usuario = "Bem vindo ".$_SESSION['user'];
     }
 ?>
 <body>
     <header>
         <h1>Estante Virtual</h1>
-        <p><?=$user?></p>
     </header>
     <main>
         <menu>
