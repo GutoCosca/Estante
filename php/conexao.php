@@ -1,5 +1,5 @@
 <?php
-        //Fazer a conexção com o BD
+        // Fazer a conexção com o BD
 
 use Conexao as GlobalConexao;
 

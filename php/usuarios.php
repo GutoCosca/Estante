@@ -117,7 +117,7 @@
                         session_start();
                         $_SESSION['user'] = $this->getUsuario();
                         $_SESSION['id_user'] = $tblValida['id_usuarios'];
-                        $_SESSION['dataIn'] = date('d/m/Y');
+                        $_SESSION['dataIn'] = date('d-m-Y');
                         $_SESSION['horaIn'] = date('H:i:s');
                     }
                     else {
@@ -148,11 +148,44 @@
         }
         
         public function acesso() {
-            $data = date('d/m/Y');
+            $data = date('d-m-Y');
             $hora = date ('H:i:s');
-            $sql = "INSERT INTO logins (diaIn, horaIn, diaOut, horaOut, id_usuarios) VALUES ('".$_SESSION['dataIn']."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
+            $sql = "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES ('".$_SESSION['dataIn']."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
             $conect = new Conexao($sql);
             $conect->conectar();
+        }
+    }
+
+    class Analise {
+        private $iduser;
+        private $lista;
+
+        public function __construct( $id_usuario) {
+            $this->setIduser($id_usuario);
+        }
+
+        public function getIduser() {
+                return $this->iduser;
+        }
+
+        public function setIduser($iduser) {
+                $this->iduser = $iduser;
+        }
+        
+        public function getLista() {
+            return $this->lista;
+        }
+        
+        public function setLista($lista) {
+            $this->lista = $lista;
+        }
+
+        public function tempo() {
+            $sql = "SELECT * FROM acessos";
+            $conect = new Conexao($sql);
+            $conect->conectar();
+            $this->setLista($conect->getResult());
+    
         }
     }
 ?>

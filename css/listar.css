@@ -162,6 +162,14 @@ table {
     margin: auto;
 }
 
+.analise {
+    text-align: center;
+}
+
+.analisar:nth-child(even) {
+    background-color: #cecece;
+}
+
 tr#roll {
     background-color: #b8860b;
 }
