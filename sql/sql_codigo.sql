@@ -59,6 +59,9 @@ ALTER TABLE logins ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios
 ALTER TABLE livros ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE revistas ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 
+CREATE VIEW if NOT EXISTS listauser (id_usuarios, username, nome, email) AS
+SELECT usuarios.id_usuarios, usuarios.usuario, usuarios.nome, usuarios.email FROM usuarios;
+
 CREATE VIEW IF NOT EXISTS acessos (id_logins, id_usuarios, usuarios, dataIn, horaIn, dataOut, horaOut) AS
 SELECT logins.id_logins, logins.id_usuarios, usuarios.usuario, logins.dataIn, logins.horaIn, logins.dataOut, logins.horaOut FROM logins
-INNER JOIN usuarios ON logins.id_usuarios = usuarios.id_usuarios
+INNER JOIN usuarios ON logins.id_usuarios = usuarios.id_usuarios;

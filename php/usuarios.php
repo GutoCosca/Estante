@@ -158,11 +158,8 @@
 
     class Analise {
         private $iduser;
-        private $lista;
-
-        public function __construct( $id_usuario) {
-            $this->setIduser($id_usuario);
-        }
+        private $listaUser;
+        private $listaDados;
 
         public function getIduser() {
                 return $this->iduser;
@@ -172,19 +169,34 @@
                 $this->iduser = $iduser;
         }
         
-        public function getLista() {
-            return $this->lista;
+        public function getListaUser() {
+            return $this->listaUser;
         }
         
-        public function setLista($lista) {
-            $this->lista = $lista;
+        public function setListaUser($listaUser) {
+            $this->listaUser = $listaUser;
         }
 
-        public function tempo() {
-            $sql = "SELECT * FROM acessos";
+        public function getListaDados() {
+            return $this->listaDados;
+        }
+        
+        public function setListaDados($listaDados) {
+            $this->listaDados = $listaDados;
+        }
+
+        public function usuarios(){
+            $sql = "SELECT * FROM listauser";
             $conect = new Conexao($sql);
             $conect->conectar();
-            $this->setLista($conect->getResult());
+            $this->setListaUser($conect->getResult());
+        }
+
+        public function tempo($id) {
+            $sql = "SELECT * FROM acessos WHERE id_usuarios = $id";
+            $conect = new Conexao($sql);
+            $conect->conectar();
+            $this->setListaDados($conect->getResult());
     
         }
     }

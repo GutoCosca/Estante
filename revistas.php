@@ -115,7 +115,7 @@
                     }
                     $lista->lista();
                 
-                    if($lista->getTbl() != null){
+                    if(mysqli_num_rows($lista->getTbl()) != 0){
             ?>
             <table>
                 <thead>
@@ -159,10 +159,10 @@
             </table>   
             <?php
                     }
+                    else {
+                        echo "<h2>Sua estante está vazia<br>Adicione novas revistas</h2>";
+                    }               
                 }
-                else {
-                    echo "<h3>Sua estante está vazia<br>Adicione novos livros</h3>";
-                }               
             ?>
         </section>
     </main>
