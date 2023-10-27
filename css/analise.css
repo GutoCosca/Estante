@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+section {
+    border-collapse: collapse;
+    border: 1px solid black;    
+    margin: 0px;
+}
+
+#controle {
+    display: inline-flex;
+    width: 400px;
+    padding: 15px 20px;
+}
+
+#resultado {
+    display: inline-block;
+    margin-top: -30px;
+    padding-left: 60px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+caption {
+    padding: 15px 0px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.analise {
+    width: 100px;
+    border: 1px solid #000000;
+    text-align: center;
+}
+
+.analisar:nth-child(even) {
+    background-color: #cecece;
+}
+
+td:last-child {
+    padding-right: 15px;
+    text-align: right;
+}
