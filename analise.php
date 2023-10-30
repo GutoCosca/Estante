@@ -54,7 +54,6 @@
                     $listaDados = new Analise();
                     $listaDados->tempo($_REQUEST['busca']);
                     $numRows = mysqli_num_rows($listaDados->getListaDados());
-                    print_r($numRows);
                     ?>
                 <table id="dados">
                     <caption>Analise dos Log do Usuário</caption>
@@ -95,12 +94,11 @@
                             $horaTemp = explode(":",$horaTotTemp);
                             $horaTempD = $horaTempD + $horaTemp[0];
                             $horaTempH = $horaTempH + $horaTemp[1];
-                            $horaTempM = $horaTempH + $horaTemp[2];
-                            print_r($horaTempD);    
+                            $horaTempM = $horaTempM + $horaTemp[2];
                     ?>
                             <tr class="analisar">
-                                <td class="analise"><?=$user?></td>
                                 <td class="analise"><?=$idUser?></td>
+                                <td class="analise"><?=$user?></td>
                                 <td class="analise"><?=$dataIn?></td>
                                 <td class="analise"><?=$horaIn?></td>
                                 <td class="analise"><?=$dataOut?></td>
@@ -108,15 +106,16 @@
                                 <td class="analise"><?=$horaTot?></td>
                                 <?php
                         }
-                        print_r($horaTempM);
-                        $tempHora = $horaTempD + ($horaTempH/24)."dias ".($horaTempH%24)."h ".$horaTempM."min";
-                    }
-                    ?>
+                        $tempHora = $horaTempD + ($horaTempH/24)."dias ".($horaTempH%24 + intdiv($horaTempM,60))."h ".($horaTempM%60)."min";
+                        ?>
                     </tr>
                     <tr>
                     <td class="analise" colspan="5">Tempo Total</td>
                     <td class="analise" colspan="2"><?=$tempHora?></td>
                 </tr>
+                <?php
+                    }
+                ?>
             </table>
         </section>
     </main>
