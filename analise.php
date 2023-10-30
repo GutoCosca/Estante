@@ -45,7 +45,6 @@
                         </tr>
                    <?php     
                     }
-                    print_r($_REQUEST['busca']);
                 ?>
             </table>
         </section>
@@ -54,7 +53,8 @@
                 if (isset($_REQUEST['acao']) == 'detalhe') {
                     $listaDados = new Analise();
                     $listaDados->tempo($_REQUEST['busca']);
-                    print_r($listaDados->tempo($_REQUEST['busca']));
+                    $numRows = mysqli_num_rows($listaDados->getListaDados());
+                    print_r($numRows);
                     ?>
                 <table id="dados">
                     <caption>Analise dos Log do Usuário</caption>
@@ -74,6 +74,9 @@
                         </tr>
                     </thead>
                     <?php
+                        $horaTempD = 0;
+                        $horaTempH = 0;
+                        $horaTempM = 0;
                         while ($dados = mysqli_fetch_array($listaDados->getListaDados())) {
                             $id = $dados[0];
                             $idUser = $dados[1];
@@ -88,6 +91,12 @@
                             $sai = new DateTime($offline);
                             $total = $entra->diff($sai);
                             $horaTot = $total->h + ($total->days * 24)."h ".$total->i."min";
+                            $horaTotTemp = $total->days.":".$total->h.":".$total->i;
+                            $horaTemp = explode(":",$horaTotTemp);
+                            $horaTempD = $horaTempD + $horaTemp[0];
+                            $horaTempH = $horaTempH + $horaTemp[1];
+                            $horaTempM = $horaTempH + $horaTemp[2];
+                            print_r($horaTempD);    
                     ?>
                             <tr class="analisar">
                                 <td class="analise"><?=$user?></td>
@@ -97,11 +106,17 @@
                                 <td class="analise"><?=$dataOut?></td>
                                 <td class="analise"><?=$horaOut?></td>
                                 <td class="analise"><?=$horaTot?></td>
-                            </tr>
-                            <?php
+                                <?php
                         }
+                        print_r($horaTempM);
+                        $tempHora = $horaTempD + ($horaTempH/24)."dias ".($horaTempH%24)."h ".$horaTempM."min";
                     }
                     ?>
+                    </tr>
+                    <tr>
+                    <td class="analise" colspan="5">Tempo Total</td>
+                    <td class="analise" colspan="2"><?=$tempHora?></td>
+                </tr>
             </table>
         </section>
     </main>
