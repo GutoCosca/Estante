@@ -139,6 +139,14 @@
                     <th class="titulo" valign="top">Opinião:</th>
                     <td colspan="3"><?=$opiniao?></td>
                 </tr>
+                <tr class="visual">
+                    <th class="titulo" valign="top">Motivo:</th>
+                    <td colspan="3">Emprestado: Ricardo</td>
+                </tr>
+                <tr class="visual">
+                    <th class="titulo" valign="top">Data</th>
+                    <td colspan="3">23/03/2023</td>
+                </tr>
             </table>
         </section>
         <section class="tblLivros">
@@ -161,7 +169,7 @@
                         <label for="isbn">ISBN:</label>
                         <input type="text" name="isbn" id="idIsbn" value="<?=$isbn?>">
                     </fieldset>
-                    <fieldset>
+                    <fieldset id="direito">
                         <label for="compra">Data de Aquisição:</label>
                         <input type="date" name="compra" id="idCompra" value="<?=$compra?>">
                         <label for="sinopse">Sinopse:</label>
@@ -169,16 +177,29 @@
                         <label for="opiniao">Opinião:</label>
                         <textarea name="opiniao" id="" cols="48" rows="10" spellcheck="off"><?=$opiniao?></textarea>
                     </fieldset>
-                    <div>
-                        <label for="arqmorto">Livro fora da estante?</label>
-                        <input type="radio" name="arqmorto" id="1" value="1" <?=$checked1?> >
-                        <label for="0">Sim</label>
-                        <input type="radio" name="arqmorto" id="0" value="0" <?=$checked0?> >
-                        <label for="1">Não</label>
-                        <input type="submit" value="Alterar" class="botao">
-                        <input type="reset" value="Limpar" class="botao">
-                    </div>
+                    
+                    <fieldset class="opcao">
+                            <label for="arqmorto" class="titulo2">O livro foi perdido?</label>
+                            <input type="radio" name="arqmorto" id="1" value="1" <?=$checked1?> class="checar">
+                            <label for="0">Sim</label>
+                            <input type="radio" name="arqmorto" id="0" value="0" <?=$checked0?> class="checar">
+                            <label for="1">Não</label>
+                            <label for="motivo" class="titulo2">Motivo:</label>
+                            <input type="text" name="motivo" id="idMotivo">
+                            <label for="dataMoti" class="titulo2">Data:</label>
+                            <input type="date" name="dataMoti" id="idDataMotiv">
+                        </fieldset>
+                        <fieldset id="idbotao">
+                            <input type="submit" value="Alterar" class="botao">
+                            <input type="reset" value="Limpar" class="botao">
+                        </fieldset>
                 </form>
+            </div>
+            <div>
+                <form action="">
+                    <input type="submit" value="alterar">
+                </form>
+
             </div>
         </section>
     </main>

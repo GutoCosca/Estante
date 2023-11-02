@@ -16,10 +16,10 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS logins (
     id_logins int PRIMARY KEY AUTO_INCREMENT,
     id_usuarios int,
-    dataIn varchar(10),
-    horaIn varchar(8),
-    dataOut varchar(10),
-    horaOut varchar(8)
+    dataIn date,
+    horaIn time,
+    dataOut date,
+    horaOut time
 );
 
 CREATE TABLE IF NOT EXISTS livros (
@@ -55,9 +55,25 @@ CREATE TABLE IF NOT EXISTS revistas (
     id_usuarios int
 );
 
+CREATE TABLE IF NOT EXISTS emprestimo (
+    id_emprest int PRIMARY KEY AUTO_INCREMENT,
+    id_usuarios int,
+    id_livros int,
+    id_revistas int,
+    nome varchar(50) NOT NULL,
+    dt_emprest date NOT NULL,
+    dt_devol date
+);
+
 ALTER TABLE logins ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE livros ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE revistas ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
+ALTER TABLE emprestimo ADD FOREIGN KEY(id_usuarios)
+REFERENCES usuarios (id_usuarios);
+ALTER TABLE emprestimo ADD FOREIGN KEY(id_livros)
+REFERENCES livros (id_livros);
+ALTER TABLE emprestimo ADD FOREIGN KEY(id_revistas)
+REFERENCES revistas (id_revistas);
 
 CREATE VIEW if NOT EXISTS listauser (id_usuarios, username, nome, email) AS
 SELECT usuarios.id_usuarios, usuarios.usuario, usuarios.nome, usuarios.email FROM usuarios;

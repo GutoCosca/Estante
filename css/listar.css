@@ -232,7 +232,6 @@ footer {
     margin-top: 0px;
     background-color: #a8a8a8;
     text-align: center;
-    /*border: 1px solid #000;*/
 }
 
 .design {
@@ -249,9 +248,10 @@ footer {
 }
 
 .visual > td, .visual > th {
-    padding-top: 30px;
+    padding-top: 10px;
     border: none;
     height: 35px;
+    font-size: 1em;
 }
 
 #idCapa {
@@ -281,13 +281,12 @@ footer {
 .edicao {
     display: inline-block;
     position: relative;
-    top: 50px;
-    width: 900px;
-    height: 900px;    
+    top: 30px;
+    width: 900px;   
     background-color: #a8a8a88c;
     border: 1px solid #000000;
     margin: center;
-    padding: 0px 35px 30px 35px;
+    padding: 0px 35px 0px 35px;
 }
 /*formatação do formulario da edição dos livras e revistas*/
 fieldset {
@@ -298,10 +297,10 @@ fieldset {
 }
 
 fieldset > label {
-    margin-top: 30px;
+    margin-top: 10px;
     color: #bf15f3;
-    font-size: 1.5em;
-    text-shadow: 1px 1px 3px #000000;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 1px #000000;
     text-align: left;
 }
 
@@ -309,21 +308,61 @@ fieldset > input {
     width: 350px;
     height: 30px;
     border-radius: 15px;
-    padding-left: 10px;
-    font-size: 1.2em;
+    padding-left: 7px;
+    font-size: .85em;
 }
 
 fieldset > textarea {
     resize: none;
     width: 350px;
-    font-size: 1.2em;
+    font-size: 0.95em;
 }
 
 fieldset > #idCapa {
     width: 350px;
 }
 
-div > .botao {
+#direito {
+    border-left: double;
+}
+
+.opcao {
+    border-top: double;
+    text-align: center;
+    display: block;
+    width: 860px;
+    padding: 0px 0px 0px 0px;
+}
+.opcao > label {
+    display: inline-block;
+    padding-top: -30px;
+    width: 50px;
+}
+
+.opcao > input {
+    width: 150px;
+}
+
+.opcao > .checar {
+    width: 15px;
+    margin-top: 10px;
+}
+.opcao > .titulo2:first-child {
+    width: 200px;
+}
+
+opcao > .titulo2 {
+
+}
+
+#idbotao {
+    display: block;
+    position: relative;
+    margin: 0px 0px 0px 315px;
+    padding: 0px;
+}
+
+.botao {
     display: inline-block;
     width: 100px;
     height: 25px;

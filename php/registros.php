@@ -383,4 +383,72 @@
         }
         
     }
+
+    class Emprestar {
+        private $id_emprest;
+        private $id_usuario;
+        private $id_livros;
+        private $id_revistas;
+        private $nome;
+        private $dt_saida;
+        private $dt_entra;
+
+        public function getId_emprest() {
+                return $this->id_emprest;
+        }
+
+        public function setId_emprest($id_emprest) {
+                $this->id_emprest = $id_emprest;
+        }
+
+        public function getId_usuario() {
+                return $this->id_usuario;
+        }
+
+        public function setId_usuario($id_usuario) {
+                $this->id_usuario = $id_usuario;
+        }        
+
+        public function getId_livros() {
+                return $this->id_livros;
+        }
+
+        public function setId_livros($id_livros) {
+                $this->id_livros = $id_livros;
+        }
+
+        public function getId_revistas() {
+                return $this->id_revistas;
+        }
+
+        public function setId_revistas($id_revistas) {
+                $this->id_revistas = $id_revistas;
+        }
+
+        public function getNome() {
+                return $this->nome;
+        }
+
+        public function setNome($nome) {
+                $this->nome = $nome;
+        }
+
+        public function getDt_saida() {
+                return $this->dt_saida;
+        }
+
+        public function setDt_saida($dt_saida) {
+                $this->dt_saida = $dt_saida;
+        }
+
+        public function getDt_entra() {
+                return $this->dt_entra;
+        }
+
+        public function setDt_entra($dt_entra) {
+                $this->dt_entra = $dt_entra;
+        }
+
+        
+    }
 ?>

@@ -148,7 +148,7 @@
         }
         
         public function acesso() {
-            $data = date('d-m-Y');
+            $data = date('Y-m-d');
             $hora = date ('H:i:s');
             $sql = "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES ('".$_SESSION['dataIn']."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
             $conect = new Conexao($sql);
@@ -160,6 +160,7 @@
         private $iduser;
         private $listaUser;
         private $listaDados;
+        private $tempoTotal;
 
         public function getIduser() {
                 return $this->iduser;
@@ -184,6 +185,14 @@
         public function setListaDados($listaDados) {
             $this->listaDados = $listaDados;
         }
+        
+        public function getTempoTotal() {
+                return $this->tempoTotal;
+        }
+
+        public function setTempoTotal($tempoTotal) {
+                $this->tempoTotal = $tempoTotal;
+        }
 
         public function usuarios(){
             $sql = "SELECT * FROM listauser";
@@ -192,12 +201,33 @@
             $this->setListaUser($conect->getResult());
         }
 
+        public function dados($id) {
+            $sql = "SELECT * FROM acessos WHERE id_usuarios = $id";
+            $conect = new Conexao($sql);
+            $conect->conectar();
+            $this->setListaDados($conect->getResult());
+        }
+        
         public function tempo($id) {
             $sql = "SELECT * FROM acessos WHERE id_usuarios = $id";
             $conect = new Conexao($sql);
             $conect->conectar();
             $this->setListaDados($conect->getResult());
-    
+            $tempoD = 0;
+            $tempoH = 0;
+            $tempoM = 0;
+
+            while ($dados = mysqli_fetch_array($this->getListaDados())) {
+                $online = new DateTime($dados[3]." ".$dados[4]);
+                $offline = new DateTime($dados[5]." ".$dados[6]);
+                $subTotal = $online->diff($offline);
+                $total = explode(":", $subTotal->days.":".$subTotal->h.":".$subTotal->i);
+                $tempoD = $tempoD + $total[0];
+                $tempoH = $tempoH + $total[1];
+                $tempoM = $tempoM + $total[2];
+            }
+
+            $this->setTempoTotal($tempoD + intdiv($tempoH,24)."dias ".($tempoH%24 + intdiv($tempoM,60))."h ".($tempoM%60)."min");
         }
     }
 ?>

@@ -52,7 +52,7 @@
             <?php
                 if (isset($_REQUEST['acao']) == 'detalhe') {
                     $listaDados = new Analise();
-                    $listaDados->tempo($_REQUEST['busca']);
+                    $listaDados->dados($_REQUEST['busca']);
                     $numRows = mysqli_num_rows($listaDados->getListaDados());
                     ?>
                 <table id="dados">
@@ -73,28 +73,18 @@
                         </tr>
                     </thead>
                     <?php
-                        $horaTempD = 0;
-                        $horaTempH = 0;
-                        $horaTempM = 0;
                         while ($dados = mysqli_fetch_array($listaDados->getListaDados())) {
                             $id = $dados[0];
                             $idUser = $dados[1];
                             $user = $dados[2];
-                            $dataIn = date('d-m-Y', strtotime($dados[3]));
+                            $dataIn = date('d-m-y', strtotime($dados[3]));
                             $horaIn = date('H:i:s', strtotime($dados[4]));
                             $dataOut = date('d-m-Y', strtotime($dados[5]));
                             $horaOut = date('H:i:s', strtotime($dados[6]));
-                            $online = $dataIn." ".$horaIn;
-                            $offline =$dataOut." ".$horaOut;
-                            $entra = new DateTime($online);
-                            $sai = new DateTime($offline);
+                            $entra = new DateTime($dados[3]." ".$dados[4]);
+                            $sai = new DateTime($dados[5]." ".$dados[6]);
                             $total = $entra->diff($sai);
                             $horaTot = $total->h + ($total->days * 24)."h ".$total->i."min";
-                            $horaTotTemp = $total->days.":".$total->h.":".$total->i;
-                            $horaTemp = explode(":",$horaTotTemp);
-                            $horaTempD = $horaTempD + $horaTemp[0];
-                            $horaTempH = $horaTempH + $horaTemp[1];
-                            $horaTempM = $horaTempM + $horaTemp[2];
                     ?>
                             <tr class="analisar">
                                 <td class="analise"><?=$idUser?></td>
@@ -106,12 +96,14 @@
                                 <td class="analise"><?=$horaTot?></td>
                                 <?php
                         }
-                        $tempHora = $horaTempD + ($horaTempH/24)."dias ".($horaTempH%24 + intdiv($horaTempM,60))."h ".($horaTempM%60)."min";
+                        $listaTempo = new Analise();
+                        $listaTempo->tempo($_REQUEST['busca']);
+                        $tempTotal = $listaTempo->getTempoTotal();
                         ?>
                     </tr>
                     <tr>
                     <td class="analise" colspan="5">Tempo Total</td>
-                    <td class="analise" colspan="2"><?=$tempHora?></td>
+                    <td class="analise" colspan="2"><?=$tempTotal?></td>
                 </tr>
                 <?php
                     }
