@@ -1,0 +1,62 @@
+@charset "utf-8";
+
+section {
+    float: left;
+    position: relative;
+    height: 240px;
+    padding: auto;
+    margin: auto;
+    text-align: center;
+    border: 1px solid #000000;
+}
+
+#controle {
+    width: 400px;
+    margin-left: 20px;
+}
+
+form {
+    margin-top: 15px;
+}
+
+#usuarios {
+    display: block;
+    width: 1450px;
+
+}
+
+#resultado {
+    display: block;
+    position: absolute;
+    top: 250px;
+    width: 1850px;
+    height: 600px;
+    margin-left: 20px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+caption {
+    padding: 15px 0px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.analise {
+    width: 100px;
+    border: 1px solid #000000;
+    text-align: center;
+}
+
+.analisar:nth-child(even) {
+    background-color: #cecece;
+}
+
+#dados > tr > td:last-child {
+    padding-right: 15px;
+    text-align: right;
+}

@@ -9,7 +9,11 @@
         return  $compraBR;
     }
 
-    function registro($idusuario) {
+    function siteErro () {
+        header('location:logar.php');
+    }
+
+    /*function registro($idusuario) {
         date_default_timezone_set('America/Sao_Paulo');
         $data = date('d/m/Y');
         $hora = date('H:i:s');
@@ -18,3 +22,6 @@
         $conect->conectar();
         return $sql;
     }
+    */
+
+    

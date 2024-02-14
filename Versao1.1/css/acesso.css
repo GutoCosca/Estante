@@ -1,0 +1,210 @@
+@charset "utf-8";
+
+*{
+    padding: 0px;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header{
+    width: 100%;
+    height: 120px;
+    background-color: bisque;
+    text-align: center;
+}
+
+h1{
+    padding-top: 25px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 3.5em;
+    color: #5968f3;
+    text-shadow: 4px 6px 1px #3f3f3f44;
+}
+
+main{
+    width: 100%;
+    height: 785px;
+}
+
+menu{
+    width: 100%;
+    height: 40px;
+    background-color: #5f9ea0;
+}
+
+ul{
+    padding-top: 13px;
+    padding-left: 12%;
+}
+
+section{
+    float: left;
+    position: relative;
+    left: 10vw;
+    height: 785px;
+}
+
+.apresentar{
+    width: 80vw;
+    height: 750px;
+    background-color: #b8860b;
+    text-align: justify;
+}
+
+.formulario{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    width: 80vw;
+    height: 790px;
+    background-color: #afe795;
+    
+    
+}
+
+p{
+    padding: 80px 100px 0px;
+}
+
+#idCadastro, #idLogin{
+    background-color: #8e44ad;
+    border: #8e44ad;
+    border-radius: 4px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100px;
+    height: 35px;
+}
+
+.cadastro, .logar{
+    position: absolute;
+    top: 2vh;
+    width: 300px;
+    padding-left: 30px;
+    border: 3px solid #777777;
+    border-radius: 15px;
+    box-shadow: 6px 5px #77777769;
+    cursor: pointer;
+}
+
+legend{
+    font-size: 1.3em;
+}
+
+.formCad, .formLog {
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+h2 {
+    text-align: center;
+    margin-right: 35px;
+}
+
+.controleCad {
+    margin: 5px, 0px ;
+    padding-top: 10px;
+}
+
+.controleCad label, .controleLog label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.controleCad input, .controleLog input {
+    border: 2px solid #f0f0f0;
+    border-radius: 4px;
+    display: block;
+    font-size: 0.8em;
+    padding: 10px;
+    width: 240px;
+}
+
+.controleCad input:focus, .controleLog input:focus{
+    outline: 0;
+    border-color: #777777;
+}
+
+.controleCad ul {
+    padding: 5px 0px 10px 20px;
+}
+.controleCad li, .controleLog li {
+    font-size: smaller;
+}
+
+.controleCad small {
+    color: #000000;
+    visibility: hidden;
+    text-align: center;
+    width: 260px;
+    display: block;
+    margin: 0px;
+}
+
+.controleCad.erro small {
+    color: #ff0000;
+    -webkit-text-stroke: 0.15px #000;
+    visibility: visible;
+}
+
+.controleCad.sucesso small {
+    visibility: hidden;
+}
+
+#idCadastrar, #idLogar {
+    background-color: #8e44ad;
+    border: #8e44ad;
+    border-radius: 4px;
+    color: #fff;
+    display: block;
+    font-family: inherit;
+    font-size: 16px;
+    padding: 10px;
+    margin-left: 25px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 220px;    
+}
+
+.regra {
+    font-size: small;
+}
+
+#textoErro {
+    width: 260px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+#erro h4{
+    visibility: hidden;
+}
+
+#idUsuario {
+    color: #ff0000;
+    font-size:large;
+    -webkit-text-stroke: 0.1px #000;    
+}
+
+#iduser {
+    text-align: center;
+    margin: 5px 0px -25px 0px;
+    width: 270px;
+}
+
+footer{
+    position: relative;
+    left: 10vw;
+    width: 80vw;
+    height: 50px;
+    background-color: #a8a8a8;
+    text-align: center;
+}
+
+.design{
+    padding: 20px 0px 0px 0px;
+}

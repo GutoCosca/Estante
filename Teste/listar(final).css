@@ -1,0 +1,314 @@
+@charset "utf-8";
+
+* {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+header {
+    height: 120px;
+    padding-left: 20px;
+    text-align: center;
+    background-color: #ffe4c4;
+}
+
+h1 {
+    padding-top: 20px;
+    font-size: 3.5em;
+    color: #5968f3;
+    text-shadow: 4px 6px 1px #3f3f3f44;
+}
+
+.identidade {
+    padding: 10px 12% 0px 0px;
+    font-size: 1.2em;
+    text-align: right;
+}
+
+nav {
+    height: 40px;
+    padding-left: 40px;
+    background-color: #5f9ea0;
+}
+
+/* Menu hamburger */
+#burguer {
+    display: none;
+}
+
+menu {
+    height: 40px;
+    display: block;
+}
+
+ul {
+    padding: 10px 0px 0px 10%;
+    font-size: 1.2em;
+}
+
+li {
+    display: inline-flex;
+    padding-right: 10px;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #fdfd84;
+}
+
+.pagina {   
+    height: 880px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 0px 10vw;
+}
+
+/* dados */
+#dados {
+    width: 19vw;
+    height: 880px;
+    grid-column: 1;
+    padding-left: 20px;
+    background-color: #b8860b;
+}
+
+h3 {
+    margin-top: 20px;
+    font-size: 1.8em;
+}
+
+#tblEdicao01, .listaEmprest {
+    width: 18vw;
+    display: block;
+    margin: 0px 0px 0px 0px;
+    padding-left: 0px;
+    border-collapse: collapse;
+}
+
+#tblEdicao02 {
+    display: none;
+    border-collapse: collapse;
+}
+
+th, td /* apagar */{
+    width: 4.5vw;
+    height: 35px;
+    /* border: 1px solid #000; */
+}
+
+th {
+    padding-right: 5px;
+    text-align: right;
+}
+
+.capa {
+    height: 110px;
+    text-align: center;
+    font-weight: bold;
+    color: #940000;
+}
+
+.opinaTit {
+    text-align: left;
+}
+
+.opina {
+    height: 100px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.titEmprest {
+    width: 13.5vw;
+    text-align: center;
+}
+
+#idNome {
+    text-align: left;
+}
+
+.dadoEmprest{
+    width: 13.5vw;
+    text-align: center;
+}
+/* Formulario de alteracao */
+.alterar {
+    height: 880px;
+    background-image: url("estante.png");
+    background-size: contain;
+    text-align: center;
+}
+
+.titulo {
+    margin: 20px 0px 10px 0px;
+    font-size: 1.8em;
+    color: #fdfd84;
+    text-shadow: 3px 3px 1px #000000;
+}
+
+form {
+    height: 500px;
+    display: grid;
+    grid-row: 2 / 11;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+}
+
+label {
+    display: block;
+    margin: 10px 0px 2px 0px;
+    padding-left: 10px;
+    text-align: left;
+    color: #fdfd84;
+    text-shadow: 3px 3px 1px #000000;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.info {
+    width: 80%;
+    height: 25px;
+    border-radius: 15px;
+    padding: 0px 10px;
+}
+
+.posicao02 > input, .posicao03 > input {
+    max-width: 200px;
+}
+
+textarea.info {
+    width: 75%;
+    height: 30%;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    columns: 80;
+}    
+
+.resp {
+    width: 15%;
+    display: inline-block;
+    padding: 10px 15px 0px 0px;
+    font-size: 1.3em;
+    color: #fdfd84;
+    text-shadow: 3px 3px 1px #000000;
+}    
+
+.posicao06 > input {
+    width: 200px;
+    margin: 4% 2%;
+}    
+
+#idTitEmprest {
+    margin: 45px 0px 0px 0px;
+}
+
+.emprestar {
+    height: 150px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.posicao08 > input {
+    width: 450px;
+}
+
+.posicao09 > input, .posicao10>input {
+    width: 200px;
+}
+
+.posicao11 > input {
+    width: 200px;
+    margin: 4% 2%;
+}
+/* Marcação do grid */
+.posicao01 {
+    height: 250px;
+    grid-column: 1 / 3;
+    grid-row: 1 / 3;
+}    
+
+.posicao02 {
+    height: 120px;
+    grid-column: 1;
+    grid-row: 3;
+}    
+
+.posicao03 {
+    height: 120px;
+    grid-column: 2;
+    grid-row: 3;
+}    
+
+.posicao04 {
+    height: 380px;
+    grid-column: 3 / 5;
+    grid-row: 1 /4;
+}
+
+.posicao05 {
+    height: 80px;
+    grid-column: 1 / 3;
+    grid-row: 4;
+}    
+
+.posicao06 {
+    height: 80px;
+    grid-column: 1 / 5;
+    margin-top: -20px;
+}    
+
+.posicao07 {
+    height: 80px;
+    grid-column: 3 / 5;
+    grid-row: 4;
+}    
+
+.posicao08 {
+    grid-column: 1 / 5;
+    grid-row: 1;
+    text-align: center;
+}
+
+.posicao09 {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    text-align: center;
+}
+
+.posicao10 {
+    grid-column: 3 / 5;
+    grid-row: 2;
+    text-align: center;
+}
+
+.posicao11 {
+    grid-column: 1 / 5;
+    grid-row: 3;
+}
+
+footer {
+    display: block;
+    height: 70px;
+    padding-left: 20px;
+    background-color: #a8a8a8;
+    text-align: center;
+}
+
+.design {
+    padding-top: 25px;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+}
+
+@media screen and (max-width: 1024px) {
+
+    
+}

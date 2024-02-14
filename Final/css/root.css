@@ -1,0 +1,37 @@
+@charset "utf8";
+
+:root {
+    --fontSize0: 0.8em;
+    --fontSize1: 1em;
+    --fontSize2: 1.2em;
+    --fontSize3: 1.8em;
+    --fontSize4: 3.6em;
+
+    --cor0: #5968f3; /* cor do texto header */
+    --cor1: #fdfd84;
+    --cor2: #5f9ea0;
+    --cor3: #ffe4c4;
+    --cor4: #95c2e7ad;
+    --cor5: #aa0101;
+    --cor6: #a8a8a8;
+    --cor7: #000000;
+    --cor8: #b8860b;
+    --cor9: #f1ca69a8;
+    --cor10: #575656;
+    --cor11: #ffffffd0;
+    --cor12: #b3b0b0c5;
+
+    --sombra0: 4px 6px 1px #3f3f3f44;
+    --sombra1: 3px 3px 1px var(--cor7);
+    --sombra2: 6px 5px #00000073;
+}
+
+@media screen and (max-width: 1200px) {
+    :root {
+    --fontSize0: 0.5em;
+    --fontSize1: 0.8em;
+    --fontSize2: 0.9em;
+    --fontSize3: 1.2em;
+    --fontSize4: 2.4em;
+    }
+}

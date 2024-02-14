@@ -208,3 +208,30 @@ footer{
 .design{
     padding: 20px 0px 0px 0px;
 }
+
+@media screen and (max-width: 1440px) {
+    main {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 140px 40px 880px 50px;
+    }
+
+    header {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    menu {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    ul {
+        padding-top: 2vh;
+    }
+
+    section {
+        grid-column: 1;
+        grid-row: 3;
+    }
+}

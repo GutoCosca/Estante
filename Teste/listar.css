@@ -1,0 +1,378 @@
+@charset "utf-8";
+
+* {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+header {
+    height: 120px;
+    padding-left: 20px;
+    text-align: center;
+    background-color: #ffe4c4;
+}
+
+h1 {
+    padding-top: 20px;
+    font-size: 3.5em;
+    color: #5968f3;
+    text-shadow: 4px 6px 1px #3f3f3f44;
+}
+
+.identidade {
+    padding: 10px 12% 0px 0px;
+    font-size: 1.2em;
+    text-align: right;
+}
+
+nav {
+    height: 40px;
+    padding-left: 20px;
+    background-color: #5f9ea0;
+}
+/* menu hamburgue --> */
+span#burguer {
+    display: none;
+}
+
+menu {
+    display: block;
+}
+/* <--- */
+ul {
+    padding: 10px 0px 0px 10%;
+    font-size: 1.2em;
+}
+
+li {
+    display: inline-flex;
+    padding-right: 10px;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #fdfd84;
+}
+
+.pagina {
+    height: 880px;
+    padding: 0 10%;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+h3 {
+    margin-top: 20px;
+    font-size: 1.8em;
+}
+
+#inserir_dados, #dados {
+    padding-left: 20px;
+    background-color: #b8860b;
+}
+
+#inserir_dados > p {
+    margin: -15px 0px -45px 0px;
+    font-size: 0.8em;
+    color: #ff0000;
+}
+
+form {
+    padding-top: 50px;
+}
+
+form  label {
+    display: block;
+    margin: 15px 0px 5px 0px;
+
+}
+
+.obrigatorio::after {
+    content: "*";
+    color: #ff0000;
+}
+
+input {
+    width: 85%;
+    height: 20px;
+    border-radius: 15px;
+    padding: 0px 10px;
+}
+
+.botao {
+    width: 45%;
+    height: 30px;
+    margin-top: 25px;
+    background-color: #98f7fa;
+}
+
+#classificar {
+    margin: 25px 0px -35px 0px;
+}
+
+select {
+    width: 45%;
+    height: 20px;
+    border-radius: 25px;
+}
+
+div.arqMorto{
+    display: inline-flex;
+}
+
+.blocoBusca02 {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    padding: 15px 0px 0px 0px;
+    
+
+}
+
+input.arqMorto {
+    margin-left: -10px;
+}
+
+label.arqMorto {
+    margin: 0px 0px 0px -15px;
+    text-align: center;
+}
+
+#tabela {
+    background-color: none;
+    background-image: url("estante.png");
+    background-size: contain;
+    text-align: center;
+}
+
+#tabela > h2 {
+    margin: 25px 0px;
+    font-size: 2.3em;
+    color: #fdfd84;
+    text-shadow: 3px 3px 1px #000000;
+}
+
+table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+thead {
+    border-style: none;
+    border-color: #575656;
+    border-bottom-width: 5px;
+    border-bottom-style: double;
+}
+
+#indice {
+    background-color: #f1ca69a8;
+}
+
+th {
+    height: 50px;
+}
+
+td {
+    width: 150px;
+    height: 110px;
+    border-bottom: 1px solid #000000;
+}
+
+.nomes {
+    width: 120px;
+}
+
+.data {
+    width: 100px;
+}
+
+img {
+    display: block;
+    margin: auto;
+}
+
+.dados:nth-child(even) {
+    background-color: #ffffffd0;
+}
+
+.dados:nth-child(odd) {
+    background-color: #b3b0b0c5;
+}
+
+footer {
+    display: block;
+    height: 70px;
+    padding-left: 20px;
+    background-color: #a8a8a8;
+    text-align: center;
+}
+
+.design {
+    padding-top: 25px;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+}
+
+@media screen and (max-width: 1024px) {
+
+    .identidade {
+        padding: 10px 6% 0px 0px;
+    }
+    
+    ul {
+        padding: 10px 0px 0px 5%;
+    }
+    
+    .pagina {
+        padding: 0px 5%;
+        grid-template-columns: 1fr 2.5fr;
+    }
+}
+
+@media screen and (max-width: 766px) {
+
+    header {
+        height: 60px;
+    }
+
+    h1 {
+        font-size: 2em;
+        padding: 10px 0px 0px 0px;
+    }
+    
+    .identidade {
+        margin: -5px 0px 0px 0px;
+        padding: 0px 10px 15px 0px;
+        font-size: 1em;
+    }
+
+    nav {
+        height: 60px;
+        font-size: 0.8em;
+    }    
+
+    span#burguer {
+        display: inline-block;
+        font-size: 3em;
+        color: #000000;
+        text-align: left;
+        margin: 0px;
+        padding: 13px 0px 0px 0px;
+    }
+    
+    span#burguer:hover {
+        color: #fdfd84;
+        cursor: pointer;
+    }
+
+    #itens {
+        display: none;
+    }    
+
+    ul {
+        padding: 0px;
+        margin-top: -35px;
+        font-size: 1.5em;
+        text-align: center;
+    }    
+    
+    .pagina {
+        height: 1230px;
+        display: block;
+        padding: 0px;
+    }
+    
+    h3 {
+        padding-top: 10px;
+    }
+
+    #inserir_dados {
+        height: 350px;
+        display: block;
+        margin: -20px 0px 0px 0px;
+    }
+
+    #inserir_dados > form {
+        padding-top: 35px;
+        font-size: 0.8em;
+    }
+
+    .adicionar_dados {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 2;
+    }
+
+    #bloco03 {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    #inserir_dados > form > label {
+        width: 45%;
+        margin: 10px 0px 3px 0px;
+    }
+
+    .botao {
+        width: 45%;
+        height: 20px;
+        margin: 15px 4% 0px 0.5%;
+        font-size: 0.9em;
+    }
+
+    #classificar {
+        margin-top: 5px;
+    }
+
+    label.arqMorto {
+        font-size: 1.2em;
+                
+    }
+
+    select.tipos {
+        width: 48%;
+        margin-right: 5px;
+    }
+
+    .blocoBusca {
+        height: 60px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #idArqMorto {
+        margin-top: 25px;
+    }
+
+    .arqMorto {
+        text-align: left;
+        padding-top: 25px;
+        
+    }
+
+    #tabela {
+        height: 880px;
+        margin: -25px 0px 0px 0px;
+    }
+
+    table {
+        font-size: 0.8em;
+    }
+
+    footer {
+        height: 40px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .design {
+        padding-top: 15px;
+        font-size: 0.8em;
+    }
+}
+

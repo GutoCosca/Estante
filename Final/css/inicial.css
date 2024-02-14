@@ -1,0 +1,136 @@
+@charset "utf8";
+
+@import "root.css";
+
+* {
+    overflow-x: hidden;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    border-collapse: collapse;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 10vw 80vw 10vw;
+    grid-template-rows: 140px 40px 715px 50px;
+}
+
+header {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    background-color: var(--cor3);
+    text-align: center;
+}
+
+h1 {
+    padding-top: 30px;
+    font-size: var(--fontSize4);
+    color: var(--cor0);
+    text-shadow: var(--sombra0);
+
+}
+
+#idIdent {
+    margin: 10px 0 0 75vw;
+    
+}
+
+.ident {
+    text-align: center;
+    font-size: var(--fontSize1);
+    color: var(--cor7);
+}
+
+menu {
+    grid-column: 1 / 4;
+    grid-row: 2;
+    display: inline;
+    background-color: var(--cor2);
+}
+
+ul{
+    padding: 1vh 0px 0px 11%;
+}
+
+li {
+    display:inline-flex;
+    padding-right: 10px;
+    font-size: var(--fontSize2);
+}
+
+a {
+    color: var(--cor7);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--cor1);
+}
+
+#idData {
+    margin: -20px 12vw 0 0;
+    font-size: var(--fontSize1);
+    text-align: right;
+    color: var(--cor7);
+}
+
+section {
+    grid-column: 2;
+    grid-row: 3;
+    background: none;
+    background-image: url("imagens/estante.png");
+    background-size: contain;
+}
+
+.apresentar {
+    margin: 20px 10px;
+    font-size: var(--fontSize2);
+    text-align: left;
+    color: var(--cor5);
+}
+
+footer {
+    grid-column: 2;
+    grid-row: 4;
+    background-color: var(--cor6);
+}
+
+footer > p {
+    padding-top: 15px;
+    text-align: center;
+    font-size: var(--fontSize2);
+    color: var(--cor7);
+}
+
+@media screen and (max-width: 1440px) {
+    main {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 140px 40px 715px 50px;
+    }
+
+    header {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    menu {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    ul {
+        padding-top: 2vh;
+    }
+
+    section {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    footer {
+        grid-column: 1;
+        grid-row: 4;
+    }
+}

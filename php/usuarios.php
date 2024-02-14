@@ -119,6 +119,9 @@
                         $_SESSION['id_user'] = $tblValida['id_usuarios'];
                         $_SESSION['dataIn'] = date('d-m-Y');
                         $_SESSION['horaIn'] = date('H:i:s');
+                        $_SESSION['last_time'] = time();
+
+                        $mensagem = "";
                     }
                     else {
                         $mensagem = "Usuário e senha inválidas";
@@ -148,9 +151,10 @@
         }
         
         public function acesso() {
+            $dt_in = date('Y-m-d', strtotime($_SESSION['dataIn']));
             $data = date('Y-m-d');
             $hora = date ('H:i:s');
-            $sql = "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES ('".$_SESSION['dataIn']."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
+            $sql = "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES ('".$dt_in."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
             $conect = new Conexao($sql);
             $conect->conectar();
         }

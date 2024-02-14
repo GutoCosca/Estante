@@ -54,13 +54,15 @@
                     $listaDados = new Analise();
                     $listaDados->dados($_REQUEST['busca']);
                     $numRows = mysqli_num_rows($listaDados->getListaDados());
+                    $usuario = mysqli_fetch_array($listaDados->getListaDados())[2];
                     ?>
                 <table id="dados">
                     <caption>Analise dos Log do Usuário</caption>
                     <thead>
                         <tr>
-                            <th rowspan="2" class="analise">ID</th>
-                            <th rowspan="2" class="analise">Usuário</th>
+                            <th colspan="5" class="analise"><?=$usuario?></th>
+                        </tr>
+                        <tr>
                             <th colspan="2" class="analise">ENTRADA</th>
                             <th colspan="2" class="analise">SAÍDA</th>
                             <th rowspan="2" class="analise">Tempo</th>
@@ -74,10 +76,10 @@
                     </thead>
                     <?php
                         while ($dados = mysqli_fetch_array($listaDados->getListaDados())) {
-                            $id = $dados[0];
+                            /*$id = $dados[0];
                             $idUser = $dados[1];
-                            $user = $dados[2];
-                            $dataIn = date('d-m-y', strtotime($dados[3]));
+                            $user = $dados[2];*/
+                            $dataIn = date('d-m-Y', strtotime($dados[3]));
                             $horaIn = date('H:i:s', strtotime($dados[4]));
                             $dataOut = date('d-m-Y', strtotime($dados[5]));
                             $horaOut = date('H:i:s', strtotime($dados[6]));
@@ -87,8 +89,6 @@
                             $horaTot = $total->h + ($total->days * 24)."h ".$total->i."min";
                     ?>
                             <tr class="analisar">
-                                <td class="analise"><?=$idUser?></td>
-                                <td class="analise"><?=$user?></td>
                                 <td class="analise"><?=$dataIn?></td>
                                 <td class="analise"><?=$horaIn?></td>
                                 <td class="analise"><?=$dataOut?></td>
@@ -102,7 +102,7 @@
                         ?>
                     </tr>
                     <tr>
-                    <td class="analise" colspan="5">Tempo Total</td>
+                    <td class="analise" colspan="4">Tempo Total</td>
                     <td class="analise" colspan="2"><?=$tempTotal?></td>
                 </tr>
                 <?php

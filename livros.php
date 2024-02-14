@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/listar.css">
-    <link rel="stylesheet" href="css/listarscreen.css">
+    <link rel="stylesheet" href="teste/listar.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <title>Estante Virtual</title>
 </head>
 <?php
@@ -13,149 +13,324 @@
     require_once ('php/funcao.php');
     session_start();
     $usuario = "";
-    
-    if (isset($_SESSION['user'])) {
+
+    if (isset($_SESSION['user'])) { // Verifica se o usuario está logado
         $usuario = "Bem vindo ".$_SESSION['user'];
+        $ativo = new Atividade(); // Verifica o tempo de inatividade
+        $ativo->tempo();
     }
 ?>
 <body>
     <header>
-        <h1>Estante Virtual</h1>
+    <h1>Estante Virtual</h1>
+    <p class="identidade"><?=$usuario?></p>
     </header>
-    <main>
-        <menu>
-            <ul>
-                <li><a href="principal.php">Inicio</a></li>
-                <li><a href="livros.php">Livros</a></li>
-                <li><a href="revistas.php">Revistas</a></li>
-                <li><a href="#">Forum</a></li>
-                <li><a href="logout.php">Sair</a></li>
+    <nav>
+        <span class="material-symbols-outlined" id="burguer" onclick="clickMenu()">menu</span>
+        <menu id="itens">
+            <ul class="navegador">
+                <li><a href="principal.php" onclick="clickItem()">Inicio</a></li>
+                <li><a href="livros.php" onclick="clickItem()">Livros</a></li>
+                <li><a href="revistas.php" onclick="clickItem()">Revistas</a></li>
+                <li><a href="#" onclick="clickItem()">Forum</a></li>
+                <li><a href="logout.php" onclick="clickItem()">Sair</a></li>
             </ul>
-            <p class="identidade"><?=$usuario?></p>
         </menu>
-        <section class="livros"> <!-- Formulário Livros -->
+    </nav>
+    <main class="pagina">
+        <section id="inserir_dados">
             <h3>Adicionar Livros</h3></br>
-            <p id="idObrig">*campos obrigatórios</p>
-            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data">
-                <label for="livro" class="obrig">Nome do Livro:</label>
-                <input type="text" name="livro" id="idLivro" required>
-                <label for="autor" class="obrig">Nome do Autor:</label>
-                <input type="text" name="autor" id="idAutor" required>
-                <label for="editora" class="obrig">Editora:</label>
-                <input type="text" name="editora" id="idEditora" required>
-                <label for="compra">Data de Aquisição:</label>
-                <input type="date" name="compra" id="idCompra">
-                <input type="submit" value="Adicionar" class="botao">
-                <input type="reset" value="Limpar" class="botao">
-            </form>
-            <div class="ordLivros">
-                <h3>Classificar</h3>
-                <form action="<?php $_SERVER['PHP_SELF']?>" method="get">
-                    <div class="arq">
-                        <input type="checkbox" name="arq" id="" class="arqmorto">
-                        <label for="arq" class="arqmorto">Exibir os livros fora da estante</label>
-                    </div>
-                    <div class="tipoLivros">
-                        <label for="tipo">Nome:</label>
-                        <select name="tipo" id="idTipo">
-                            <option value="livro">Livro</option>
-                            <option value="autor">Autor</option>
-                        </select>
-                        <select name="ordem" id="">
-                            <option value="ASC">Crescente</option>
-                            <option value="DESC">Decrescente</option>
-                        </select>
-                    </div>
-                    <label for="letra">Nome</label>
-                    <input type="text" name="letra" id="">
-                    <input type="submit" value="Buscar" class="botao">
+            <p>*campos obrigatórios</p>
+            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" class="adicionar_dados"> <!-- Formulario para inserir livros -->
+                <div class="bloco" id="bloco01">
+                    <label for="livro" class="obrigatorio">Nome do Livro:</label>
+                    <input type="text" name="livro" id="idLivro" required>
+                    <label for="autor" class="obrigatorio">Nome do autor:</label>
+                    <input type="text" name="autor" id="idAutor" required>
+                </div>
+                <div class="bloco" id="bloco02">
+                    <label for="editora" class="obrigatorio">Editora:</label>
+                    <input type="text" name="editora" id="idEditora" required>
+                    <label for="compra">Data da Compra:</label>
+                    <input type="date" name="compra" id="idCompra">
+                </div>
+                <div class="bloco" id="bloco03">
+                    <input type="submit" value="Adicionar" class="botao">
                     <input type="reset" value="Limpar" class="botao">
-                </form>
-            </div>
+                </div>
+            </form>
+            <h3 id="classificar">Buscar</h3>
+            <form action="<?php $_SERVER['PHP_SELF']?>" method="get" class="buscar_dados"> <!-- Formulario para busca de livros -->
+                <select name="tipo" class="tipos" id="idTipo">
+                    <option value="livro">Livro</option>
+                    <option value="autor">Autor</option>
+                </select>
+                <select name="ordem" class="tipos" id="idOrdem">
+                    <option value="ASC">Crescente</option>
+                    <option value="DESC">Decrescente</option>
+                </select>
+                <div class="blocoBusca">
+                    <div class="blocoBusca01">
+                        <label for="letra">Nome:</label>
+                        <input type="text" name="letra" id="idLetra">
+                    </div>
+                    <div class="blocoBusca02">
+                        <input type="checkbox" name="arq" id="idArqMorto" class="arqMorto">
+                        <label for="arq" class="arqMorto">Livros desaparecidos</label>
+                    </div>
+                </div>
+                <input type="submit" value="buscar" class="botao">
+                <input type="reset" value="limpar" class="botao">
+            </form>
         </section>
-        <section class="tblLivros">
-            <h2>Sua Estante de Livros</h2>
+        <section class="informacao" id="tabela"> <!-- Exibir Livros-->
+            <!-- <h2>Sua Estante de Livros</h2> -->
             <?php
-                if (isset($_SESSION['user']))  {
+                if (isset($_SESSION['user'])) {
                     $arq = 0;
+                    $situa = "Sua Estante de Livros";
+                    
                     if (isset($_REQUEST['arq'])) {
                         $arq = 1;
+                        $situa = "Livros Desaparecidos";
                     }
                     
-                    if (isset($_REQUEST['tipo']))  {
-                        $lista = new Registros($_SESSION['id_user'],"livros", $_GET['tipo'], $_GET['letra'], $_GET['ordem'], $arq);
+                    if (isset($_REQUEST['tipo'])) {
+                        $lista = new Registros($_SESSION['id_user'], "livros", $_GET['tipo'],$_GET['letra'], $_GET['ordem'], $arq);
                     }
-                    else if (isset($_REQUEST['acao']) && $_REQUEST["acao"] == 'addLivro'){
-                        $add = new Editar (
-                            $_SESSION['id_user'],
-                            "livros",
-                            $_POST['livro'],
-                            $_POST['autor'],
-                            $_POST['editora'],
-                            "", "", "",
-                            $_POST['compra'],
-                            "", "", "", "", "", $arq);
-                        $add->addLivros();
-                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "", $arq);
+                    
+                    else if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'addLivro') {
+                        $add = new EditLivros(
+                            $_SESSION['id_user'], 
+                            "livros", 
+                            $_POST['livro'], 
+                            $_POST['autor'], 
+                            $_POST['editora'], 
+                            "", "", "", 
+                            $_POST['compra'], 
+                            "", "", "", "", "", 
+                            $arq);
+                        $add -> addLivros();
+                        $lista = new Registros($_SESSION['id_user'], "livros", "livro", "", "", $arq);
                     }
+                    
                     else {
-                        $lista = new Registros($_SESSION['id_user'],"livros", "livro", "", "", $arq);
+                        $lista = new Registros($_SESSION['id_user'], "livros", "livro", "", "", $arq);
                     }
                     $lista->lista();
-                
-                    if(mysqli_num_rows($lista->getTbl()) != 0){
+                    
+                    if (mysqli_num_rows($lista -> getTbl()) != 0) {
             ?>
+            <h2><?=$situa?></h2>
             <table>
                 <thead>
-                    <tr id="roll">
+                    <tr id="indice">
                         <th>CAPA</th>
                         <th>LIVRO</th>
                         <th>AUTOR</th>
                         <th>EDITORA</th>
-                        <th>COMPRADO EM</th>
+                        <th>COMPRA</th>
                     </tr>
-                </thead> 
-                <?php
-                    while ($tblLista = mysqli_fetch_array($lista->getTbl())) {
-                        $codigo = $tblLista["id_livros"];
-                        $livro = $tblLista["livro"];
-                        $autor = $tblLista["autor"];
-                        $editora = $tblLista["editora"];
-                        $compra = $tblLista['compra'];
+                </thead>
+                <?php 
                         
-                        if ($compra != null){
-                            $compraBR = mesBR($compra)[0];
-                        }
-                        else {
-                            $compraBR = "";
-                        }
-                        
-                        $capa = $tblLista["capa"];
-                ?>
-                    <tr class="lista">
-                        <td class="capa"><img src="capas/<?=$capa?>" alt="<?=$capa?>"></td>
-                        <td class="nomes"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$codigo?>"><?=$livro?></td>
-                        <td class="nomes"><?=$autor?></a></td>
-                        <td class=""><?=$editora?></td>
+                        while ($tblLista = mysqli_fetch_array($lista->getTbl())) {
+
+                            if ($tblLista['compra'] != null) {
+                                $compraBR = mesBR($tblLista['compra']) [0];
+                            }
+
+                            else {
+                                $compraBR = "";
+                            }
+                    ?>
+                    <tr class="dados">
+                        <td class="capa"><img src="capas/<?=$tblLista['capa']?>" alt="<?=$tblLista['livro']?>"></td>
+                        <td class="nomes" id="idNomes"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$tblLista['id_livros']?>"><?=$tblLista['livro']?></a></td>
+                        <td class="nomes"><?=$tblLista['autor']?></td>
+                        <td class=""><?=$tblLista['editora']?></td>
                         <td class="data"><?=$compraBR?></td>
                     </tr>
-                <?php
-                    }
-                ?>
+                    <?php
+                        }
+                    ?>
             </table>
             <?php
-                }
-                else {
-                    echo "<h2>Sua estante está vazia<br>Adicione novos livros</h2>";
+                    }
+                    
+                    else {
+                        echo "<h2>está vazia</br>Adicione novos livros</h2>";
                     }
                 }
-            ?>
+                ?>
         </section>
     </main>
     <footer>
-        <div>
-            <p class="design">Desenvolvido por Gustavo Coscarello</p>
-        </div>
+        <p class="design">Desenvolvido por Gustavo Coscarello</p>
     </footer>
+    <script>
+        function mudouTamanho() {
+            if (window.innerWidth >= 766) {
+                itens.style.display = 'block'
+            }
+            else {
+                itens.style.display = 'none'
+            }
+        }
+
+        function clickMenu() {
+            if (itens.style.display == 'block') {
+                itens.style.display = 'none'
+            }
+            else {
+                itens.style.display = 'block'
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+<?php
+                if (isset($_SESSION['user'])) {
+                    $limit = '.", LIMIT 0,10"';
+                    $morto = 0;
+                    $emprest = 0;
+                    $situa = "Sua Estante de Livros";
+                    $linhas = new Registros(
+                        $_SESSION['id_user'],
+                        "livros",
+                        "livro",
+                        "","",
+                        $emprest,
+                        $morto,
+                        ""
+                    );
+                    $linhas->lista();
+                    $tblLista = mysqli_fetch_array($linhas->getTbl());
+                    echo (mysqli_num_rows($linhas->getTbl()));
+                    $pag = (ceil((mysqli_num_rows($linhas->getTbl()))/10));
+                    echo " - ".$pag;
+                    //var_dump($linhas);
+                    print_r($linhas);
+
+                    if (isset($_REQUEST['acao'])) {
+                        if ($_REQUEST['acao'] == 'addLivro') {
+                            $add = new EditLivros(
+                                $_SESSION['id_user'],
+                                "livros",
+                                $_POST['livro'],
+                                $_POST['autor'],
+                                $_POST['editora'],
+                                "", "", "",
+                                $_POST['compra'],
+                                "", "", "", "", "",
+                                $emprest,
+                                $morto
+                            );
+                             
+                            $add->addLivros();
+                            $listar = new Registros(
+                                $_SESSION['id_user'],
+                                "livros",
+                                "livro",
+                                "", "",
+                                $emprest,
+                                $morto,
+                                $limit
+                            );
+                        }
+
+                        elseif ($_REQUEST['acao'] == 'Buscar') {
+
+                            if ($_REQUEST['condic'] == 1) {
+                                $morto = 1;
+                                $emprest = 0;
+                                $situa = "Seus Livros Extarviados";
+                            }
+
+                            elseif ($_REQUEST['condic'] == 2) {
+                                $morto = 0;
+                                $emprest = 1;
+                                $situa = "Seus Livros Emprestados";
+                            }
+
+                            $listar = new Registros(
+                                $_SESSION['id_user'],
+                                "livros",
+                                $_GET['tipo'],
+                                $_GET['letra'],
+                                $_GET['ordem'],
+                                $emprest,
+                                $morto,
+                                $limit
+                            );
+                        }
+                    }
+
+                    else {
+                    
+                        $listar = new Registros(
+                            $_SESSION['id_user'],
+                            "livros",
+                            "livro",
+                            "","",
+                            $emprest,
+                            $morto,
+                            $limit
+                        );
+                    }
+                    $listar->lista();
+
+                    if (mysqli_num_rows($listar->getTbl()) != 0) {
+                        var_dump($listar);
+                        
+            ?>
+            <h3 id="idTitEstante"><?=$situa?></h3>
+            <table>
+                <thead>
+                    <tr id="idIndice">
+                    <th>CAPA</th>
+                    <th>LIVRO</th>
+                    <th>AUTOR</th>
+                    <th>EDITORA</th>
+                    <th>COMPRA</th>
+                    </tr>
+                </thead>
+            <?php
+                        while ($tblLista = (mysqli_fetch_array($listar->getTbl()))) {
+                            if ($tblLista['compra'] != null) {
+                                $compraBR = mesBR($tblLista['compra']) [0];
+                            }
+
+                            else {
+                                $compraBR = "";
+                            }
+
+                            if ($tblLista['capa'] != null) {
+                                $capa = '<img src="capas/'.$tblLista['capa'].'">';
+                            }
+
+                            else {
+                                $capa="";
+                            }
+            ?>
+                <tr>
+                    <td class="listaCapa" id="idCapa"><?=$capa?></td>
+                    <td class="listaNome" id="idLivro"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$tblLista['id_livros']?>"><?=$tblLista['livro']?></a></td>
+                    <td class="listaNome" id="idAutor"><?=$tblLista['autor']?></td>
+                    <td class="listaNome" id="idEditora"><?=$tblLista['editora']?></td>
+                    <td class="listaData" id="idCompra"><?=$compraBR?></td>
+                </tr>
+            <?php
+                        }
+            ?>
+            </table>
+            <?php
+                    }
+
+                    else {
+                        echo '<h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>';
+                    }
+                }
+            ?>
