@@ -239,7 +239,28 @@ img {
 }
 
 nav {
-    margin-top: 50px;
+    margin: 50px 0 0 -80px;
+    text-align: center;
+    font-size: larger;
+    font-weight: bolder;
+    text-shadow: var(--sombra3);
+    color: var(--cor3);
+}
+
+.pagi {
+    padding: 0 20px;
+}
+
+.paginacao {
+    color: var(--cor3);
+}
+
+.paginacao:hover {
+    color: var(--cor5);
+}
+
+#idPaginas {
+    word-spacing: 10px;
 }
 
 footer {

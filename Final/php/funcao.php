@@ -11,6 +11,39 @@
         return  $compraBR;
     }
 
+    function semanaBR($sema) {
+        switch ($sema) {
+            case 'Monday':
+                $semaBR = 'Segunda-feira';
+                break;
+
+            case 'Tuesday':
+                $semaBR = 'Terça-feira';
+                break;
+
+            case 'Wednesday':
+                $semaBR = 'Quarta-feira';
+                break;
+
+            case 'Thursday':
+                $semaBR = 'Quinta-feira';
+                break;
+            
+            case 'Friday':
+                $semaBR = 'Sexta-feira';
+                break;
+
+            case 'Saturday':
+                $semaBR = 'Sábado';
+                break;
+
+            case 'Sunday':
+                $semaBR = 'Domingo';
+                break;
+        }
+        return $semaBR;
+    }
+
     function siteErro () {
         header('location:login.php');
     }

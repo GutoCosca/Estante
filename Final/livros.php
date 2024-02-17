@@ -11,8 +11,15 @@
     require_once ('php/funcao.php');
     session_start();
     $logado = sessao($_SESSION['user']);
-    // $ativo = new Atividade($_SESSION['user']);
-    // $ativo->tempo();
+    $ativo = new Atividade($_SESSION['user']);
+    $ativo->tempo();
+    if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
+        $pag = $_GET['pagina'];
+    }
+    else {
+        $pag = 1;
+    }
+    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
 ?>
 <body>
     <main>
@@ -25,18 +32,19 @@
         <menu>
             <ul>
                 <li><a href="principal.php">Início</a></li>
-                <li><a href="livros.php">Livros</a></li>
+                <li><a href="livros.php?">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
                 <li><a href="#">Forum</a></li>
                 <li><a href="logout.php">Sair</a></li>
             </ul>
             </ul>
-            <p id="idData">22 / janeiro / 2024 - 18:45:00</p>
+            <p id="idData"><?=$horario?></p>
         </menu>
         <section id="idAdicionar">
             <h3>Adicionar Livros</h3>
             <p>*campos obrigatórios</p>
-            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" id="idFormAdd"> <!-- Adicionar na estante -->
+            <!-- Adicionar na estante -->
+            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" id="idFormAdd">
                 <div id="idArea00">
                     <label for="livro" class="obrig">Título do Livro:</label>
                     <input type="text" name="livro" id="idlivro" required>
@@ -59,7 +67,8 @@
                 </div>
             </form>
             <h3 id="idTitBusca">Buscar</h3>
-            <form action="<?php $_SERVER['PHP_SELF']?>" method="get" id="idFormBusca"> <!-- Busca detalhada -->
+            <!-- Busca detalhada -->
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="get" id="idFormBusca">
                 <div id="idArea05">
                     <label for="letra">Nome:</label>
                     <input type="text" name="letra" id="idLetra">
@@ -89,24 +98,13 @@
             </form>
         </section>
         <section id="idListar">
+            <!-- Listagem da estante -->
             <?php
                 if (isset($_SESSION['user'])) {
                     $arqMorto = 0;
                     $arqEmprestar = 0;
-                    $limite = 0;
+                    $limite = ($pag -1) *10;
                     $situa = "Sua Estante de Livros";
-
-                    $reg = new Registros(
-                        $_SESSION['id_user'],
-                        "livros",
-                        "livro", "", "",
-                        $arqEmprestar,
-                        $arqMorto,
-                        $limite
-                    );
-                    $reg->total();
-                    $tblReg = mysqli_fetch_array($reg->getTbl());
-                    $pag = ceil ($tblReg[0]/10);
                     if (isset($_REQUEST['acao'])) {
                         if ($_REQUEST['acao'] == 'addLivro') {
                             $add = new EditLivros(
@@ -131,14 +129,12 @@
                                 $limite
                             );
                         }
-
                         elseif ($_REQUEST['acao'] == 'Buscar') {
                             if ($_REQUEST['condic'] == 1) {
                                 $arqEmprestar = 0;
                                 $arqMorto = 1;
                                 $situa = "Seua Livros Extraviados";
                             }
-
                             elseif ($_REQUEST['condic'] == 2) {
                                 $arqEmprestar = 1;
                                 $arqMorto = 0;
@@ -157,7 +153,6 @@
                             );
                         }
                     }
-                    
                     else {
                         $listar = new Registros(
                             $_SESSION['id_user'],
@@ -168,9 +163,11 @@
                             $limite
                         );
                     }
+                    $listar->total();
+                    $count = mysqli_fetch_array($listar->getTbl());
+                    if ($count[0] > 0) {
+                    $totPag = ceil($count[0]/10);
                     $listar->lista();
-                    if ($tblReg[0] != null) {
-                        
             ?>
             <h3 id="idTitEstante"><?=$situa?></h3>
             <div id="idTabela01">
@@ -206,29 +203,70 @@
                         <td class="listaNome" id="idEditora"><?=$tblLista['editora']?></td>
                         <td class="listaData" id="idCompra"><?=$compraBR?></td>
                     </tr>
-                    <?php
+                <?php
                             }
-                    ?>
+                ?>
                 </table>
-            </div>
-                        <nav style="background-color: aqua;">
-                            <ul>
-                                <li><<</li>
-                                <li><</li>
-                                <li>1 - <?=$pag?></li>
-                                <li>></li>
-                                <li>>></li>
-                            </ul>
-                        </nav>
-            <?php
+                <!-- Barra de Navegação -->
+                <?php
+                    $totPagi = $totPag;
+                    if ($pag > 1) {
+                        $ant = $pag - 1;
                     }
-
                     else {
-                        echo '<h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>';
+                        $ant = $pag;
                     }
 
-                }
-            ?>      
+                    if ($pag < $totPagi) {
+                        $prox = $pag + 1;
+                    }
+                    else {
+                        $prox = $pag;
+                    }
+                    $ini = "pagina=1";
+                    
+                    if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'Buscar') {
+                        $tip = "&tipo=".$_GET['tipo'];
+                        $ord = "&ordem=".$_GET['ordem'];
+                        $cond = "&condic=".$_GET['condic'];
+                        $acao = "&acao=".$_GET['acao'];
+                        if ($_GET['letra'] != null){
+                            $let = "&letra=".$_GET['letra'];
+                        }
+                        else {
+                            $let = "&letra=";
+                        }
+                        $resp = $let.$tip.$ord.$cond.$acao;
+                        $ini = $ini.$resp;
+                        $ant = $ant.$resp;
+                        $prox = $prox.$resp;
+                        $totPagi = $totPag.$resp;
+                    }
+                    else {
+                        $let = "";
+                        $tip = "";
+                        $ord = "";
+                        $cond = "";
+                        $acao = "";
+                    }
+                echo '
+            </div>
+            <nav>
+                <ul>'.
+                    "<li class='pagi'><a href='?$ini' class='paginacao'><<</a></li>
+                    <li class='pagi'><a href='?pagina=$ant' class='paginacao'><</a></li>
+                    <li class='pagi' id='idPaginas'>Página $pag  /  $totPag</li>
+                    <li class='pagi'><a href='?pagina=$prox' class='paginacao'>></a></li>
+                    <li class='pagi'><a href='?pagina=$totPagi' class='paginacao'>>></a></li>
+                </ul>
+            </nav>";
+                
+                        }
+                        else {
+                            echo '<h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>';
+                        }
+                    }
+            ?>
         </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

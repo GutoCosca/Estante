@@ -24,6 +24,7 @@
     --sombra0: 4px 6px 1px #3f3f3f44;
     --sombra1: 3px 3px 1px var(--cor7);
     --sombra2: 6px 5px #00000073;
+    --sombra3: 2px 2px 1px var(--cor7);
 }
 
 @media screen and (max-width: 1200px) {

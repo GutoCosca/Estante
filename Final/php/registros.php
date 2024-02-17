@@ -21,32 +21,10 @@
             $this->setTabela($tb);
             $this->setTipo($tp);
             $this->setLimite($lmt);
-            if ($morto != null) {
-                $this->setArqMorto($morto);
-            }
-            else {
-                $this->setArqMorto(0);
-            }
-            if ($emprestar !=null) {
-                $this->setArqEmprestar($emprestar);
-            }
-            else {
-                $this->setArqEmprestar(0);
-            }
-            if ($lt != null) {
-                $this->setLetra($lt);
-            }
-            else {
-                $this->setLetra("");
-            }
-
-            if ($od != null) {
-                $this->setOrdem($od);
-            }
-
-            else{
-                $this->setOrdem("ASC");
-            }
+            $this->setArqMorto($morto);
+            $this->setArqEmprestar($emprestar);
+            $this->setOrdem($od);
+            $this->setLetra($lt);
         }
         
         public function getId_user() {
@@ -137,13 +115,34 @@
             $this->limite = $lmt;
         }
 
-        public function instrucao {
-            
+        public function instrucao () {
+             if ($this->getTabela() === "livros") {
+                $colum6 = ", ano ";
+                $colum1 = " id_livros = ";
+             }
+             elseif ($this->getTabela() === "revistas") {
+                $colum6 = ", numero ";
+                $colum1 = " id_revista = ";
+             }
+
+             if ($this->getLetra() != null) {
+                $leter = " AND ".$this->getTipo()." LIKE '".$this->getLetra()."%'";
+             }
+             else {
+                $leter = "";
+             }
+
+             if ($this->getOrdem() != null) {
+                $ordenar = $this->getOrdem();
+             }
+             else 
+                $ordenar = " ASC";
+             return $instru = array($colum6, $leter, $ordenar, $colum1);
         }
 
         public function total () {
-            $this->setSql("SELECT COUNT(*) FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto());
-            
+            $complemento = $this->instrucao();
+            $this->setSql("SELECT COUNT(*) FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto().$complemento[1]);
             $conect = new Conexao($this->getSql());
             $conect->conectar();
             $this->setTbl($conect->getResult());
@@ -151,24 +150,8 @@
         }
 
         public function lista() {
-            if ($this->getLetra() != null) {
-                if ($this->getTipo() == "livro" || $this->getTipo() == "autor") {
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  ano ".$this->getOrdem()." Limit ".$this->getLimite().",10");
-                }
-                else if ($this->getTipo() == "revista" || $this->getTipo() == "titulo") {
-                    
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto()." AND ".$this->getTipo()." LIKE '".$this->getLetra()."%' ORDER BY ".$this->getTipo()." ".$this->getOrdem().",  numero ".$this->getOrdem()." Limit ".$this->getLimite().",10");
-                }
-            }
-            else {
-                if ($this->getTipo() == "livro" || $this->getTipo() == "autor") {
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", ano ".$this->getOrdem()." Limit ".$this->getLimite().",10");
-                }
-                elseif ($this->getTipo() == "revista" || $this->getTipo() == "titulo"){
-                    $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto()." ORDER BY ".$this->getTipo()." ".$this->getOrdem().", numero ".$this->getOrdem()." Limit ".$this->getLimite().",10");
-                }
-            }
-            
+            $complemento = $this->instrucao();
+            $this->setSql("SELECT * FROM ". $this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND arqempresta = ".$this->getArqEmprestar()." AND arqmorto = ".$this->getArqMorto().$complemento[1]." ORDER BY ". $this->getTipo()." ".$complemento[2].$complemento[0].$complemento[2]." LIMIT ".$this->getLimite().",10");
             $conect = new Conexao($this->getSql());
             $conect->conectar();
             $this->setTbl($conect->getResult());
@@ -176,14 +159,9 @@
         }
 
         public function buscar($busCod) {
+            $complemento = $this->instrucao();
             $this->setCodigo($busCod);
-            if ($this->getTabela() == "livros") {
-                $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND id_livros = ".$this->getCodigo());
-            }
-
-            else if ($this->getTabela() == "revistas") {
-                $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND id_revista = ".$this->getCodigo());
-            }
+            $this->setSql("SELECT * FROM ".$this->getTabela()." WHERE id_usuarios = ".$this->getId_user()." AND ".$complemento[3].$this->getCodigo());
             $conect = new Conexao($this->getSql());
             $conect->conectar();
             $this->setTbl($conect->getResult());
@@ -361,18 +339,21 @@
             $instAnoValue = "";
             $instAnoValue2 = "";
             $instAno = "";
-            
+            $instCompColum = "";
+            $instCompValue = "";
+            $instCompValue2 = "";
+            $instComp = "";
+            $diretorio = "capas/";
+            $instrCapaColum = "";
+            $instrCapaValue = "";
+            $instrCapaValue2 = "";
+            $instCapa = "";
             if($this->getAno() != null) {
                 $instAnoColum = ", ano";
                 $instAnoValue = ", ".$this->getAno();
                 $instAnoValue2 = $this->getAno();
                 $instAno = " = ";
             }
-
-            $instCompColum = "";
-            $instCompValue = "";
-            $instCompValue2 = "";
-            $instComp = "";
             
             if($this->getCompra() != null){
                 $instCompColum = ", compra";
@@ -380,12 +361,6 @@
                 $instCompValue2 = " '".$this->getCompra()."'";
                 $instComp = " = ";
             }
-
-            $diretorio = "capas/";
-            $instrCapaColum = "";
-            $instrCapaValue = "";
-            $instrCapaValue2 = "";
-            $instCapa = "";
             
             if($this->getCapaSize() > 0){
                 $this->setCapaNome(uniqid().".".$this->getCapaExt());
@@ -395,26 +370,22 @@
                 $instCapa = " = ";
                 move_uploaded_file($this->getCapaTemp(), $diretorio.$this->getCapaNome());
             }
-
             return $instru = array($instAnoColum, $instAnoValue, $instCompColum, $instCompValue, $diretorio, $instrCapaColum, $instrCapaValue, $instAno, $instComp, $instCapa, $instAnoValue2, $instCompValue2, $instrCapaValue2);
         }
 
         public function addLivros () {
             $instrucao = $this->instrucoes();
-
             if ($this->getTabela() === "livros") {
                 $this->setSql("INSERT INTO ".$this->getTabela()." (id_usuarios, livro, autor, editora, edicao".$instrucao[0].", isbn".$instrucao[2].$instrucao[5].", sinopse, opiniao, arqempresta, arqmorto) VALUES (".$this->getId_user().", '".$this->getLivro()."', '".$this->getAutor()."', '".$this->getEditora()."', '".$this->getEdicao()."'".$instrucao[1].", '".$this->getIsbn()."'".$instrucao[3].$instrucao[6].", '".$this->getSinopse()."', '".$this->getOpiniao()."', ".$this->getArqEmprestar().", ".$this->getArqMorto().")");
             }
-
-            // $Conect = new Conexao($this->getSql());
-            // $Conect->conectar();
-            // $this->setTbl($Conect->getResult());
+            $Conect = new Conexao($this->getSql());
+            $Conect->conectar();
+            $this->setTbl($Conect->getResult());
         }
 
         public function altLivro($cod) {
             $this->setCodigo($cod);
             $instrucao = $this->instrucoes();
-            
             if($this->getCapaSize() > 0){
                 $sqlCapa = "SELECT capa FROM ".$this->getTabela()." WHERE id_livros = ".$this->getCodigo();
                 $conectCapa = new Conexao($sqlCapa);
@@ -426,15 +397,12 @@
                     unlink($instrucao[4].$capaAtual);
                 }
             }
-
             $this->setSql("UPDATE ".$this->getTabela()." SET livro = '".$this->getLivro()."', autor = '".$this->getAutor()."', editora = '".$this->getEditora()."', edicao = '".$this->getEdicao()."'".$instrucao[0].$instrucao[7].$instrucao[10].", isbn = '".$this->getIsbn()."'".$instrucao[2].$instrucao[8].$instrucao[11].$instrucao[5].$instrucao[9].$instrucao[12].", sinopse = '".$this->getSinopse()."', opiniao = '".$this->getOpiniao()."', arqempresta = ".$this->getArqEmprestar().", arqmorto = ".$this->getArqMorto()." WHERE id_livros = ".$this->getCodigo());
-
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
             return $this->getSql();
         }
-        
     }
 
     //adicionar e modificar registros revistas
@@ -618,18 +586,21 @@
             $instAnoValue = "";
             $instAnoValue2 = "";
             $instAno = "";
-            
+            $diretorio = "capas/";
+            $instrCapaColum = "";
+            $instrCapaValue = "";
+            $instrCapaValue2 = "";
+            $instCapa = "";
+            $instCompColum = "";
+            $instCompValue = "";
+            $instCompValue2 = "";
+            $instComp = "";
             if($this->getAno() != null) {
                 $instAnoColum = ", ano";
                 $instAnoValue = ", ".$this->getAno();
                 $instAnoValue2 = $this->getAno();
                 $instAno = " = ";
             }
-
-            $instCompColum = "";
-            $instCompValue = "";
-            $instCompValue2 = "";
-            $instComp = "";
             
             if($this->getCompra() != null){
                 $instCompColum = ", compra";
@@ -637,12 +608,6 @@
                 $instCompValue2 = " '".$this->getCompra()."'";
                 $instComp = " = ";
             }
-
-            $diretorio = "capas/";
-            $instrCapaColum = "";
-            $instrCapaValue = "";
-            $instrCapaValue2 = "";
-            $instCapa = "";
             
             if($this->getCapaSize() > 0){
                 $this->setCapaNome(uniqid().".".$this->getCapaExt());
@@ -652,27 +617,22 @@
                 $instCapa = " = ";
                 move_uploaded_file($this->getCapaTemp(), $diretorio.$this->getCapaNome());
             }
-
             return $instru = array($instAnoColum, $instAnoValue, $instCompColum, $instCompValue, $diretorio, $instrCapaColum, $instrCapaValue, $instAno, $instComp, $instCapa, $instAnoValue2, $instCompValue2, $instrCapaValue2);
         }
 
         public function addRevistas () {
             $instrucao = $this->instrucoes();
-
             if ($this->getTabela() === "revistas") {
                 $this->setSql("INSERT INTO ".$this->getTabela()." (id_usuarios, revista, titulo, autor, editora, numero".$instrucao[0].", issn".$instrucao[2].$instrucao[5].", sinopse, opiniao, arqempresta ,arqmorto) VALUES (".$this->getId_user().", '".$this->getRevista()."', '".$this->getTitulo()."','".$this->getAutor()."', '".$this->getEditora()."', '".$this->getNumero()."'".$instrucao[1].", '".$this->getIssn()."'".$instrucao[3].$instrucao[6].", '".$this->getSinopse()."', '".$this->getOpiniao()."', ".$this->getArqEmprestar()."', ".$this->getArqMorto().")");
             }
-
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
-
         }
 
         public function altRevista($cod) {
             $this->setCodigo($cod);
             $instrucao = $this->instrucoes();
-            
             if($this->getCapaSize() > 0){
                 $sqlCapa = "SELECT capa FROM ".$this->getTabela()." WHERE id_revistas = ".$this->getCodigo();
                 $conectCapa = new Conexao($sqlCapa);
@@ -684,15 +644,12 @@
                     unlink($instrucao[4].$capaAtual);
                 }
             }
-
             $this->setSql("UPDATE ".$this->getTabela()." SET revista = '".$this->getRevista()."', titulo = '".$this->getTitulo()."', autor = '".$this->getAutor()."', editora = '".$this->getEditora()."', numero = '".$this->getNumero()."'".$instrucao[0].$instrucao[7].$instrucao[10].", issn = '".$this->getIssn()."'".$instrucao[2].$instrucao[8].$instrucao[11].$instrucao[5].$instrucao[9].$instrucao[12].", sinopse = '".$this->getSinopse()."', opiniao = '".$this->getOpiniao()."', arqempresta = ".$this->getArqEmprestar()."', arqmorto = ".$this->getArqMorto()." WHERE id_livros = ".$this->getCodigo());
-
             $Conect = new Conexao($this->getSql());
             $Conect->conectar();
             $this->setTbl($Conect->getResult());
             return $this->getSql();
         }
-        
     }
 
     class Emprestar {
@@ -774,7 +731,6 @@
         
         public function tempo() {
             $this->getLast_time($_SESSION['last_time']);
-            
             if (isset($_SESSION['last_time']) && (time() - $_SESSION['last_time'] > 1800)) {
                 header('location:login.php');
             }
