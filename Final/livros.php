@@ -9,17 +9,20 @@
 <?php
     require_once ('php/registros.php');
     require_once ('php/funcao.php');
+    if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'logout') {
+        logout();
+    }
     session_start();
     $logado = sessao($_SESSION['user']);
     $ativo = new Atividade($_SESSION['user']);
     $ativo->tempo();
+    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
     if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
         $pag = $_GET['pagina'];
     }
     else {
         $pag = 1;
     }
-    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
 ?>
 <body>
     <main>
@@ -31,12 +34,11 @@
         </header>
         <menu>
             <ul>
-                <li><a href="principal.php">Início</a></li>
-                <li><a href="livros.php?">Livros</a></li>
+                <li><a href="inicio.php">Início</a></li>
+                <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
                 <li><a href="#">Forum</a></li>
-                <li><a href="logout.php">Sair</a></li>
-            </ul>
+                <li><a href="?acao=logout">Sair</a></li>
             </ul>
             <p id="idData"><?=$horario?></p>
         </menu>
@@ -74,20 +76,22 @@
                     <input type="text" name="letra" id="idLetra">
                 </div>
                 <div id="idArea06">
-                    <select name="tipo" id="idTipo">
-                        <option value="livro">Livro</option>
-                        <option value="autor">Autor</option>
-                    </select>
-                    <select name="ordem" id="idOrdem">
-                        <option value="ASC">Crescente</option>
-                        <option value="DESC">Decrescente</option>
-                    </select>
+                    <div id="idArq01">
+                        <select name="tipo" id="idTipo">
+                            <option value="livro">Livro</option>
+                            <option value="autor">Autor</option>
+                        </select>
+                        <select name="ordem" id="idOrdem">
+                            <option value="ASC">Crescente</option>
+                            <option value="DESC">Decrescente</option>
+                        </select>
+                    </div>
                     <div id="idArq">
                         <label for="condic" id="idCondic">Situação do Livro:</label>
                         <select name="condic" id="idCondic">
                             <option value="0">Estante</option>
-                            <option value="1">Extraviado</option>
-                            <option value="2">Emprestado</option>
+                            <option value="1">Emprestado</option>
+                            <option value="2">Extraviado</option>
                         </select>
                     </div>
                 </div>
@@ -103,6 +107,7 @@
                 if (isset($_SESSION['user'])) {
                     $arqMorto = 0;
                     $arqEmprestar = 0;
+                    $ebook = 0;
                     $limite = ($pag -1) *10;
                     $situa = "Sua Estante de Livros";
                     if (isset($_REQUEST['acao'])) {
@@ -116,6 +121,7 @@
                                 "","","",
                                 $_POST['compra'],
                                 "","","","","",
+                                $ebook,
                                 $arqEmprestar,
                                 $arqMorto
                             );
@@ -124,6 +130,7 @@
                                 $_SESSION['id_user'],
                                 "livros",
                                 "livro","","",
+                                $ebook,
                                 $arqEmprestar,
                                 $arqMorto,
                                 $limite
@@ -131,14 +138,14 @@
                         }
                         elseif ($_REQUEST['acao'] == 'Buscar') {
                             if ($_REQUEST['condic'] == 1) {
-                                $arqEmprestar = 0;
-                                $arqMorto = 1;
-                                $situa = "Seua Livros Extraviados";
-                            }
-                            elseif ($_REQUEST['condic'] == 2) {
                                 $arqEmprestar = 1;
                                 $arqMorto = 0;
                                 $situa = "Seus Livros Emprestados";
+                            }
+                            elseif ($_REQUEST['condic'] == 2) {
+                                $arqEmprestar = 0;
+                                $arqMorto = 1;
+                                $situa = "Seus Livros Extraviados";
                             }
 
                             $listar = new Registros(
@@ -147,6 +154,7 @@
                                 $_GET['tipo'],
                                 $_GET['letra'],
                                 $_GET['ordem'],
+                                $ebook,
                                 $arqEmprestar,
                                 $arqMorto,
                                 $limite
@@ -158,6 +166,7 @@
                             $_SESSION['id_user'],
                             "livros",
                             "livro","","",
+                            $ebook,
                             $arqEmprestar,
                             $arqMorto,
                             $limite

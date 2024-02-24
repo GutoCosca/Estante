@@ -1,11 +1,21 @@
 @charset "utf8";
 
+* {
+    overflow-x: hidden;
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    border-collapse: collapse;
+}
+
 :root {
     --fontSize0: 0.8em;
     --fontSize1: 1em;
     --fontSize2: 1.2em;
     --fontSize3: 1.8em;
     --fontSize4: 3.6em;
+    --fontSize5: 0.8em;
 
     --cor0: #5968f3; /* cor do texto header */
     --cor1: #fdfd84;
@@ -27,12 +37,12 @@
     --sombra3: 2px 2px 1px var(--cor7);
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1440px) {
     :root {
-    --fontSize0: 0.5em;
+    --fontSize0: 0.7em;
     --fontSize1: 0.8em;
-    --fontSize2: 0.9em;
-    --fontSize3: 1.2em;
+    --fontSize2: 1em;
+    --fontSize3: 1.4em;
     --fontSize4: 2.4em;
     }
 }

@@ -13,6 +13,12 @@
         header('location:logar.php');
     }
 
+    function logout () {
+        session_unset();
+        session_destroy();
+        header('location:inicio.php');
+    }
+
     /*function registro($idusuario) {
         date_default_timezone_set('America/Sao_Paulo');
         $data = date('d/m/Y');

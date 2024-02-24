@@ -60,6 +60,8 @@
         return $resp;
     }
 
-    function listar() {
-
+    function logout () {
+        session_unset();
+        session_destroy();
+        header('location:principal.php');
     }

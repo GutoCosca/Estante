@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="css/acesso.css">
     <title>Estante Virtual</title>
 </head>
+<?php
+    require_once ('php/funcao.php');
+    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+?>
 <body>
     <main>
         <header>
@@ -17,7 +21,7 @@
             <li><a href="login.php">Entrar</a></li>
             <li><a href="cadastrar.php">Cadastrar</a></li>
             </ul>
-            <p id="idData">22 / janeiro / 2024 - 18:45:00</p>
+            <p id="idData"><?=$horario?></p>
         </menu>
             <section>
                 <fieldset id="idCadastrar">

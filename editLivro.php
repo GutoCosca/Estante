@@ -105,7 +105,7 @@
             <h3>Dados do Livro</h3></br>
             <table id="tblEdicao01">
                 <tr class="visual">
-                <td class="capa" colspan="2"><img src="capas/<?=$tblEditar['capa']?>" alt="<?=$tblEditar['livro']?>"></td>
+                    <td class="capa" colspan="2"><img src="capas/<?=$tblEditar['capa']?>" alt="<?=$tblEditar['livro']?>"></td>
                     <td class="capa" colspan="2"><?=$situa?></td>
                 </tr>
                 <tr class="visual">
