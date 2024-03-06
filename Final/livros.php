@@ -13,10 +13,15 @@
         logout();
     }
     session_start();
-    $logado = sessao($_SESSION['user']);
-    $ativo = new Atividade($_SESSION['user']);
-    $ativo->tempo();
-    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    if (isset($_SESSION['id_user'])){
+        $logado = sessao($_SESSION['user']);
+        $ativo = new Atividade();
+        $ativo->tempo();
+        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    }
+    else {
+        logout();
+    }
     if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
         $pag = $_GET['pagina'];
     }
@@ -37,7 +42,7 @@
                 <li><a href="inicio.php">Início</a></li>
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
-                <li><a href="#">Forum</a></li>
+                <li><a href="forum.php">Forum</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
             <p id="idData"><?=$horario?></p>
@@ -45,7 +50,7 @@
         <section id="idAdicionar">
             <h3>Adicionar Livros</h3>
             <p>*campos obrigatórios</p>
-            <!-- Adicionar na estante -->
+            <!-- Adicionar livro -->
             <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" id="idFormAdd">
                 <div id="idArea00">
                     <label for="livro" class="obrig">Título do Livro:</label>
@@ -102,7 +107,7 @@
             </form>
         </section>
         <section id="idListar">
-            <!-- Listagem da estante -->
+            <!-- Listagem dos livros -->
             <?php
                 if (isset($_SESSION['user'])) {
                     $arqMorto = 0;
@@ -175,8 +180,8 @@
                     $listar->total();
                     $count = mysqli_fetch_array($listar->getTbl());
                     if ($count[0] > 0) {
-                    $totPag = ceil($count[0]/10);
-                    $listar->lista();
+                        $totPag = ceil($count[0]/10);
+                        $listar->lista();
             ?>
             <h3 id="idTitEstante"><?=$situa?></h3>
             <div id="idTabela01">
@@ -193,7 +198,7 @@
                     <?php
                             while ($tblLista = mysqli_fetch_array($listar->getTbl())) {
                                 if ($tblLista['compra'] != null ) {
-                                    $compraBR = mesBR($tblLista['compra']) [0];
+                                    $compraBR = mesBR($tblLista['compra'])[0];
                                 }
                                 else {
                                     $compraBR = "";
@@ -218,64 +223,68 @@
                 </table>
                 <!-- Barra de Navegação -->
                 <?php
-                    $totPagi = $totPag;
-                    if ($pag > 1) {
-                        $ant = $pag - 1;
-                    }
-                    else {
-                        $ant = $pag;
-                    }
+                    if ($count[0] > 10) {
+                        $totPagi = $totPag;
+                        if ($pag > 1) {
+                            $ant = $pag - 1;
+                        }
+                        else {
+                            $ant = $pag;
+                        }
 
-                    if ($pag < $totPagi) {
-                        $prox = $pag + 1;
-                    }
-                    else {
-                        $prox = $pag;
-                    }
-                    $ini = "pagina=1";
-                    
-                    if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'Buscar') {
-                        $tip = "&tipo=".$_GET['tipo'];
-                        $ord = "&ordem=".$_GET['ordem'];
-                        $cond = "&condic=".$_GET['condic'];
-                        $acao = "&acao=".$_GET['acao'];
-                        if ($_GET['letra'] != null){
-                            $let = "&letra=".$_GET['letra'];
+                        if ($pag < $totPagi) {
+                            $prox = $pag + 1;
                         }
                         else {
-                            $let = "&letra=";
+                            $prox = $pag;
                         }
-                        $resp = $let.$tip.$ord.$cond.$acao;
-                        $ini = $ini.$resp;
-                        $ant = $ant.$resp;
-                        $prox = $prox.$resp;
-                        $totPagi = $totPag.$resp;
-                    }
-                    else {
-                        $let = "";
-                        $tip = "";
-                        $ord = "";
-                        $cond = "";
-                        $acao = "";
-                    }
-                echo '
-            </div>
-            <nav>
-                <ul>'.
-                    "<li class='pagi'><a href='?$ini' class='paginacao'><<</a></li>
-                    <li class='pagi'><a href='?pagina=$ant' class='paginacao'><</a></li>
-                    <li class='pagi' id='idPaginas'>Página $pag  /  $totPag</li>
-                    <li class='pagi'><a href='?pagina=$prox' class='paginacao'>></a></li>
-                    <li class='pagi'><a href='?pagina=$totPagi' class='paginacao'>>></a></li>
-                </ul>
-            </nav>";
-                
+                        $ini = "pagina=1";
+                        
+                        if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'Buscar') {
+                            $tip = "&tipo=".$_GET['tipo'];
+                            $ord = "&ordem=".$_GET['ordem'];
+                            $cond = "&condic=".$_GET['condic'];
+                            $acao = "&acao=".$_GET['acao'];
+                            if ($_GET['letra'] != null){
+                                $let = "&letra=".$_GET['letra'];
+                            }
+                            else {
+                                $let = "&letra=";
+                            }
+                            $resp = $let.$tip.$ord.$cond.$acao;
+                            $ini = $ini.$resp;
+                            $ant = $ant.$resp;
+                            $prox = $prox.$resp;
+                            $totPagi = $totPag.$resp;
                         }
                         else {
-                            echo '<h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>';
+                            $let = "";
+                            $tip = "";
+                            $ord = "";
+                            $cond = "";
+                            $acao = "";
+                        }
+                        ?>
+                        <nav>
+                            <ul>
+                                <li class="pagi"><a href="?<?=$ini?>" class="paginacao"><<</a></li>
+                                <li class="pagi"><a href="?pagina=<?=$ant?>" class="paginacao"><</a></li>
+                                <li class="pagi" id="idPaginas">Página <?=$pag?> / <?=$totPag?></li>
+                                <li class="pagi"><a href="?pagina=<?=$prox?>" class="paginacao">></a></li>
+                                <li class="pagi"><a href="?pagina=<?=$totPagi?>" class="paginacao">>></a></li>
+                            </ul>
+                        </nav>
+                    <?php
+                    }
+                    }
+                    else {
+                    ?>
+                    <h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>
+                    <?php
                         }
                     }
             ?>
+            
         </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

@@ -67,15 +67,16 @@
                         $ebook = 0;
                     }
 
-                    $altera = new EditLivros(
+                    $altera = new EditRevistas(
                         $_SESSION['id_user'],
-                        "livros",
-                        $_POST['livro'],
+                        "revistas",
+                        $_POST['revista'],
+                        $_POST['numero'],
+                        $_POST['titulo'],
                         $_POST['autor'],
                         $_POST['editora'],
-                        $_POST['edicao'],
                         $_POST['ano'],
-                        $_POST['isbn'],
+                        $_POST['issn'],
                         $_POST['compra'],
                         $_FILES['capa']['tmp_name'],
                         $_FILES['capa']['size'],
@@ -86,12 +87,12 @@
                         $arqEmprestar,
                         $arqMorto
                     );
-                    $altera->altLivro($_REQUEST['buscaCodigo']);
+                    $altera->altRevistas($_REQUEST['buscaCodigo']);
                     
                 }
                 $dados = new Registros(
                     $_SESSION['id_user'],
-                    "livros",
+                    "revistas",
                     "","","","","","",""
                 );
                 $dados->buscar($_REQUEST['buscaCodigo']);
@@ -140,32 +141,32 @@
                 }
                 $emprest = new Emprestar(
                     $_SESSION['id_user'],
-                    "",
+                    "","",
                     $_REQUEST['buscaCodigo'],
-                    "","","","",
+                    "","","",
                     1
                 );
                 $emprest->listar();
                 $tblEmprest = mysqli_fetch_array($emprest->getTbl());
-                    if ($tblEmprest != null) {
-                        $nome = $tblEmprest['nome'];
-                        $saida = mesBR($tblEmprest['dt_emprest'])[2];
-                        if ($tblEmprest['dt_devol'] != null){
-                            $entra = mesBR($tblEmprest['dt_devol'])[2];
-                        }
-                        else {
-                            $entra = "";
-                        } 
+                if ($tblEmprest != null) {
+                    $nome = $tblEmprest['nome'];
+                    $saida = mesBR($tblEmprest['dt_emprest'])[2];
+                    if ($tblEmprest['dt_devol'] != null) {
+                        $entra = mesBR($tblEmprest['dt_devol'])[2];
                     }
                     else {
-                        $saida = "";
-                        $nome = "";
                         $entra = "";
-                    }   
+                    }
+                }
+                else{
+                    $saida = "";
+                    $nome = "";
+                    $entra = "";
+                }
             }
             ?>
         <section id="idDado">
-            <h3>Dados do Livro</h3>
+            <h3>Dados da Revista</h3>
             <!-- Exibe os dados completo do livro (media screen > 1024px) -->
             <table id="idTabela01">
                 <tr class="visual">
@@ -173,26 +174,30 @@
                     <td class="capa" colspan="3"><?=$situa?></td>
                 </tr>
                 <tr class="visual">
-                    <th>LIVRO:</th>
-                    <td colspan="3"><?=$tblDados['livro']?></td>
+                    <th>REVISTA:</th>
+                    <td colspan="3"><?=$tblDados['revista']?></td>
+                </tr>
+                <tr class="visual">
+                    <th>NUMERO:</th>
+                    <td><?=$tblDados['numero']?></td>
+                    <th>ANO:</th>
+                    <td><?=$tblDados['ano']?></td>
+                </tr>
+                <tr class="visual">
+                    <th>TÍTULO:</th>
+                    <td colspan="3"><?=$tblDados['titulo']?></td>
                 </tr>
                 <tr class="visual">
                     <th>AUTOR:</th>
                     <td colspan="3"><?=$tblDados['autor']?></td>
                 </tr>
-                <tr class="visual">
+                <tr>
                     <th>EDITORA:</th>
                     <td colspan="3"><?=$tblDados['editora']?></td>
                 </tr>
                 <tr class="visual">
-                    <th>EDIÇÃO:</th>
-                    <td><?=$tblDados['edicao']?></td>                    
-                    <th>ANO:</th>
-                    <td><?=$tblDados['ano']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>ISBN:</th>
-                    <td colspan="3"><?=$tblDados['isbn']?></td>
+                    <th>ISSN:</th>
+                    <td colspan="3"><?=$tblDados['issn']?></td>
                 </tr>
                 <tr class="visual">
                     <th>COMPRA:</th>
@@ -211,22 +216,24 @@
                     <td class="texto" colspan="4"><?=$tblDados['opiniao']?></td>
                 </tr>
             </table>
-            <!-- Exibe os dados completo do livro (media screen =< 1024px) -->
+            <!-- Exibe os dados completo da revista (media screen =< 1024px) -->
             <div id="idTabela02">
                 <p id="idCapaP"><?=$capa?></p>
                 <p id="idSituaP"><?=$situa?></p>
-                <p class="dadosP01" id="idLivroP01">LIVRO:</p>
-                <p class="dadosP02" id="idLivroP02"><?=$tblDados['livro']?></p>
-                <p class="dadosP01" id="idAutorP01">AUTOR:</p>
-                <p class="dadosP02" id="idAutorP02"><?=$tblDados['autor']?></p>
-                <p class="dadosP01" id="idEditoraP01">EDITORA:</p>
-                <p class="dadosP02" id="idEditoraP02"><?=$tblDados['editora']?></p>
+                <p class="dadosP01" id="idLivroP01">REVISTA:</p>
+                <p class="dadosP02" id="idLivroP02"><?=$tblDados['revista']?></p>
+                <p class="dadosP01" id="idTituloR01">TÍTULO:</p>
+                <p class="dadosP02" id="idTituloR02"><?=$tblDados['titulo']?></p>
+                <p class="dadosP01" id="idAutorR01">AUTOR:</p>
+                <p class="dadosP02" id="idAutorR02"><?=$tblDados['autor']?></p>
+                <p class="dadosP01" id="idEditoraR01">EDITORA:</p>
+                <p class="dadosP02" id="idEditoraR02"><?=$tblDados['editora']?></p>
                 <p class="dadosP01" id="idCompraP01">COMPRA:</p>
                 <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
-                <p class="dadosP01" id="idIsbnP01">ISBN:</p>
-                <p class="dadosP02" id="idIsbnP02"><?=$tblDados['isbn']?></p>
-                <p class="dadosP01" id="idEdicaoP01">EDIÇÃO:</p>
-                <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['edicao']?></p>
+                <p class="dadosP01" id="idIsbnP01">ISSN:</p>
+                <p class="dadosP02" id="idIsbnP02"><?=$tblDados['issn']?></p>
+                <p class="dadosP01" id="idEdicaoP01">NÚMERO:</p>
+                <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['numero']?></p>
                 <p class="dadosP01" id="idAnoP01">ANO:</p>
                 <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
                 <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
@@ -236,9 +243,9 @@
             </div>
         </section>
         <section id="idAltera">
-            <h3>Alterar Dados do Livro</h3>
-            <!-- Alteração dos dados do livro -->
-            <form action="<?=$_SERVER['PHP_SELF']?>?acao=alterar&buscaCodigo=<?=$tblDados['id_livros']?>" method="post" enctype="multipart/form-data" id="idForm">
+            <h3>Alterar Dados da Revista</h3>
+            <!-- Alteração dos dados da revista -->
+            <form action="<?=$_SERVER['PHP_SELF']?>?acao=alterar&buscaCodigo=<?=$tblDados['id_revistas']?>" method="post" enctype="multipart/form-data" id="idForm">
                 <div id="idItem01">
                     <div id="idArea01">
                         <p>Capa:</p>
@@ -251,21 +258,27 @@
                     </div>
                 </div>
                 <div id="idItem02">
-                    <label for="livro">Nome do Livro:</label>
-                    <input type="text" name="livro" id="" value="<?=$tblDados['livro']?>">
+                    <label for="titulo">Nome da Revista:</label>
+                    <input type="text" name="titulo" id="" value="<?=$tblDados['revista']?>">
                 </div>
                 <div id="idItem03">
-                    <label for="autor">Nome do Autor</label>
-                    <input type="text" name="autor" id="" value="<?=$tblDados['autor']?>">
+                    <label for="revista">Título da Revista:</label>
+                    <input type="text" name="revista" id="" value="<?=$tblDados['revista']?>">
                 </div>
-                <div id="idItem04">
-                    <label for="editora">Nome da Editora:</label>
-                    <input type="text" name="editora" id="" value="<?=$tblDados['editora']?>">
+                <div class="revista" id="idItem04">
+                    <div>
+                        <label for="autor">Nome do Autor</label>
+                        <input type="text" name="autor"  class="input01" value="<?=$tblDados['autor']?>">
+                    </div>
+                    <div>
+                        <label for="editora">Nome da Editora:</label>
+                        <input type="text" name="editora" class ="input01" value="<?=$tblDados['editora']?>">
+                    </div>
                 </div>
                 <div id="idItem05">
                     <div id="idArea03">
-                        <label for="edicao">Edição:</label>
-                        <input type="text" name="edicao" class="input01" id="" value="<?=$tblDados['edicao']?>">
+                        <label for="numero">Número:</label>
+                        <input type="text" name="numero" class="input01" id="" value="<?=$tblDados['numero']?>">
                     </div>
                     <div id="idArea04">
                         <label for="ano">Ano:</label>
@@ -274,8 +287,8 @@
                 </div>
                 <div id="idItem06">
                     <div id="idArea05">
-                        <label for="isbn">ISBN:</label>
-                        <input type="text" name="isbn" class="input01" id="" value="<?=$tblDados['isbn']?>">
+                        <label for="issn">ISSN:</label>
+                        <input type="text" name="issn" class="input01" id="" value="<?=$tblDados['issn']?>">
                     </div>
                     <div id="idArea06">
                         <label for="compra">Compra:</label>
@@ -291,7 +304,7 @@
                     <textarea name="opiniao" id="" ><?=$tblDados['opiniao']?></textarea>
                 </div>
                 <div id="idItem09" <?=$displayEbook?>>
-                    <label class="areas" for="situacao" id="idSituacao">Situação do Livro:</label>
+                    <label class="areas" for="situacao" id="idSituacao">Situação da Revista:</label>
                     <div class="areas" id="idArea07">
                         <input type="radio" name="situacao" <?=$checkEstante?> id="idOpcao01" value="0">
                         <label for="estante">Estante</label>
@@ -326,12 +339,12 @@
                     <p class="situa" id="idSituaNome"><?=$nome?></p>
                 </div>
                 <div class="emprestar" id="idItem14">
-                    <button type="submit"><a id="idButEmprest" href="emprestar.php?acao=emprestLivro&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>">Emprestar</a></button>
+                    <button type="submit"><a id="idButEmprest" href="emprestar.php?acao=emprestRevista&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>">Emprestar</a></button>
                 </div>
             </div>
             <!-- Criar forum -->
             <h3>Criar Forum</h3>
-            <form action="<?=$_SERVER['PHP_SELF']?>?acao=editarLivro&buscaCodigo=<?=$tblDados['id_livros']?>" method="post" id="idFormForum">
+            <form action="<?=$_SERVER['PHP_SELF']?>?acao=editarRevista&buscaCodigo=<?=$tblDados['id_revistas']?>" method="post" id="idFormForum">
                 <div class="forum" id="idForum01">
                     <label for="topico">Topico:</label>
                     <input type="text" name="topico" id="idTopico">
@@ -345,17 +358,6 @@
                     <input class="botao" type="submit" value="Criar">
                 </div>
             </form>
-            <?php 
-                if (isset($_POST['topico'])){
-                    if ($_REQUEST['acao'] == "editarLivro") {
-                        $id_livro = $_REQUEST['buscaCodigo'];
-                    }
-                    elseif ($_REQUEST['acao'] == "editarRevista") {
-                        $id_revista = $_REQUEST['buscaCodigo'];
-                    }
-                    
-                }
-            ?>
         </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

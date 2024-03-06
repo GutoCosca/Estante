@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/inicial.css">
+    <link rel="stylesheet" href="css/forum.css">
     <title>Estante Virtual</title>
 </head>
 <?php
@@ -36,16 +36,15 @@
                 <li><a href="inicio.php">Início</a></li>
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
-                <li><a href="forum.php">Forum</a></li>
+                <li><a href="#">Forum</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
             <p id="idData"><?=$horario?></p>
         </menu>
-            <section>
-                <div id="idApresenta">
-                    <p class="apresentar">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maxime, fugiat atque pariatur vel rerum veritatis nihil distinctio odit molestiae amet doloribus optio voluptas tempora, animi facere suscipit tempore quo inventore.</p>
-                    <p class="apresentar">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic aperiam quasi similique nostrum maiores quaerat laudantium corrupti, nisi fugiat mollitia libero tempora ut numquam sapiente iusto voluptate, at placeat molestiae.</p>
-                </div>
+            <section id="idForumLista">
+                
+            </section>
+            <section id="idForumResposta">
             </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

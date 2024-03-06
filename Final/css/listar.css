@@ -155,14 +155,15 @@ select {
 }
 
 #idArq > label {
-    width: 150px;
+    width: 160px;
     height: 20px;
-    margin: 0 0 0 5px;
+    margin: 0;
 }
 
 #idArq > input {
     width: 20px;
     padding: 0;
+    margin-left: 20px;
 }
 
 .optTexto {
@@ -314,7 +315,7 @@ footer > p {
 
     #idArq > select {
         min-width: 90px;
-        margin-left: -30px;
+        margin-left: 0px;
     }
 
     #idArq > label {

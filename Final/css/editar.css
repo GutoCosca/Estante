@@ -141,6 +141,13 @@ td, th {
     text-shadow:  var(--sombra1);
 }
 
+#idAviso {
+    font-size: var(--fontSize2);
+    text-align: center;
+    color: var(--cor1);
+    text-shadow: var(--sombra1);
+}
+
 #idForm {
     display: grid;
     grid-template-rows: repeat(6, 1fr) 1.5fr 0.75fr;
@@ -180,6 +187,11 @@ input {
     padding: 0px 10px;
     font-size: var(--fontSize0);
     border-radius: 15px;
+}
+
+.revista {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 input[type='file'] {
@@ -244,12 +256,17 @@ textarea:first-letter {
 .situa {
     width: 65%;
     height: 15px;
-    padding: 5px 10px;
+    padding: 5px 10px 5px 0;
     font-size: var(--fontSize0);
-    text-align: left;
+    text-align: center;
     color: var(--cor7);
     background-color: #c9c9c9;
     border-radius: 15px;
+}
+
+#idSituaNome {
+    text-align: left;
+    padding-left: 15px;
 }
 
 #idItem14 > button {
@@ -262,6 +279,42 @@ textarea:first-letter {
     color: var(--cor0);
     text-decoration: none;
 }
+
+#idVoltar {
+    font-size: var(--fontSize1);
+    font-weight: bold;
+    color: var(--cor0);    
+}
+
+#idVoltar:hover {
+    color: none;
+}
+
+nav {
+    margin: 30px 0 0 -80px;
+    text-align: center;
+    font-size: larger;
+    font-weight: bolder;
+    text-shadow: var(--sombra3);
+    color: var(--cor3);
+}
+
+.pagi {
+    padding: 0 20px;
+}
+
+.paginacao {
+    color: var(--cor3);
+}
+
+.paginacao:hover {
+    color: var(--cor5);
+}
+
+#idPaginas {
+    word-spacing: 10px;
+}
+
 /* Lista Emprestado */
 #idFormAltEmprest {
     display: grid;
@@ -294,14 +347,15 @@ textarea:first-letter {
 
 #idTblEmprestar {
     margin: auto;
-    height: 50px;
+    height: 40px;
+    margin-top: 25px;
     border-style: none;
     border-color: var(--cor10);
     border-bottom-width: 5px;
 }
 
 #idTblEmprestar > thead {
-    height: 50px;
+    height: 40px;
     border-style: none;
     border-color: var(--cor10);
     border-bottom-width: 5px;
@@ -314,7 +368,7 @@ textarea:first-letter {
 
 .rowEmprest > th, .rowEmprest > td {
     width: 230px;
-    height: 50px;
+    height: 40px;
     text-align: center;
     font-size: var(--fontSize1);
 }
@@ -474,6 +528,33 @@ textarea:first-letter {
 #idItem14 {
     grid-column: 4;
     text-align: center;
+}
+
+#idFormForum {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#idForum01 {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#idForum01 > input {
+    width: 90%;
+}
+
+#idForum02 {
+    grid-row: 1 / 4;
+    grid-column: 2;
+    margin-left: 30px;
+}
+
+#idForum03 {
+    grid-row: 2 / 4;
+    grid-column: 1;
+    margin-top: 50px;
 }
 
 footer {
@@ -640,6 +721,35 @@ footer > p {
     #idEditoraP02 {
         grid-row: 3;
         grid-column: 3 / 6;
+    }
+
+    #idTituloR01 {
+        grid-row: 2;
+        grid-column: 2;
+    }
+
+    #idTituloR02 {
+        grid-row: 2;
+        grid-column: 3 / 6;
+    }
+
+    #idAutorR01 {
+        grid-row: 3;
+        grid-column: 2;
+    }
+    #idAutorR02 {
+        grid-row: 3;
+        grid-column: 3;
+    }
+
+    #idEditoraR01 {
+        grid-row: 3;
+        grid-column: 4;
+    }
+
+    #idEditoraR02 {
+        grid-row: 3;
+        grid-column: 5;
     }
 
     #idCompraP01 {

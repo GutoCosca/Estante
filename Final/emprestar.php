@@ -13,10 +13,24 @@
         logout();
     }
     session_start();
-    $logado = sessao($_SESSION['user']);
-    $ativo = new Atividade($_SESSION['user']);
-    $ativo->tempo();
-    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    if (isset($_SESSION['id_user'])){
+        $logado = sessao($_SESSION['user']);
+        $ativo = new Atividade();
+        $ativo->tempo();
+        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    }
+    else {
+        logout();
+    }
+
+    if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
+        $pag = $_GET['pagina'];
+        $pg ="&pagina=".$pag;
+    }
+    else {
+        $pag = 1;
+        $pg = "";
+    }
 ?>
 <body>
     <main>
@@ -28,22 +42,42 @@
         </header>
         <menu>
             <ul>
-                <li><a href="principal.php">Início</a></li>
+                <li><a href="inicio.php">Início</a></li>
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
-                <li><a href="#">Forum</a></li>
+                <li><a href="forum.php">Forum</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
             <p id="idData"><?=$horario?></p>
         </menu>
         <?php
-            if ($_REQUEST['acao'] == "emprestLivro") {
-                $site = "editlivro.php?acao=editarLivro&buscaCodigo=".$_REQUEST['buscaCodigo'];
-                $dados = new Registros(
-                    $_SESSION['id_user'],
-                    "livros",
-                    "","","","","","",""
-                );
+            if (isset($_REQUEST['idNome'])) {
+                $idNome = "&idNome=".$_REQUEST['idNome'];
+                $idEmprest = $_REQUEST['idNome'];
+            }
+            else {
+                $idNome = "";
+                $idEmprest = "";
+            }
+            if (isset ($_REQUEST['acao'])) {
+                if ($_REQUEST['acao'] == "emprestLivro") {
+                    $site = "editLivro.php?acao=editarLivro&buscaCodigo=".$_REQUEST['buscaCodigo'];
+                    $tipo = " do Livro";
+                    $dados = new Registros(
+                        $_SESSION['id_user'],
+                        "livros",
+                        "","","","","","",""
+                    );
+                }
+                elseif ($_REQUEST['acao'] == "emprestRevista") {
+                    $site = "editRevista.php?acao=editarRevista&buscaCodigo=".$_REQUEST['buscaCodigo'];
+                    $tipo = "da Revista";
+                    $dados = new Registros(
+                        $_SESSION['id_user'],
+                        "revistas",
+                        "","","","","","",""
+                    );
+                }
                 $dados->buscar($_REQUEST['buscaCodigo']);
                 $tblDados = mysqli_fetch_array($dados->getTbl());
                 $checkEstante = "";
@@ -72,47 +106,204 @@
                 else {
                     $compraBR = "";
                 }
-                // ?sair=2024-02-08&entrar=&nome=Ricardo&emprestar=Alterar metodo post
+                $mensagem = "";
+        ?>
+        <section id="idDado">
+            <h3>Dados <?=$tipo?></h3>
+            <?php
+                if ($_REQUEST['acao'] == "emprestLivro") {
+                    $buscaLiv = $_REQUEST['buscaCodigo'];
+                    $buscaRev = "";
+                    ?> 
+                    <!-- Exibe os dados completo do livro (media screen > 1024px) -->
+                    <table id="idTabela01">
+                        <tr class="visua0l">
+                            <td class="capa" id="idCapa"><?=$capa?></td>
+                            <td class="capa" colspan="3"><?=$situa?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>LIVRO:</th>
+                            <td colspan="3"><?=$tblDados['livro']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>AUTOR:</th>
+                            <td colspan="3"><?=$tblDados['autor']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>EDITORA:</th>
+                            <td colspan="3"><?=$tblDados['editora']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>EDIÇÃO:</th>
+                            <td><?=$tblDados['edicao']?></td>                    
+                            <th>ANO:</th>
+                            <td><?=$tblDados['ano']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>ISBN:</th>
+                            <td colspan="3"><?=$tblDados['isbn']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>COMPRA:</th>
+                            <td colspan="3"><?=$compraBR?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>SINOPSE:</th>
+                        </tr>
+                        <tr class="visual">
+                            <td class="texto" colspan="4"><?=$tblDados['sinopse']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>OPINIÃO:</th>
+                        </tr>
+                        <tr class="visual">
+                            <td class="texto" colspan="4"><?=$tblDados['opiniao']?></td>
+                        </tr>
+                    </table>
+                    <!-- Exibe os dados completo do livro (media screen =< 1024px) -->
+                    <div id="idTabela02">
+                        <p id="idCapaP"><?=$capa?></p>
+                        <p id="idSituaP"><?=$situa?></p>
+                        <p class="dadosP01" id="idLivroP01">LIVRO:</p>
+                        <p class="dadosP02" id="idLivroP02"><?=$tblDados['livro']?></p>
+                        <p class="dadosP01" id="idAutorP01">AUTOR:</p>
+                        <p class="dadosP02" id="idAutorP02"><?=$tblDados['autor']?></p>
+                        <p class="dadosP01" id="idEditoraP01">EDITORA:</p>
+                        <p class="dadosP02" id="idEditoraP02"><?=$tblDados['editora']?></p>
+                        <p class="dadosP01" id="idCompraP01">COMPRA:</p>
+                        <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
+                        <p class="dadosP01" id="idIsbnP01">ISBN:</p>
+                        <p class="dadosP02" id="idIsbnP02"><?=$tblDados['isbn']?></p>
+                        <p class="dadosP01" id="idEdicaoP01">EDIÇÃO:</p>
+                        <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['edicao']?></p>
+                        <p class="dadosP01" id="idAnoP01">ANO:</p>
+                        <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
+                        <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
+                        <p class="dadosP02" id="idSinopseP02"><?=$tblDados['sinopse']?></p>
+                        <p class="dadosP01" id="idOpiniaoP01">OPINIÃO:</p>
+                        <p class="dadosP02" id="idOpiniaoP02"><?=$tblDados['opiniao']?></p>
+                    </div>
+                    <?php
+                }
+                elseif ($_REQUEST['acao'] == "emprestRevista") {
+                    $buscaLiv = "";
+                    $buscaRev = $_REQUEST['buscaCodigo'];
+                    ?>
+                    "<!-- Exibe os dados completo da revista (media screen > 1024px) -->
+                    <table id="idTabela01">
+                    <tr class="visual">
+                            <td class="capa" id="idCapa"><?=$capa?></td>
+                            <td class="capa" colspan="3"><?=$situa?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>REVISTA:</th>
+                            <td colspan="3"><?=$tblDados['revista']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>NUMERO:</th>
+                            <td><?=$tblDados['numero']?></td>
+                            <th>ANO:</th>
+                            <td><?=$tblDados['ano']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>TÍTULO:</th>
+                            <td colspan="3"><?=$tblDados['titulo']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>AUTOR:</th>
+                            <td colspan="3"><?=$tblDados['autor']?></td>
+                        </tr>
+                        <tr>
+                            <th>EDITORA:</th>
+                            <td colspan="3"><?=$tblDados['editora']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>ISSN:</th>
+                            <td colspan="3"><?=$tblDados['issn']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>COMPRA:</th>
+                            <td colspan="3"><?=$compraBR?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>SINOPSE:</th>
+                        </tr>
+                        <tr class="visual">
+                            <td class="texto" colspan="4"><?=$tblDados['sinopse']?></td>
+                        </tr>
+                        <tr class="visual">
+                            <th>OPINIÃO:</th>
+                        </tr>
+                        <tr class="visual">
+                            <td class="texto" colspan="4"><?=$tblDados['opiniao']?></td>
+                        </tr>
+                    </table>
+                    <!-- Exibe os dados completo da revista (media screen =< 1024px) -->
+                    <div id="idTabela02">
+                        <p id="idCapaP"><?=$capa?></p>
+                        <p id="idSituaP"><?=$situa?></p>
+                        <p class="dadosP01" id="idLivroP01">REVISTA:</p>
+                        <p class="dadosP02" id="idLivroP02"><?=$tblDados['revista']?></p>
+                        <p class="dadosP01" id="idTituloR01">TÍTULO:</p>
+                        <p class="dadosP02" id="idTituloR02"><?=$tblDados['titulo']?></p>
+                        <p class="dadosP01" id="idAutorR01">AUTOR:</p>
+                        <p class="dadosP02" id="idAutorR02"><?=$tblDados['autor']?></p>
+                        <p class="dadosP01" id="idEditoraR01">EDITORA:</p>
+                        <p class="dadosP02" id="idEditoraR02"><?=$tblDados['editora']?></p>
+                        <p class="dadosP01" id="idCompraP01">COMPRA:</p>
+                        <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
+                        <p class="dadosP01" id="idIsbnP01">ISSN:</p>
+                        <p class="dadosP02" id="idIsbnP02"><?=$tblDados['issn']?></p>
+                        <p class="dadosP01" id="idEdicaoP01">NÚMERO:</p>
+                        <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['numero']?></p>
+                        <p class="dadosP01" id="idAnoP01">ANO:</p>
+                        <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
+                        <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
+                        <p class="dadosP02" id="idSinopseP02"><?=$tblDados['sinopse']?></p>
+                        <p class="dadosP01" id="idOpiniaoP01">OPINIÃO:</p>
+                        <p class="dadosP02" id="idOpiniaoP02"><?=$tblDados['opiniao']?></p>
+                    </div>;
+                    <?php
+                }
+            ?>
+        </section>
+        <section id="idAltera">
+            <?php
                 if (isset($_POST['emprestar'])) {
                     if ($_POST['emprestar'] == "Adicionar") {
                         $AdicEmprest = new Emprestar(
                             $_SESSION['id_user'],"",
-                            $_REQUEST['buscaCodigo'],
-                            "",
+                            $buscaLiv,
+                            $buscaRev,
                             $_POST['nome'],
                             $_POST['sair'],
                             $_POST['entrar'],
                             ""
                         );
                         $AdicEmprest->addEmprest();
+                        $mensagem =$AdicEmprest->addEmprest();
                     }
                     elseif ($_POST['emprestar'] == "Alterar") {
                         $AltEmprest = new Emprestar(
                             $_SESSION['id_user'],
                             $_REQUEST['idNome'],
-                            $_REQUEST['buscaCodigo'],
-                            "",
+                            $buscaLiv,
+                            $buscaRev,
                             $_POST['nome'],
                             $_POST['sair'],
                             $_POST['entrar'],
                             ""
                         );
                         $AltEmprest->altEmprest();
+                        $mensagem = $AltEmprest->altEmprest();
                     }
                 }
-
-                if (isset($_REQUEST['idNome'])) {
-                    $idEmprest = $_REQUEST['idNome'];
-                }
-                else {
-                    $idEmprest = "";
-                } 
                 $listAberto = new Emprestar(
                     $_SESSION['id_user'],
                     $idEmprest,
-                    $_REQUEST['buscaCodigo'],
-                    "","","","",
-                    1
+                    $buscaLiv,
+                    $buscaRev,
+                    "","","",""
                 );
                 $listAberto->listar();
                 $tblAberto = mysqli_fetch_array($listAberto->getTbl());
@@ -122,99 +313,13 @@
                     $entra = $tblAberto['dt_devol'];
                 }
                 else {
-                    if ($tblAberto['dt_devol'] != null) {
-                        $saida = "";
-                        $nome = "";
-                        $entra = "";
-                    }
-                    else {
-                        $saida = $tblAberto['dt_emprest'];
-                        $nome = $tblAberto['nome'];
-                        $entra = $tblAberto['dt_devol'];
-                    }
+                    $saida = "";
+                    $nome = "";
+                    $entra = "";
                 }
-                $listEmprest = new Emprestar(
-                    $_SESSION['id_user'],
-                    "",
-                    $_REQUEST['buscaCodigo'],
-                    "","","","",
-                    "0,10"
-                );
-                $listEmprest->listar();
-        ?>
-        <section id="idDado">
-            <h3>Dados do Livro</h3>
-            <!-- Exibe os dados completo do livro (media screen > 1024px) -->
-            <table id="idTabela01">
-                <tr class="visual">
-                    <td class="capa" id="idCapa"><?=$capa?></td>
-                    <td class="capa" colspan="3"><?=$situa?></td>
-                </tr>
-                <tr class="visual">
-                    <th>LIVRO:</th>
-                    <td colspan="3"><?=$tblDados['livro']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>AUTOR:</th>
-                    <td colspan="3"><?=$tblDados['autor']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>EDITORA:</th>
-                    <td colspan="3"><?=$tblDados['editora']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>EDIÇÃO:</th>
-                    <td><?=$tblDados['edicao']?></td>                    
-                    <th>ANO:</th>
-                    <td><?=$tblDados['ano']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>ISBN:</th>
-                    <td colspan="3"><?=$tblDados['isbn']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>COMPRA:</th>
-                    <td colspan="3"><?=$compraBR?></td>
-                </tr>
-                <tr class="visual">
-                    <th>SINOPSE:</th>
-                </tr>
-                <tr class="visual">
-                    <td class="texto" colspan="4"><?=$tblDados['sinopse']?></td>
-                </tr>
-                <tr class="visual">
-                    <th>OPINIÃO:</th>
-                </tr>
-                <tr class="visual">
-                    <td class="texto" colspan="4"><?=$tblDados['opiniao']?></td>
-                </tr>
-            </table>
-            <!-- Exibe os dados completo do livro (media screen =< 1024px) -->
-            <div id="idTabela02">
-                <p id="idCapaP"><?=$capa?></p>
-                <p id="idSituaP"><?=$situa?></p>
-                <p class="dadosP01" id="idLivroP01">LIVRO:</p>
-                <p class="dadosP02" id="idLivroP02"><?=$tblDados['livro']?></p>
-                <p class="dadosP01" id="idAutorP01">AUTOR:</p>
-                <p class="dadosP02" id="idAutorP02"><?=$tblDados['autor']?></p>
-                <p class="dadosP01" id="idEditoraP01">EDITORA:</p>
-                <p class="dadosP02" id="idEditoraP02"><?=$tblDados['editora']?></p>
-                <p class="dadosP01" id="idCompraP01">COMPRA:</p>
-                <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
-                <p class="dadosP01" id="idIsbnP01">ISBN:</p>
-                <p class="dadosP02" id="idIsbnP02"><?=$tblDados['isbn']?></p>
-                <p class="dadosP01" id="idEdicaoP01">EDIÇÃO:</p>
-                <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['edicao']?></p>
-                <p class="dadosP01" id="idAnoP01">ANO:</p>
-                <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
-                <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
-                <p class="dadosP02" id="idSinopseP02"><?=$tblDados['sinopse']?></p>
-                <p class="dadosP01" id="idOpiniaoP01">OPINIÃO:</p>
-                <p class="dadosP02" id="idOpiniaoP02"><?=$tblDados['opiniao']?></p>
-            </div>
-        </section>
-        <section id="idAltera">
-            <form action="<?=$_SERVER['PHP_SELF']."?acao=".$_REQUEST['acao']."&buscaCodigo=".$_REQUEST['buscaCodigo']?>" method="post" id="idFormAltEmprest">
+            ?>
+            <!-- Adicionar e alterar emprestar -->
+            <form action="<?=$_SERVER['PHP_SELF']."?acao=".$_REQUEST['acao']."&buscaCodigo=".$_REQUEST['buscaCodigo'].$idNome?>" method="post" id="idFormAltEmprest">
                 <div class="itemEmprest" id="idItemEmprest01">
                     <label for="sair">Data da Saída:</label>
                     <input type="date" name="sair" value="<?=$saida?>" id="">
@@ -228,12 +333,44 @@
                     <input type="text" name="nome" value="<?=$nome?>" id="">
                 </div>
                 <div class="itemEmprest" id="idItemEmprest04">
-                    <input type="reset" value="Limpar" class="botao">
                     <input type="submit" name="emprestar" value="Alterar" class="botao">
                     <input type="submit" name="emprestar" value="Adicionar" class="botao">
+                    <button class="botao"><a id="idVoltar" href="<?=$site?>">Voltar</a></button>
                 </div>
             </form>
-            <button><a href="<?=$site?>">voltar</a></button>
+            <?php
+                $limite = ($pag - 1) *20;
+                $listEmprest = new Emprestar(
+                    $_SESSION['id_user'],
+                    "",
+                    $buscaLiv,
+                    $buscaRev,
+                    "","","",
+                    $limite.",20"
+                );
+                $listEmprest->total();
+                $count = mysqli_fetch_array($listEmprest->getTbl());
+                if ($count[0] > 0) {
+                    $totPag = ceil($count[0]/20);
+                    $listEmprest->listar();
+                    $totPagi = $totPag;
+                    if ($pag > 1) {
+                        $ant = $pag-1;
+                    }
+                    else {
+                        $ant = $pag;
+                    }
+
+                    if ($pag < $totPagi) {
+                        $prox =$pag+1;
+                    }
+                    else {
+                        $prox = $pag;
+                    }
+            ?>
+            <h1 id="idAviso"><?=$mensagem?></h1>
+            <!-- Lista de emprestar -->
+            <h3>Lista de Emprestimos:</h3>
             <table id="idTblEmprestar">
                 <thead>
                     <tr class="rowEmprest" id="idIndiceEmprest">
@@ -243,31 +380,59 @@
                     </tr>
                 </thead>
         <?php
-                while ($tblEmprest = mysqli_fetch_array($listEmprest->getTbl())) {
-                    if ($tblEmprest['dt_emprest'] != null){
-                        $dt_saida = mesBR($tblEmprest['dt_emprest'])[1];
-                    }
-                    else {
-                        $dt_saida = "";
-                    }
+                    while ($tblEmprest = mysqli_fetch_array($listEmprest->getTbl())) {
+                        if ($tblEmprest['dt_emprest'] != null){
+                            $dt_saida = mesBR($tblEmprest['dt_emprest'])[1];
+                        }
+                        else {
+                            $dt_saida = "";
+                        }
 
-                    if ($tblEmprest['dt_devol'] != null){
-                        $dt_entra = mesBR($tblEmprest['dt_devol'])[1];
-                    }
-                    else {
-                        $dt_entra = "";
-                    }
+                        if ($tblEmprest['dt_devol'] != null){
+                            $dt_entra = mesBR($tblEmprest['dt_devol'])[1];
+                        }
+                        else {
+                            $dt_entra = "";
+                        }
         ?>
                 <tr class="rowEmprest">
-                    <td class="colEmprest"><a href="<?=$_SERVER['PHP_SELF']."?acao=".$_REQUEST['acao']."&buscaCodigo=".$_REQUEST['buscaCodigo']."&idNome=".$tblEmprest['id_emprest']?>"><?=$tblEmprest['nome']?></a></td>
+                    <td class="colEmprest"><a href="<?=$_SERVER['PHP_SELF']."?acao=".$_REQUEST['acao']."&buscaCodigo=".$_REQUEST['buscaCodigo'].$pg."&idNome=".$tblEmprest['id_emprest']?>"><?=$tblEmprest['nome']?></a></td>
                     <td class="colEmprest"><?=$dt_saida?></td>
                     <td class="colEmprest"><?=$dt_entra?></td>
                 </tr>
-        <?php
-                }
-            }
-        ?>
+                <?php
+                    }                
+                ?>
             </table>
+            <!-- Barra de Navegação -->
+            <?php
+                    if ($count[0] > 20) {
+                        $ini = "pagina=1";
+                        $urle = "?acao=".$_REQUEST['acao']."&buscaCodigo=".$_REQUEST['buscaCodigo']."&";
+                        $ini = $urle.$ini;
+                        $ant = $urle."pagina=".$ant;
+                        $prox = $urle."pagina=".$prox;
+                        $totPagi = $urle."pagina=".$totPag;
+            ?>
+                        <nav>
+                            <ul>
+                                <li class="pagi"><a href="<?=$ini?>" class="paginacao"><<</a></li>
+                                <li class="pagi"><a href="<?=$ant?>" class="paginacao"><</a></li>
+                                <li class="pagi" id="idPaginas">Página <?=$pag?> / <?=$totPag?></li>
+                                <li class="pagi"><a href="<?=$prox?>" class="paginacao">></a></li>
+                                <li class="pagi"><a href="<?=$totPagi?>" class="paginacao">>></a></li>
+                            </ul>
+                        </nav>
+                    <?php
+                    }
+                    }
+                    else {
+                    ?>
+                    <h3>Não Existe Histórico de Empréstimos:</h3>
+                    <?php
+                    }
+            }
+            ?>
         </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

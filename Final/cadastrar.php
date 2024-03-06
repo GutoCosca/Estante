@@ -17,7 +17,7 @@
         </header>
         <menu>
             <ul>
-            <li><a href="inicio.html">Início</a></li>
+            <li><a href="inicio.php">Início</a></li>
             <li><a href="login.php">Entrar</a></li>
             <li><a href="cadastrar.php">Cadastrar</a></li>
             </ul>

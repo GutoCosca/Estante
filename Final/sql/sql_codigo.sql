@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS logins (
 
 CREATE TABLE IF NOT EXISTS livros (
     id_livros int PRIMARY KEY AUTO_INCREMENT,
+    id_usuarios int
     livro varchar(200) NOT NULL,
     autor varchar(50) NOT NULL,
     editora varchar(30),
@@ -35,11 +36,11 @@ CREATE TABLE IF NOT EXISTS livros (
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20),
-    id_usuarios int
 );
 
 CREATE TABLE IF NOT EXISTS revistas (
     id_revistas int PRIMARY KEY AUTO_INCREMENT,
+    id_usuarios int
     revista varchar(200) NOT NULL,
     numero int NOT NULL,
     titulo varchar(200) NOT NULL,
@@ -52,7 +53,6 @@ CREATE TABLE IF NOT EXISTS revistas (
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20),
-    id_usuarios int
 );
 
 CREATE TABLE IF NOT EXISTS emprestimo (
@@ -65,12 +65,41 @@ CREATE TABLE IF NOT EXISTS emprestimo (
     dt_devol date
 );
 
+CREATE TABLE IF NOT EXISTS forum_pergunta (
+    id_pergunta int PRIMARY KEY AUTO_INCREMENT,
+    id_usuarios int,    
+    id_livros int,
+    id_revistas int
+    topico varchar(255) NOT NULL,
+    detalhe longtext,
+    dt_aberta date NOT NULL,
+    hr_aberta time NOT NULL,
+    dt_fecha date,
+    hr_fecha time 
+);
+
+CREATE TABLE IF NOT EXISTS forum_resposta (
+    id_resposta int PRIMARY KEY AUTO_INCREMENT,
+    id_usuarios int,    
+    respoata longtext,
+    dt date NOT NULL,
+    hr time NOT NULL
+);
+
 ALTER TABLE logins ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE livros ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE revistas ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE emprestimo ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);
 ALTER TABLE emprestimo ADD FOREIGN KEY(id_livros) REFERENCES livros (id_livros);
 ALTER TABLE emprestimo ADD FOREIGN KEY(id_revistas) REFERENCES revistas (id_revistas);
+ALTER TABLE forum_pergunta ADD FOREIGN KEY(id_usuarios)
+REFERENCES usuarios (id_usuarios);
+ALTER TABLE forum_pergunta ADD FOREIGN KEY(id_livros)
+REFERENCES livros (id_livros);
+ALTER TABLE forum_pergunta ADD FOREIGN KEY(id_revistas)
+REFERENCES revistas (id_revistas);
+ALTER TABLE forum_resposta ADD FOREIGN KEY(id_usuarios)
+REFERENCES usuarios (id_usuarios);
 
 CREATE VIEW if NOT EXISTS listauser (id_usuarios, username, nome, email) AS
 SELECT usuarios.id_usuarios, usuarios.usuario, usuarios.nome, usuarios.email FROM usuarios;
