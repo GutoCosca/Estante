@@ -76,6 +76,10 @@ a:hover {
     grid-row: 3;
     background-color: var(--cor8)
 }
+
+td, th {
+    border: 1px solid #000;
+}
 /* Listar estante */
 #idForumResposta {
     grid-column: 3;

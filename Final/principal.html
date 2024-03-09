@@ -6,22 +6,26 @@
     <link rel="stylesheet" href="css/inicial.css">
     <title>Estante Virtual</title>
 </head>
-<?php
-    require_once ('php/funcao.php');
-    $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
-?>
-<body>
+<script language=javascript type="text/javascript">
+    function data() {
+        semana = new Array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado");
+        mes = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+        hoje = new Date;
+        document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+    }
+</script>
+<body onload="data()">
     <main>
         <header>
             <h1>ESTANTE VIRTUAL</h1>
         </header>
         <menu>
             <ul>
-                <li><a href="principal.php">Início</a></li>
+                <li><a href="principal.html">Início</a></li>
                 <li><a href="login.php">Entrar</a></li>
                 <li><a href="cadastrar.php">Cadastrar</a></li>
             </ul>
-            <p id="idData"><?=$horario?></p>
+            <p id="idData"></p>
         </menu>
             <section>
                 <div id="idApresenta">

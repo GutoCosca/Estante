@@ -347,13 +347,14 @@
             </form>
             <?php 
                 if (isset($_POST['topico'])){
-                    if ($_REQUEST['acao'] == "editarLivro") {
-                        $id_livro = $_REQUEST['buscaCodigo'];
-                    }
-                    elseif ($_REQUEST['acao'] == "editarRevista") {
-                        $id_revista = $_REQUEST['buscaCodigo'];
-                    }
-                    
+                    $forum = new Forum(
+                        $_SESSION['id_user'],
+                        $_REQUEST['buscaCodigo'],
+                        $_REQUEST['acao'],
+                        $_POST['topico'],
+                        $_POST['detalhe']
+                    );
+                    $forum-> abrir();
                 }
             ?>
         </section>

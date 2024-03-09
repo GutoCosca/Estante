@@ -358,6 +358,18 @@
                     <input class="botao" type="submit" value="Criar">
                 </div>
             </form>
+            <?php 
+                if (isset($_POST['topico'])){
+                    $forum = new Forum(
+                        $_SESSION['id_user'],
+                        $_REQUEST['buscaCodigo'],
+                        $_REQUEST['acao'],
+                        $_POST['topico'],
+                        $_POST['detalhe']
+                    );
+                    $forum-> abrir();
+                }
+            ?>
         </section>
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>

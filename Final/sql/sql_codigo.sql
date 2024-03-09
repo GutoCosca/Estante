@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS forum_pergunta (
 
 CREATE TABLE IF NOT EXISTS forum_resposta (
     id_resposta int PRIMARY KEY AUTO_INCREMENT,
+    id_pergunta int,
     id_usuarios int,    
     respoata longtext,
     dt date NOT NULL,
@@ -98,6 +99,8 @@ ALTER TABLE forum_pergunta ADD FOREIGN KEY(id_livros)
 REFERENCES livros (id_livros);
 ALTER TABLE forum_pergunta ADD FOREIGN KEY(id_revistas)
 REFERENCES revistas (id_revistas);
+ALTER TABLE forum_resposta ADD FOREIGN KEY(id_pergunta)
+REFERENCES forum_pergunta (id_pergunta);
 ALTER TABLE forum_resposta ADD FOREIGN KEY(id_usuarios)
 REFERENCES usuarios (id_usuarios);
 

@@ -54,7 +54,7 @@
         }
 
         else {
-            header('locacion:login.html');
+            header('locacion:login.php');
         }
                 
         return $resp;
@@ -63,5 +63,5 @@
     function logout () {
         session_unset();
         session_destroy();
-        header('location:principal.php');
+        header('location:principal.html');
     }
