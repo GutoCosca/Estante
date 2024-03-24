@@ -330,10 +330,6 @@
                     <p class="titulo">Saída:</p>
                     <p class="situa"><?=$saida?></p>
                 </div>
-                <div class="emprestar" id="idItem12">
-                    <p class="titulo">Entrada:</p>
-                    <p class="situa"><?=$entra?></p>
-                </div>
                 <div class="emprestar" id="idItem13">
                     <p class="titulo">Nome:</p>
                     <p class="situa" id="idSituaNome"><?=$nome?></p>
@@ -365,7 +361,8 @@
                         $_REQUEST['buscaCodigo'],
                         $_REQUEST['acao'],
                         $_POST['topico'],
-                        $_POST['detalhe']
+                        $_POST['detalhe'],
+                        "",""
                     );
                     $forum-> abrir();
                 }

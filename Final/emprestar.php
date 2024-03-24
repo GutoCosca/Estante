@@ -281,7 +281,6 @@
                             ""
                         );
                         $AdicEmprest->addEmprest();
-                        $mensagem =$AdicEmprest->addEmprest();
                     }
                     elseif ($_POST['emprestar'] == "Alterar") {
                         $AltEmprest = new Emprestar(
@@ -335,7 +334,7 @@
                 <div class="itemEmprest" id="idItemEmprest04">
                     <input type="submit" name="emprestar" value="Alterar" class="botao">
                     <input type="submit" name="emprestar" value="Adicionar" class="botao">
-                    <button class="botao"><a id="idVoltar" href="<?=$site?>">Voltar</a></button>
+                    <a id="idVoltar" href="<?=$site?>"><button class="botao">Voltar</button></a>
                 </div>
             </form>
             <?php

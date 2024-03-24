@@ -22,6 +22,7 @@
     else {
         logout();
     }
+    
     if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
         $pag = $_GET['pagina'];
     }
@@ -275,7 +276,7 @@
                             </ul>
                         </nav>
                     <?php
-                    }
+                        }
                     }
                     else {
                     ?>

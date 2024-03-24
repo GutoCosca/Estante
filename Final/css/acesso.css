@@ -49,7 +49,7 @@ menu {
 }
 
 ul{
-    padding: 1vh 0px 0px 11%;
+    padding: 10px 0px 0px 11%;
 }
 
 li {
@@ -115,12 +115,14 @@ legend {
 button {
     width: 140px;
     height: 35px;
-    font-size:medium;
+    font-size:var(--fontSize1);
     font-weight:bold;
     color: var(--cor0);
-    background-color: var(--cor3);
-    border: 1px solid var(--cor7);
-    border-radius: 10px;
+    text-align: center;
+    border-radius: 15px;
+    background-image: var(--botaoAltoRelevo);
+    box-shadow:  var(--sombraAltoRelevo);
+    border: none;
 }
 
 #idEntCad {
@@ -239,10 +241,6 @@ footer > p {
     menu {
         grid-column: 1;
         grid-row: 2;
-    }
-
-    ul {
-        padding-top: 2vh;
     }
 
     section {

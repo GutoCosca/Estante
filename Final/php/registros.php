@@ -794,25 +794,6 @@ use PSpell\Config;
             $this->limite = $limite;
         }
 
-        public function dataEmprest() {
-            $dt_atual = date('Y-m-d');
-            if ($this->getDt_saida() <= $dt_atual && $this->getDt_saida() != null){
-                $aprovSaida = 1;
-            }
-            else {
-                $aprovSaida = 0;
-            }
-
-            if ($this->getDt_entra() == null || ($this->getDt_entra() > $this->getDt_saida() && $this->getDt_entra() <= $dt_atual)) {
-                $aprovEntrada = 1;
-            }
-            elseif ($this->getDt_entra() <= $this->getDt_saida()) {
-                $aprovEntrada = 0;
-            }
-            $aprova = array($aprovSaida, $aprovEntrada);
-            return $aprova;
-        }
-
         public function instrucao() {
             if ($this->getId_livros() != null) {
                 $periodico = 'id_livros = '.$this->getId_livros();
@@ -851,7 +832,7 @@ use PSpell\Config;
                 $instru02 = $this->getId_livros();
             }
             elseif ($this->getId_revistas() != null) {
-                $instru01 = "id_revista";
+                $instru01 = "id_revistas";
                 $instru02 = $this->getId_revistas();
             }
 
@@ -883,34 +864,19 @@ use PSpell\Config;
 
         public function addEmprest() {
             $instruId = $this->instrucaoID();
-            $aprova = $this->dataEmprest();
-            if ($aprova[0] == true) {
-                $this->setSql(
-                    "INSERT INTO emprestimo (id_usuarios, ".$instruId[0].", nome, dt_emprest".$instruId[2].") VALUES (".$this->getId_usuario().", ".$instruId[1].", '".$this->getNome()."', '".$this->getDt_saida()."'".$instruId[3].")"
-                );
-                $conect = new Conexao($this->getSql());
-                $conect->conectar();
-                $this->setTbl($conect->getResult());
-                $mensagem = "";
-            }
-            else {
-                $mensagem = "data de saída não pode ser menor que a data atual ! ! !";
-            }
-            return $mensagem;
+            $this->setSql(
+                "INSERT INTO emprestimo (id_usuarios, ".$instruId[0].", nome, dt_emprest".$instruId[2].") VALUES (".$this->getId_usuario().", ".$instruId[1].", '".$this->getNome()."', '".$this->getDt_saida()."'".$instruId[3].")"
+            );
+            $conect = new Conexao($this->getSql());
+            $conect->conectar();
+            $this->setTbl($conect->getResult());
         }
 
         public function altEmprest() {
-            $aprova = $this->dataEmprest();
-            if ($aprova[1] == true) {
-                $this->setSql("UPDATE emprestimo SET nome = '".$this->getNome()."', dt_emprest = '".$this->getDt_saida()."', dt_devol = '".$this->getDt_entra()."' WHERE id_emprest = ".$this->getId_emprest());
-                $conect = new Conexao($this->getSql());
-                $conect->conectar();
-                $mensagem = "";
-            }
-            else {
-                $mensagem = "Data de devolução não pode ser menor que a data saida e maior que a data atual ! ! !";
-            }
-            return $mensagem;
+            $this->setSql("UPDATE emprestimo SET nome = '".$this->getNome()."', dt_emprest = '".$this->getDt_saida()."', dt_devol = '".$this->getDt_entra()."' WHERE id_emprest = ".$this->getId_emprest());
+            $conect = new Conexao($this->getSql());
+            $conect->conectar();
+            $mensagem = "";
         }
 
     }
@@ -927,16 +893,20 @@ use PSpell\Config;
         private $h_aberta;
         private $dt_fecha;
         private $h_fecha;
+        private $fechado;
+        private $limite;
         private $sql;
         private $tbl;
         private $periodico;
 
-        public function __construct($user, $idPeri, $peri, $top, $det) {
+        public function __construct($user, $idPeri, $peri, $top, $det, $fechar, $lmt) {
             $this->setId_usuarios($user);
             $this->setId_periodico($idPeri);
             $this->setTopico(addslashes($top));
             $this->setDetalhe(addslashes($det));
             $this->setPeriodico($peri);
+            $this->setFechado($fechar);
+            $this->setLimite($lmt);
         }
         
         public function getId_pergunta() {
@@ -1051,6 +1021,22 @@ use PSpell\Config;
                 $this->periodico = $perio;
         }
 
+        public function getFechado() {
+            return $this->fechado;
+        }
+
+        public function setFechado($fechar) {
+            $this->fechado = $fechar;
+        }
+
+        public function getLimite() {
+            return $this->limite;
+        }
+
+        public function setLimite($lmt) {
+            $this->limite = $lmt;
+        }
+
         public function instrucao() {
             if ($this->getPeriodico() == "editarLivro") {
                 $this->setId_livros($this->getPeriodico());
@@ -1070,7 +1056,14 @@ use PSpell\Config;
             else {
                 $condic = "";
             }
-            $resposta = array($column, $condic);
+
+            if ($this->getLimite() >= 0) {
+                $limit = " LIMIT ".$this->getLimite().",8";
+            }
+            else {
+                $limit = "";
+            }
+            $resposta = array($column, $condic, $limit);
             return $resposta;
         }
         
@@ -1086,16 +1079,25 @@ use PSpell\Config;
             $this->setTbl($conect->getResult());
         }
 
-        public function listar() {
-            $instru = $this->instrucao();
+        public function total() {
             $this->setSql(
-                "SELECT * FROM forum_pergunta WHERE id_usuarios ".$this->getId_usuarios() ." ORDER BY dt_aberta DESC"
+                "SELECT COUNT(*) FROM forum_pergunta WHERE id_usuarios ".$this->getId_usuarios()." AND fechado = ".$this->getFechado()
             );
             $conect = new Conexao($this->getSql());
-            $conect ->conectar();
+            $conect->conectar();
             $this->setTbl($conect->getResult());
         }
 
+        public function listar() {
+            $instru = $this->instrucao();
+            $this->setSql(
+                "SELECT * FROM forum_pergunta WHERE id_usuarios ".$this->getId_usuarios() ." AND fechado = ".$this->getFechado()." ORDER BY dt_aberta DESC".$instru[2]
+            );
+            $conect = new Conexao($this->getSql());
+            $conect->conectar();
+            $this->setTbl($conect->getResult());
+        }
+        
         public function busca ($perg) {
             $this->setId_pergunta($perg);
             $this->setSql(

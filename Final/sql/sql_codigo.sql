@@ -84,7 +84,8 @@ CREATE TABLE IF NOT EXISTS forum_resposta (
     id_usuarios int,    
     respoata longtext,
     dt date NOT NULL,
-    hr time NOT NULL
+    hr time NOT NULL,
+    fechado boolean NOT NULL DEFAULT FALSE
 );
 
 ALTER TABLE logins ADD FOREIGN KEY(id_usuarios) REFERENCES usuarios (id_usuarios);

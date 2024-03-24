@@ -147,20 +147,13 @@
                 );
                 $emprest->listar();
                 $tblEmprest = mysqli_fetch_array($emprest->getTbl());
-                    if ($tblEmprest != null) {
-                        $nome = $tblEmprest['nome'];
-                        $saida = mesBR($tblEmprest['dt_emprest'])[2];
-                        if ($tblEmprest['dt_devol'] != null){
-                            $entra = mesBR($tblEmprest['dt_devol'])[2];
-                        }
-                        else {
-                            $entra = "";
-                        } 
+                    if ($tblEmprest != null && $tblEmprest['dt_emprest'] != null && $tblEmprest['dt_devol'] == null) {
+                            $nome = $tblEmprest['nome'];
+                            $saida = mesBR($tblEmprest['dt_emprest'])[2];
                     }
                     else {
                         $saida = "";
                         $nome = "";
-                        $entra = "";
                     }   
             }
             ?>
@@ -317,10 +310,6 @@
                     <p class="titulo">Saída:</p>
                     <p class="situa"><?=$saida?></p>
                 </div>
-                <div class="emprestar" id="idItem12">
-                    <p class="titulo">Entrada:</p>
-                    <p class="situa"><?=$entra?></p>
-                </div>
                 <div class="emprestar" id="idItem13">
                     <p class="titulo">Nome:</p>
                     <p class="situa" id="idSituaNome"><?=$nome?></p>
@@ -352,7 +341,8 @@
                         $_REQUEST['buscaCodigo'],
                         $_REQUEST['acao'],
                         $_POST['topico'],
-                        $_POST['detalhe']
+                        $_POST['detalhe'],
+                        "",""
                     );
                     $forum-> abrir();
                 }

@@ -45,7 +45,7 @@ menu {
 }
 
 ul{
-    padding: 1vh 0px 0px 11%;
+    padding: 10px 0px 0px 11%;
 }
 
 li {
@@ -125,10 +125,6 @@ footer > p {
     menu {
         grid-column: 1;
         grid-row: 2;
-    }
-
-    ul {
-        padding-top: 1.5vh;
     }
 
     #idData {
