@@ -2,190 +2,294 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="teste/listar.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="css/listar.css">
     <title>Estante Virtual</title>
 </head>
 <?php
     require_once ('php/registros.php');
     require_once ('php/funcao.php');
+    if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'logout') {
+        logout();
+    }
     session_start();
-    $usuario = "";
-
-    if (isset($_SESSION['user'])) { // Verifica se o usuario está logado
-        $usuario = "Bem vindo ".$_SESSION['user'];
-        $ativo = new Atividade(); // Verifica o tempo de inatividade
+    if (isset($_SESSION['id_user'])){
+        $logado = sessao($_SESSION['user']);
+        $ativo = new Atividade();
         $ativo->tempo();
+        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    }
+    else {
+        logout();
+    }
+    
+    if (isset($_GET['pagina']) && $_GET['pagina'] != null) {
+        $pag = $_GET['pagina'];
+    }
+    else {
+        $pag = 1;
     }
 ?>
 <body>
-    <header>
-    <h1>Estante Virtual</h1>
-    <p class="identidade"><?=$usuario?></p>
-    </header>
-    <nav>
-        <span class="material-symbols-outlined" id="burguer" onclick="clickMenu()">menu</span>
-        <menu id="itens">
-            <ul class="navegador">
-                <li><a href="principal.php" onclick="clickItem()">Inicio</a></li>
-                <li><a href="livros.php" onclick="clickItem()">Livros</a></li>
-                <li><a href="revistas.php" onclick="clickItem()">Revistas</a></li>
-                <li><a href="#" onclick="clickItem()">Forum</a></li>
-                <li><a href="logout.php" onclick="clickItem()">Sair</a></li>
+    <main>
+        <header>
+            <h1>ESTANTE VIRTUAL</h1>
+            <div id="idIdent">
+                <p class="ident"><?=$logado?></p>
+            </div>
+        </header>
+        <menu>
+            <ul>
+                <li><a href="inicio.php">Início</a></li>
+                <li><a href="livros.php">Livros</a></li>
+                <li><a href="revistas.php">Revistas</a></li>
+                <li><a href="forum.php">Forum</a></li>
+                <li><a href="?acao=logout">Sair</a></li>
             </ul>
+            <p id="idData"><?=$horario?></p>
         </menu>
-    </nav>
-    <main class="pagina">
-        <section id="inserir_dados">
-            <h3>Adicionar Livros</h3></br>
+        <section id="idAdicionar">
+            <h3>Adicionar Livros</h3>
             <p>*campos obrigatórios</p>
-            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" class="adicionar_dados"> <!-- Formulario para inserir livros -->
-                <div class="bloco" id="bloco01">
-                    <label for="livro" class="obrigatorio">Nome do Livro:</label>
-                    <input type="text" name="livro" id="idLivro" required>
-                    <label for="autor" class="obrigatorio">Nome do autor:</label>
+            <!-- Adicionar livro -->
+            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addLivro" method="post" enctype="multipart/form-data" id="idFormAdd">
+                <div id="idArea00">
+                    <label for="livro" class="obrig">Título do Livro:</label>
+                    <input type="text" name="livro" id="idlivro" required>
+                </div>
+                <div id="idArea01">
+                    <label for="autor" class="obrig">Autor:</label>
                     <input type="text" name="autor" id="idAutor" required>
                 </div>
-                <div class="bloco" id="bloco02">
-                    <label for="editora" class="obrigatorio">Editora:</label>
-                    <input type="text" name="editora" id="idEditora" required>
+                <div id="idArea02">
+                    <label for="editora">Editora:</label>
+                    <input type="text" name="editora" id="idEditora">
+                    </div>
+                <div id="idArea03">
                     <label for="compra">Data da Compra:</label>
                     <input type="date" name="compra" id="idCompra">
                 </div>
-                <div class="bloco" id="bloco03">
+                <div id="idArea04">
                     <input type="submit" value="Adicionar" class="botao">
                     <input type="reset" value="Limpar" class="botao">
                 </div>
             </form>
-            <h3 id="classificar">Buscar</h3>
-            <form action="<?php $_SERVER['PHP_SELF']?>" method="get" class="buscar_dados"> <!-- Formulario para busca de livros -->
-                <select name="tipo" class="tipos" id="idTipo">
-                    <option value="livro">Livro</option>
-                    <option value="autor">Autor</option>
-                </select>
-                <select name="ordem" class="tipos" id="idOrdem">
-                    <option value="ASC">Crescente</option>
-                    <option value="DESC">Decrescente</option>
-                </select>
-                <div class="blocoBusca">
-                    <div class="blocoBusca01">
-                        <label for="letra">Nome:</label>
-                        <input type="text" name="letra" id="idLetra">
+            <h3 id="idTitBusca">Buscar</h3>
+            <!-- Busca detalhada -->
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="get" id="idFormBusca">
+                <div id="idArea05">
+                    <label for="letra">Nome:</label>
+                    <input type="text" name="letra" id="idLetra">
+                </div>
+                <div id="idArea06">
+                    <div id="idArq01">
+                        <select name="tipo" id="idTipo">
+                            <option value="livro">Livro</option>
+                            <option value="autor">Autor</option>
+                        </select>
+                        <select name="ordem" id="idOrdem">
+                            <option value="ASC">Crescente</option>
+                            <option value="DESC">Decrescente</option>
+                        </select>
                     </div>
-                    <div class="blocoBusca02">
-                        <input type="checkbox" name="arq" id="idArqMorto" class="arqMorto">
-                        <label for="arq" class="arqMorto">Livros desaparecidos</label>
+                    <div id="idArq">
+                        <label for="condic" id="idCondic">Situação do Livro:</label>
+                        <select name="condic" id="idCondic">
+                            <option value="0">Estante</option>
+                            <option value="1">Emprestado</option>
+                            <option value="2">Extraviado</option>
+                        </select>
                     </div>
                 </div>
-                <input type="submit" value="buscar" class="botao">
-                <input type="reset" value="limpar" class="botao">
+                <div id="idArea07">
+                    <input type="submit" name="acao" value="Buscar" class="botao">
+                    <input type="reset" value="Limpar" class="botao">
+                </div>
             </form>
         </section>
-        <section class="informacao" id="tabela"> <!-- Exibir Livros-->
-            <!-- <h2>Sua Estante de Livros</h2> -->
+        <section id="idListar">
+            <!-- Listagem dos livros -->
             <?php
                 if (isset($_SESSION['user'])) {
-                    $arq = 0;
+                    $arqMorto = 0;
+                    $arqEmprestar = 0;
+                    $ebook = 0;
+                    $limite = ($pag -1) *10;
                     $situa = "Sua Estante de Livros";
-                    
-                    if (isset($_REQUEST['arq'])) {
-                        $arq = 1;
-                        $situa = "Livros Desaparecidos";
+                    if (isset($_REQUEST['acao'])) {
+                        if ($_REQUEST['acao'] == 'addLivro') {
+                            $add = new EditLivros(
+                                $_SESSION['id_user'],
+                                "livros",
+                                $_POST['livro'],
+                                $_POST['autor'],
+                                $_POST['editora'],
+                                "","","",
+                                $_POST['compra'],
+                                "","","","","",
+                                $ebook,
+                                $arqEmprestar,
+                                $arqMorto
+                            );
+                            $add->addLivros();
+                            $listar = new Registros (
+                                $_SESSION['id_user'],
+                                "livros",
+                                "livro","","",
+                                $ebook,
+                                $arqEmprestar,
+                                $arqMorto,
+                                $limite
+                            );
+                        }
+                        elseif ($_REQUEST['acao'] == 'Buscar') {
+                            if ($_REQUEST['condic'] == 1) {
+                                $arqEmprestar = 1;
+                                $arqMorto = 0;
+                                $situa = "Seus Livros Emprestados";
+                            }
+                            elseif ($_REQUEST['condic'] == 2) {
+                                $arqEmprestar = 0;
+                                $arqMorto = 1;
+                                $situa = "Seus Livros Extraviados";
+                            }
+
+                            $listar = new Registros(
+                                $_SESSION['id_user'],
+                                "livros",
+                                $_GET['tipo'],
+                                $_GET['letra'],
+                                $_GET['ordem'],
+                                $ebook,
+                                $arqEmprestar,
+                                $arqMorto,
+                                $limite
+                            );
+                        }
                     }
-                    
-                    if (isset($_REQUEST['tipo'])) {
-                        $lista = new Registros($_SESSION['id_user'], "livros", $_GET['tipo'],$_GET['letra'], $_GET['ordem'], $arq);
-                    }
-                    
-                    else if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'addLivro') {
-                        $add = new EditLivros(
-                            $_SESSION['id_user'], 
-                            "livros", 
-                            $_POST['livro'], 
-                            $_POST['autor'], 
-                            $_POST['editora'], 
-                            "", "", "", 
-                            $_POST['compra'], 
-                            "", "", "", "", "", 
-                            $arq);
-                        $add -> addLivros();
-                        $lista = new Registros($_SESSION['id_user'], "livros", "livro", "", "", $arq);
-                    }
-                    
                     else {
-                        $lista = new Registros($_SESSION['id_user'], "livros", "livro", "", "", $arq);
+                        $listar = new Registros(
+                            $_SESSION['id_user'],
+                            "livros",
+                            "livro","","",
+                            $ebook,
+                            $arqEmprestar,
+                            $arqMorto,
+                            $limite
+                        );
                     }
-                    $lista->lista();
-                    
-                    if (mysqli_num_rows($lista -> getTbl()) != 0) {
+                    $listar->total();
+                    $count = mysqli_fetch_array($listar->getTbl());
+                    if ($count[0] > 0) {
+                        $totPag = ceil($count[0]/10);
+                        $listar->lista();
             ?>
-            <h2><?=$situa?></h2>
-            <table>
-                <thead>
-                    <tr id="indice">
+            <h3 id="idTitEstante"><?=$situa?></h3>
+            <div id="idTabela01">
+                <table>
+                    <thead>
+                        <tr id="idIndice">
                         <th>CAPA</th>
                         <th>LIVRO</th>
                         <th>AUTOR</th>
                         <th>EDITORA</th>
                         <th>COMPRA</th>
-                    </tr>
-                </thead>
-                <?php 
-                        
-                        while ($tblLista = mysqli_fetch_array($lista->getTbl())) {
-
-                            if ($tblLista['compra'] != null) {
-                                $compraBR = mesBR($tblLista['compra']) [0];
-                            }
-
-                            else {
-                                $compraBR = "";
-                            }
+                        </tr>
+                    </thead>
+                    <?php
+                            while ($tblLista = mysqli_fetch_array($listar->getTbl())) {
+                                if ($tblLista['compra'] != null ) {
+                                    $compraBR = mesBR($tblLista['compra'])[0];
+                                }
+                                else {
+                                    $compraBR = "";
+                                }
+                                if ($tblLista['capa'] != null) {
+                                    $capa = '<img src="capas/'.$tblLista['capa'].'">';
+                                }
+                                else {
+                                    $capa = "";
+                                }
                     ?>
-                    <tr class="dados">
-                        <td class="capa"><img src="capas/<?=$tblLista['capa']?>" alt="<?=$tblLista['livro']?>"></td>
-                        <td class="nomes" id="idNomes"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$tblLista['id_livros']?>"><?=$tblLista['livro']?></a></td>
-                        <td class="nomes"><?=$tblLista['autor']?></td>
-                        <td class=""><?=$tblLista['editora']?></td>
-                        <td class="data"><?=$compraBR?></td>
+                    <tr>
+                        <td class="listaCapa" id="idCapa"><?=$capa?></td>
+                        <td class="listaNome" id="idLivro"><a href="editLivro.php?acao=editarLivro&buscaCodigo=<?=$tblLista['id_livros']?>"><?=$tblLista['livro']?></a></td>
+                        <td class="listaNome" id="idAutor"><?=$tblLista['autor']?></td>
+                        <td class="listaNome" id="idEditora"><?=$tblLista['editora']?></td>
+                        <td class="listaData" id="idCompra"><?=$compraBR?></td>
                     </tr>
+                <?php
+                            }
+                ?>
+                </table>
+                <!-- Barra de Navegação -->
+                <?php
+                    if ($count[0] > 10) {
+                        $totPagi = $totPag;
+                        if ($pag > 1) {
+                            $ant = $pag - 1;
+                        }
+                        else {
+                            $ant = $pag;
+                        }
+
+                        if ($pag < $totPagi) {
+                            $prox = $pag + 1;
+                        }
+                        else {
+                            $prox = $pag;
+                        }
+                        $ini = "pagina=1";
+                        
+                        if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'Buscar') {
+                            $tip = "&tipo=".$_GET['tipo'];
+                            $ord = "&ordem=".$_GET['ordem'];
+                            $cond = "&condic=".$_GET['condic'];
+                            $acao = "&acao=".$_GET['acao'];
+                            if ($_GET['letra'] != null){
+                                $let = "&letra=".$_GET['letra'];
+                            }
+                            else {
+                                $let = "&letra=";
+                            }
+                            $resp = $let.$tip.$ord.$cond.$acao;
+                            $ini = $ini.$resp;
+                            $ant = $ant.$resp;
+                            $prox = $prox.$resp;
+                            $totPagi = $totPag.$resp;
+                        }
+                        else {
+                            $let = "";
+                            $tip = "";
+                            $ord = "";
+                            $cond = "";
+                            $acao = "";
+                        }
+                        ?>
+                        <nav>
+                            <ul>
+                                <li class="pagi"><a href="?<?=$ini?>" class="paginacao"><<</a></li>
+                                <li class="pagi"><a href="?pagina=<?=$ant?>" class="paginacao"><</a></li>
+                                <li class="pagi" id="idPaginas">Página <?=$pag?> / <?=$totPag?></li>
+                                <li class="pagi"><a href="?pagina=<?=$prox?>" class="paginacao">></a></li>
+                                <li class="pagi"><a href="?pagina=<?=$totPagi?>" class="paginacao">>></a></li>
+                            </ul>
+                        </nav>
                     <?php
                         }
-                    ?>
-            </table>
-            <?php
                     }
-                    
                     else {
-                        echo "<h2>está vazia</br>Adicione novos livros</h2>";
+                    ?>
+                    <h3 id="idTitEstante">Sua Estante de Livros</br>Está Vazia</h3>
+                    <?php
+                        }
                     }
-                }
-                ?>
+            ?>
+            
         </section>
+        <footer>
+            <p>Desenvolvido por Gustavo Coscarello</p>
+        </footer>
     </main>
-    <footer>
-        <p class="design">Desenvolvido por Gustavo Coscarello</p>
-    </footer>
-    <script>
-        function mudouTamanho() {
-            if (window.innerWidth >= 766) {
-                itens.style.display = 'block'
-            }
-            else {
-                itens.style.display = 'none'
-            }
-        }
-
-        function clickMenu() {
-            if (itens.style.display == 'block') {
-                itens.style.display = 'none'
-            }
-            else {
-                itens.style.display = 'block'
-            }
-        }
-    </script>
 </body>
 </html>

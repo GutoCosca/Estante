@@ -113,15 +113,13 @@
 
                 if ($userResult === $this->getUsuario()) {
                     if (password_verify($this->getSenha(), $senhaResult)) {
-                        header('location:principal.php');
+                        header('location:inicio.php');
                         session_start();
                         $_SESSION['user'] = $this->getUsuario();
                         $_SESSION['id_user'] = $tblValida['id_usuarios'];
                         $_SESSION['dataIn'] = date('d-m-Y');
                         $_SESSION['horaIn'] = date('H:i:s');
                         $_SESSION['last_time'] = time();
-
-                        $mensagem = "";
                     }
                     else {
                         $mensagem = "Usuário e senha inválidas";

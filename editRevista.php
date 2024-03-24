@@ -2,215 +2,375 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/listar.css">
+    <link rel="stylesheet" href="css/editar.css">
     <title>Estante Virtual</title>
 </head>
 <?php
+
     require_once ('php/registros.php');
     require_once ('php/funcao.php');
-    session_start();
-    $usuario = "";
-    
-    if (isset($_SESSION['user'])) {
-        $usuario = "Bem vindo ".$_SESSION['user'];
-        $ativo = new Atividade();
-        $ativo ->tempo();
+    if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'logout') {
+        logout();
     }
-    $ativo = new Atividade();
-    $ativo ->tempo();
+    session_start();
+    if (isset($_SESSION['id_user'])){
+        $logado = sessao($_SESSION['user']);
+        $ativo = new Atividade();
+        $ativo->tempo();
+        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
+    }
+    else {
+        logout();
+    }
 ?>
 <body>
-    <header>
-        <h1>Estante Virtual</h1>
-    </header>
     <main>
+        <header>
+            <h1>ESTANTE VIRTUAL</h1>
+            <div id="idIdent">
+                <p class="ident"><?=$logado?></p>
+            </div>
+        </header>
         <menu>
             <ul>
-                <li><a href="principal.php">Inicio</a></li>
+                <li><a href="inicio.php">Início</a></li>
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
-                <li><a href="#">Forum</a></li>
-                <li><a href="logout.php">Sair</a></li>
+                <li><a href="forum.php">Forum</a></li>
+                <li><a href="?acao=logout">Sair</a></li>
             </ul>
-            <p class="identidade"><?=$usuario?></p>
+            <p id="idData"><?=$horario?></p>
         </menu>
         <?php
-            if(isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'alterar'){
-                $buscacodigo = $_POST['id_livro'];
-                $altera = new Editar(
-                    $_SESSION['id_user'],   
-                    "livros",
-                    $_POST['livro'],
-                    $_POST['autor'],
-                    $_POST['editora'],
-                    $_POST['edicao'],
-                    $_POST['ano'],
-                    $_POST['isbn'],
-                    $_POST['compra'],
-                    $_FILES['capa']['tmp_name'],
-                    $_FILES['capa']['size'],
-                    pathinfo($_FILES['capa']['name'], PATHINFO_EXTENSION),
-                    $_POST['sinopse'],
-                    $_POST['opiniao'],
-                    $_POST['arqmorto'],
+            if (isset($_REQUEST['acao'])){
+                if ($_REQUEST['acao'] == 'alterar') {
+                    if (isset($_POST['ebook']) && $_POST['ebook'] == 1) {
+                        $ebook = $_POST['ebook'];
+                        $arqEmprestar = 0;
+                        $arqMorto = 0;
+                    }
+                    else {
+                        if ($_POST['situacao'] == 1) {
+                            $arqEmprestar = 1;
+                            $arqMorto = 0;
+                        }
+                        elseif ($_POST['situacao'] == 2) {
+                            $arqEmprestar = 0;
+                            $arqMorto = 1;
+                        }
+                        else {
+                            $arqEmprestar = 0;
+                            $arqMorto = 0;
+                        }
+
+                        $ebook = 0;
+                    }
+
+                    $altera = new EditRevistas(
+                        $_SESSION['id_user'],
+                        "revistas",
+                        $_POST['revista'],
+                        $_POST['numero'],
+                        $_POST['titulo'],
+                        $_POST['autor'],
+                        $_POST['editora'],
+                        $_POST['ano'],
+                        $_POST['issn'],
+                        $_POST['compra'],
+                        $_FILES['capa']['tmp_name'],
+                        $_FILES['capa']['size'],
+                        pathinfo($_FILES['capa']['name'], PATHINFO_EXTENSION),
+                        $_POST['sinopse'],
+                        $_POST['opiniao'],
+                        $ebook,
+                        $arqEmprestar,
+                        $arqMorto
                     );
+                    $altera->altRevistas($_REQUEST['buscaCodigo']);
+                    
+                }
+                $dados = new Registros(
+                    $_SESSION['id_user'],
+                    "revistas",
+                    "","","","","","",""
+                );
+                $dados->buscar($_REQUEST['buscaCodigo']);
+                $tblDados = mysqli_fetch_array($dados->getTbl());
+                $checkEstante = '';
+                $checkEmprestar = '';
+                $checkExtarviado = '';
+                $displayEbook = "";
+                $display = 'style="display: none;"';
+                if ($tblDados['arqempresta'] == 1) {
+                    $situa = "EMPRESTADO";
+                    $checkEmprestar = 'checked = "checked"';
+                    $display = "";
+                }
+                elseif ($tblDados['arqmorto'] == 1) {
+                    $situa = "EXTRAVIADO";
+                    $checkExtarviado = 'checked = "checked"';
+                }
+                else {
+                    $situa = "";
+                    $checkEstante = 'checked = "checked"';
+                }
+
+                if ($tblDados['ebook'] == 1) {
+                    $checkEbook = 'checked';
+                    $situa = "eBook";
+                    $displayEbook = 'style="display: none;"';
+                    $display = 'style="display: none;"';
+                }
+                else {
+                    $checkEbook = "";
+                }
                 
-                $altera->alterar($buscacodigo);
-            }
-            else if(isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'editarLivro'){
-                $buscacodigo = $_REQUEST['buscaCodigo'];
-            }
-            else {
-                $buscacodigo = $codigo;
-            }
+                if ($tblDados['capa'] != null) {
+                    $capa = "<img src='capas/".$tblDados['capa']."'>";
+                }
+                else {
+                    $capa = "";
+                }
 
-            $busca = new Registros($_SESSION['id_user'],"livros","","","","");
-            $busca->buscar($buscacodigo);            
-            $tblEditar = mysqli_fetch_assoc($busca->getTbl());
-
-            $codigo = $tblEditar["id_livros"];
-            $livro = $tblEditar["livro"];
-            $autor = $tblEditar["autor"];
-            $editora = $tblEditar["editora"];
-            $edicao = $tblEditar["edicao"];
-            $ano = $tblEditar["ano"];
-            $isbn = $tblEditar["isbn"];
-            $compra = $tblEditar["compra"];
-            $sinopse = $tblEditar["sinopse"];
-            $opiniao = $tblEditar["opiniao"];
-            $arqMorto = $tblEditar["arqmorto"];
-
-            if ($arqMorto == 1) {
-                $situa = "FORA DA ESTANTE";
-                $checked1 = 'checked = "checked"';
-                $checked0 = '';
+                if ($tblDados['compra'] != null) {
+                    $compraBR = mesBR($tblDados['compra'])[1];
+                }
+                else {
+                    $compraBR = "";
+                }
+                $emprest = new Emprestar(
+                    $_SESSION['id_user'],
+                    "","",
+                    $_REQUEST['buscaCodigo'],
+                    "","","",
+                    1
+                );
+                $emprest->listar();
+                $tblEmprest = mysqli_fetch_array($emprest->getTbl());
+                if ($tblEmprest != null) {
+                    $nome = $tblEmprest['nome'];
+                    $saida = mesBR($tblEmprest['dt_emprest'])[2];
+                    if ($tblEmprest['dt_devol'] != null) {
+                        $entra = mesBR($tblEmprest['dt_devol'])[2];
+                    }
+                    else {
+                        $entra = "";
+                    }
+                }
+                else{
+                    $saida = "";
+                    $nome = "";
+                    $entra = "";
+                }
             }
-            else {
-                $situa = "";
-                $checked0 = 'checked = "checked"';
-                $checked1 = '';
-            }
-
-            if ($compra != null){
-                $compraBR = mesBR($compra)[1];
-            }
-            else {
-                $compraBR = "";
-            }
-
-            $capa = $tblEditar["capa"];
-        ?>
-        <section class="livros">
-            <h2 id="idEditLivro">Dados do Livro</h2>
-            <table class="tbledicao">
+            ?>
+        <section id="idDado">
+            <h3>Dados da Revista</h3>
+            <!-- Exibe os dados completo do livro (media screen > 1024px) -->
+            <table id="idTabela01">
                 <tr class="visual">
-                    <td id="idCapa" colspan="2"><img src="capas/<?=$capa?>" alt="<?=$capa?>"></td>
-                    <td colspan="2" class="estante"><?=$situa?></td>
+                    <td class="capa" id="idCapa"><?=$capa?></td>
+                    <td class="capa" colspan="3"><?=$situa?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">Livro:</th>
-                    <td colspan="3"><?=$livro?></td>
+                    <th>REVISTA:</th>
+                    <td colspan="3"><?=$tblDados['revista']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">Autor:</th>
-                    <td colspan="3"><?=$autor?></td>
+                    <th>NUMERO:</th>
+                    <td><?=$tblDados['numero']?></td>
+                    <th>ANO:</th>
+                    <td><?=$tblDados['ano']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">Editora:</th>
-                    <td colspan="3"><?=$editora?></td>
+                    <th>TÍTULO:</th>
+                    <td colspan="3"><?=$tblDados['titulo']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">Edição:</th>
-                    <td><?=$edicao?></td>
-                    <th class="titulo">Ano:</th>
-                    <td><?=$ano?></td>
+                    <th>AUTOR:</th>
+                    <td colspan="3"><?=$tblDados['autor']?></td>
+                </tr>
+                <tr>
+                    <th>EDITORA:</th>
+                    <td colspan="3"><?=$tblDados['editora']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">ISBN:</th>
-                    <td colspan="3"><?=$isbn?></td>
+                    <th>ISSN:</th>
+                    <td colspan="3"><?=$tblDados['issn']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo">Aquisição:</th>
+                    <th>COMPRA:</th>
                     <td colspan="3"><?=$compraBR?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo" valign="top">Sinopse:</th>
-                    <td colspan="3"><?=$sinopse?></td>
+                    <th>SINOPSE:</th>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo" valign="top">Opinião:</th>
-                    <td colspan="3"><?=$opiniao?></td>
+                    <td class="texto" colspan="4"><?=$tblDados['sinopse']?></td>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo" valign="top">Motivo:</th>
-                    <td colspan="3">Emprestado: Ricardo</td>
+                    <th>OPINIÃO:</th>
                 </tr>
                 <tr class="visual">
-                    <th class="titulo" valign="top">Data</th>
-                    <td colspan="3">23/03/2023</td>
+                    <td class="texto" colspan="4"><?=$tblDados['opiniao']?></td>
                 </tr>
             </table>
+            <!-- Exibe os dados completo da revista (media screen =< 1024px) -->
+            <div id="idTabela02">
+                <p id="idCapaP"><?=$capa?></p>
+                <p id="idSituaP"><?=$situa?></p>
+                <p class="dadosP01" id="idLivroP01">REVISTA:</p>
+                <p class="dadosP02" id="idLivroP02"><?=$tblDados['revista']?></p>
+                <p class="dadosP01" id="idTituloR01">TÍTULO:</p>
+                <p class="dadosP02" id="idTituloR02"><?=$tblDados['titulo']?></p>
+                <p class="dadosP01" id="idAutorR01">AUTOR:</p>
+                <p class="dadosP02" id="idAutorR02"><?=$tblDados['autor']?></p>
+                <p class="dadosP01" id="idEditoraR01">EDITORA:</p>
+                <p class="dadosP02" id="idEditoraR02"><?=$tblDados['editora']?></p>
+                <p class="dadosP01" id="idCompraP01">COMPRA:</p>
+                <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
+                <p class="dadosP01" id="idIsbnP01">ISSN:</p>
+                <p class="dadosP02" id="idIsbnP02"><?=$tblDados['issn']?></p>
+                <p class="dadosP01" id="idEdicaoP01">NÚMERO:</p>
+                <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['numero']?></p>
+                <p class="dadosP01" id="idAnoP01">ANO:</p>
+                <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
+                <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
+                <p class="dadosP02" id="idSinopseP02"><?=$tblDados['sinopse']?></p>
+                <p class="dadosP01" id="idOpiniaoP01">OPINIÃO:</p>
+                <p class="dadosP02" id="idOpiniaoP02"><?=$tblDados['opiniao']?></p>
+            </div>
         </section>
-        <section class="tblLivros">
-            <div class="edicao">
-                <form action="<?php $_SERVER['PHP_SELF'] ?>?acao=alterar&<?=$codigo?>" method="post" enctype="multipart/form-data" id="idEditLivro">
-                    <input type="hidden" name="id_livro" id="" value="<?=$codigo?>">
-                    <fieldset>
-                        <label for="capa">Capa:</label>
-                        <input type="file" name="capa" id="idCapa">
-                        <label for="livro">Nome do Livro:</label>
-                        <input type="text" name="livro" id="idLivro" value="<?=$livro?>">
-                        <label for="autor">Nome do Autor:</label>
-                        <input type="text" name="autor" id="idAutor" value="<?=$autor?>">
-                        <label for="editora">Editora:</label>
-                        <input type="text" name="editora" id="idEditora" value="<?=$editora?>">
-                        <label for="edicao">Edição:</label>
-                        <input type="text" name="edicao" id="idEdicao" value="<?=$edicao?>">
+        <section id="idAltera">
+            <h3>Alterar Dados da Revista</h3>
+            <!-- Alteração dos dados da revista -->
+            <form action="<?=$_SERVER['PHP_SELF']?>?acao=alterar&buscaCodigo=<?=$tblDados['id_revistas']?>" method="post" enctype="multipart/form-data" id="idForm">
+                <div id="idItem01">
+                    <div id="idArea01">
+                        <p>Capa:</p>
+                        <label for="capaBotao">Capa</label>
+                        <input type="file" name="capa"  id="capaBotao">
+                    </div>
+                    <div id="idArea02">
+                        <input type="checkbox" name="ebook" value="1" <?=$checkEbook?> id="idEbook">
+                        <label for="ebook">eBooK</label>
+                    </div>
+                </div>
+                <div id="idItem02">
+                    <label for="titulo">Nome da Revista:</label>
+                    <input type="text" name="titulo" id="" value="<?=$tblDados['revista']?>">
+                </div>
+                <div id="idItem03">
+                    <label for="revista">Título da Revista:</label>
+                    <input type="text" name="revista" id="" value="<?=$tblDados['revista']?>">
+                </div>
+                <div class="revista" id="idItem04">
+                    <div>
+                        <label for="autor">Nome do Autor</label>
+                        <input type="text" name="autor"  class="input01" value="<?=$tblDados['autor']?>">
+                    </div>
+                    <div>
+                        <label for="editora">Nome da Editora:</label>
+                        <input type="text" name="editora" class ="input01" value="<?=$tblDados['editora']?>">
+                    </div>
+                </div>
+                <div id="idItem05">
+                    <div id="idArea03">
+                        <label for="numero">Número:</label>
+                        <input type="text" name="numero" class="input01" id="" value="<?=$tblDados['numero']?>">
+                    </div>
+                    <div id="idArea04">
                         <label for="ano">Ano:</label>
-                        <input type="text" name="ano" id="iAno" value="<?=$ano?>">
-                        <label for="isbn">ISBN:</label>
-                        <input type="text" name="isbn" id="idIsbn" value="<?=$isbn?>">
-                    </fieldset>
-                    <fieldset id="direito">
-                        <label for="compra">Data de Aquisição:</label>
-                        <input type="date" name="compra" id="idCompra" value="<?=$compra?>">
-                        <label for="sinopse">Sinopse:</label>
-                        <textarea name="sinopse" id="" cols="100" rows="10"><?=$sinopse?></textarea>
-                        <label for="opiniao">Opinião:</label>
-                        <textarea name="opiniao" id="" cols="48" rows="10" spellcheck="off"><?=$opiniao?></textarea>
-                    </fieldset>
-                    
-                    <fieldset class="opcao">
-                            <label for="arqmorto" class="titulo2">O livro foi perdido?</label>
-                            <input type="radio" name="arqmorto" id="1" value="1" <?=$checked1?> class="checar">
-                            <label for="0">Sim</label>
-                            <input type="radio" name="arqmorto" id="0" value="0" <?=$checked0?> class="checar">
-                            <label for="1">Não</label>
-                            <label for="motivo" class="titulo2">Motivo:</label>
-                            <input type="text" name="motivo" id="idMotivo">
-                            <label for="dataMoti" class="titulo2">Data:</label>
-                            <input type="date" name="dataMoti" id="idDataMotiv">
-                        </fieldset>
-                        <fieldset id="idbotao">
-                            <input type="submit" value="Alterar" class="botao">
-                            <input type="reset" value="Limpar" class="botao">
-                        </fieldset>
-                </form>
+                        <input type="text" name="ano" class="input01" id="" value="<?=$tblDados['ano']?>">
+                    </div>
+                </div>
+                <div id="idItem06">
+                    <div id="idArea05">
+                        <label for="issn">ISSN:</label>
+                        <input type="text" name="issn" class="input01" id="" value="<?=$tblDados['issn']?>">
+                    </div>
+                    <div id="idArea06">
+                        <label for="compra">Compra:</label>
+                        <input type="date" name="compra" class="input01" id="" value="<?=$tblDados['compra']?>">
+                    </div>
+                </div>
+                <div id="idItem07">
+                    <label for="sinopse">Sinopse:</label>
+                    <textarea name="sinopse" id="" spellcheck="off"><?=$tblDados['sinopse']?></textarea>
+                </div>
+                <div id="idItem08">
+                    <label for="opiniao">Opinião:</label>
+                    <textarea name="opiniao" id="" ><?=$tblDados['opiniao']?></textarea>
+                </div>
+                <div id="idItem09" <?=$displayEbook?>>
+                    <label class="areas" for="situacao" id="idSituacao">Situação da Revista:</label>
+                    <div class="areas" id="idArea07">
+                        <input type="radio" name="situacao" <?=$checkEstante?> id="idOpcao01" value="0">
+                        <label for="estante">Estante</label>
+                    </div>
+                    <div class="areas" id="idArea08">
+                        <input type="radio" name="situacao" id="idOpcao02" value="1" <?=$checkEmprestar?>>
+                        <label for="emprestar">Emprestado</label>
+                    </div>
+                    <div class="areas" id="idArea09">
+                        <input type="radio" name="situacao" id="idOpcao03" value="2" <?=$checkExtarviado?>>
+                        <label for="extraviado">Extraviado</label>
+                    </div>
+                </div>
+                <div id="idItem10">
+                    <input type="submit" value="Alterar">
+                    <button class="botao"><a id="idVoltar" href="livros.php">Voltar</a></button>
+                </div>
+            </form>
+                <!-- Informação de Emprestimos -->
+                <h3 class="emprestar" id="idTitEmprest" <?=$displayEbook?>>Emprestado</h3>
+            <div class="emprestar" id="idEmprest" <?=$displayEbook?>>
+                <div class="emprestar" id="idItem11">
+                    <p class="titulo">Saída:</p>
+                    <p class="situa"><?=$saida?></p>
+                </div>
+                <div class="emprestar" id="idItem13">
+                    <p class="titulo">Nome:</p>
+                    <p class="situa" id="idSituaNome"><?=$nome?></p>
+                </div>
+                <div class="emprestar" id="idItem14">
+                    <button type="submit"><a id="idButEmprest" href="emprestar.php?acao=emprestRevista&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>">Emprestar</a></button>
+                </div>
             </div>
-            <div>
-                <form action="">
-                    <input type="submit" value="alterar">
-                </form>
-
-            </div>
+            <!-- Criar forum -->
+            <h3>Criar Forum</h3>
+            <form action="<?=$_SERVER['PHP_SELF']?>?acao=editarRevista&buscaCodigo=<?=$tblDados['id_revistas']?>" method="post" id="idFormForum">
+                <div class="forum" id="idForum01">
+                    <label for="topico">Topico:</label>
+                    <input type="text" name="topico" id="idTopico">
+                </div>
+                <div class="forum" id="idForum02">
+                    <label for="detalhe">Detalhe:</label>
+                    <textarea name="detalhe" id="idDetalhe" cols="10" rows="10"></textarea>
+                </div>
+                <div class="forum" id="idForum03">
+                    <input class="botao" type="reset" value="Limpar">
+                    <input class="botao" type="submit" value="Criar">
+                </div>
+            </form>
+            <?php 
+                if (isset($_POST['topico'])){
+                    $forum = new Forum(
+                        $_SESSION['id_user'],
+                        $_REQUEST['buscaCodigo'],
+                        $_REQUEST['acao'],
+                        $_POST['topico'],
+                        $_POST['detalhe'],
+                        "",""
+                    );
+                    $forum-> abrir();
+                }
+            ?>
         </section>
-    </main>
-    <footer>
-        <div>
-            <p class="design">Desenvolvido por Gustavo Coscarello</p>
-        </div>
-    </footer>
+        <footer>
+            <p>Desenvolvido por Gustavo Coscarello</p>
+        </footer>
+    </main>    
 </body>
 </html>

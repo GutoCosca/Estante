@@ -23,11 +23,11 @@ function testar(caso) {
     
     switch (caso){
         case 0:
-            validaNome(usuarioCad, 'controleCad erro', 'controleCad', "Usuário inválido!!", "(Mínimo 03, máximo 12 caracteres");
+            validaNome(usuarioCad, 'controleCad erro', 'controleCad', "Usuário inválido!!", "(Mínimo 03, máximo 12 caracteres)");
             document.querySelector('#idUsuario').innerText = "";
             break;
         case 1:
-            validaNome(nomeCad, 'controleCad erro', 'controleCad', "Nome inválido!!", "(Mínimo 03, máximo 12 caracteres");
+            validaNome(nomeCad, 'controleCad erro', 'controleCad', "Nome inválido!!", "(Mínimo 03, máximo 12 caracteres)");
             break;
         case 2:
             validaEmail(emailCad,'controleCad erro', 'controleCad', "Email inválido!!", 'Deve conter "@" e "." min. 2 máx. 4 letras');
@@ -53,8 +53,8 @@ function cadastrar() {
 // Testa todos os formularios digitados na tela cadastro
 function testeCad() {
     statusCad = false;
-    statusUsuarioCad = validaNome(usuarioCad, 'controleCad erro', 'controleCad', "Usuário inválido!!", "(Mínimo 03, máximo 12 caracteres");
-    statusNomeCad = validaNome(nomeCad, 'controleCad erro', 'controleCad', "Nome inválido!!", "(Mínimo 03, máximo 12 caracteres");
+    statusUsuarioCad = validaNome(usuarioCad, 'controleCad erro', 'controleCad', "Usuário inválido!!", "(Mínimo 03, máximo 12 caracteres)");
+    statusNomeCad = validaNome(nomeCad, 'controleCad erro', 'controleCad', "Nome inválido!!", "(Mínimo 03, máximo 12 caracteres)");
     statusEmailCad = validaEmail(emailCad,'controleCad erro', 'controleCad', "Email inválido!!", 'Deve conter "@" e "." min. 2 máx. 4 letras');
     statusSenha1Cad = validaSenha1(senha1Cad,'controleCad erro', 'controleCad', "Senha inválida!!", 'Deve conter:');
     statusSenha2Cad = validaSenha2(senha1Cad, senha2Cad,'controleCad erro', 'controleCad', "Senha não confere!!", 'Deve ser igual a senha criada.');
@@ -195,7 +195,7 @@ function validaSenha2(senha1, senha2, classe1, classe2, mensagem1, mensagem2,) {
 
 function negativo(estilo) {
     estilo.style.textDecoration = 'none';
-    estilo.style.color = '#ff0000';
+    estilo.style.color = '#aa0101';
     return false;
 }
 
@@ -233,7 +233,7 @@ function testeLog() {
     if (!usuarioLog.value.trim() || !senhaLog.value.trim()) {
         const smalllog = document.querySelector('#erro');
         smalllog.style.visibility = 'visible';
-        smalllog.style.color = '#ff0000'
+        smalllog.style.color = '#aa0101'
         smalllog.style.textAlign ='center'
         smalllog.innerText = "Os campos não podem ficar em branco!!!";
         statusLog = false ;
