@@ -1,9 +1,7 @@
 <?php
 
-use PSpell\Config;
-
-    require_once ('conexao.php');
-    require_once ('usuarios.php');
+require_once ('conexao.php');
+require_once ('usuarios.php');
 
     //lista e busca os arquivos do BD
     class Registros {
@@ -206,7 +204,7 @@ use PSpell\Config;
             $this->setIsbn($isbn);
             $this->setCompra($dtComp);
             $this->setSinopse(addslashes($res));
-            $this->SetOpiniao(addslashes($opn));
+            $this->setOpiniao(addslashes($opn));
             $this->setEbook($eb);
             $this->setArqEmprestar($emprestar);
             $this->setArqMorto($morto);
@@ -660,7 +658,7 @@ use PSpell\Config;
             $instrucao = $this->instrucoes();
             if ($this->getTabela() === "revistas") {
                 $this->setSql(
-                    "INSERT INTO ".$this->getTabela()." (id_usuarios, revista, titulo, autor, editora, numero".$instrucao[0].", issn".$instrucao[2].$instrucao[5].", sinopse, opiniao, ebook, arqempresta ,arqmorto) VALUES (".$this->getId_user().", '".$this->getRevista()."', '".$this->getTitulo()."','".$this->getAutor()."', '".$this->getEditora()."', '".$this->getNumero()."'".$instrucao[1].", '".$this->getIssn()."'".$instrucao[3].$instrucao[6].", '".$this->getSinopse()."', '".$this->getOpiniao()."', ".$this->getEbook().$this->getArqEmprestar().", ".$this->getArqMorto().")"
+                    "INSERT INTO ".$this->getTabela()." (id_usuarios, revista, titulo, autor, editora, numero".$instrucao[0].", issn".$instrucao[2].$instrucao[5].", sinopse, opiniao, ebook, arqempresta ,arqmorto) VALUES (".$this->getId_user().", '".$this->getRevista()."', '".$this->getTitulo()."','".$this->getAutor()."', '".$this->getEditora()."', '".$this->getNumero()."'".$instrucao[1].", '".$this->getIssn()."'".$instrucao[3].$instrucao[6].", '".$this->getSinopse()."', '".$this->getOpiniao()."', ".$this->getEbook().", ".$this->getArqEmprestar().", ".$this->getArqMorto().")"
                 );
             }
             $Conect = new Conexao($this->getSql());

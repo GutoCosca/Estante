@@ -72,7 +72,7 @@ a:hover {
 #idDado {
     grid-column: 2;
     grid-row: 3;
-    padding-left: 20px;
+    padding-left: 10px;
     background-color: var(--cor8);
 }
 
@@ -80,6 +80,7 @@ a:hover {
     margin-top: 20px;
     font-size: var(--fontSize3);
 }
+
 #idTabela01 {
     width: 18vw;
     margin-top: 25px;
@@ -87,7 +88,7 @@ a:hover {
 
 #idTabela02 {
     display:none;
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 th {
@@ -239,7 +240,7 @@ textarea:first-letter {
     display: inline;    
 }
 
-#idItem10 > input, #idItem14 > input, #idItem14 > button, .botao {
+#idItem10 > input,  #idItem14 > input, #idItem14 > a > button, .botao {
     width: 10vw;
     min-width: 80px;
     height: 30px;
@@ -271,7 +272,7 @@ textarea:first-letter {
     padding-left: 15px;
 }
 
-#idItem14 > button {
+#idItem14 > a > button {
     margin: 30px 0 0 0;
     padding: 0;
     text-align: center;
@@ -283,6 +284,8 @@ textarea:first-letter {
 }
 
 #idVoltar {
+    width: 80px;
+    height: 30px;
     font-size: var(--fontSize1);
     font-weight: bold;
     color: var(--cor0);    
@@ -567,44 +570,44 @@ footer > p {
     color: var(--cor7);
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1360px) {
     main {
-        display: grid;
         grid-template-columns: 25vw 75vw;
-        grid-template-rows: 140px 40px 1200px 50px;
+        grid-template-rows: 140px 40px 1380px 50px;
     }
 
     header {
         grid-column: 1 / 3;
-        grid-row: 1;
+    }
+
+    #idIdent {
+        margin: 1px 0 0 75vw;
     }
 
     menu {
         grid-column: 1 / 3;
-        grid-row: 2;
     }
-
-    #idData {
-        padding-top: 5px;
+    
+    ul {
+        display: block;
+        padding: 8px 0 0 10px;
     }
 
     #idDado {
         grid-column: 1;
-        grid-row: 3;
     }
 
     #idTabela01 {
-        width: 22vw;
+        width: 23vw;
+        margin-top: 25px;
     }
 
     #idAltera {
         grid-column: 2;
-        grid-row: 3;
     }
 
     footer {
         grid-column: 1 / 3;
-        grid-row: 4;
     }
 }
 
@@ -612,7 +615,9 @@ footer > p {
     main {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 100px 30px 570px 1300px 50px;
+        grid-template-rows: 100px 30px 600px 1450px 50px;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 
     header {
@@ -620,22 +625,18 @@ footer > p {
         grid-row: 1;
     }
 
-    h1 {
-        padding-top: 20px;
-    }
-
-    #idIdent {
-        margin: 10px 0 0 60vw;
-    }
-
     menu {
         grid-column: 1;
         grid-row: 2;
     }
 
-    ul {
-        display: block;
-        padding-top: 7px;
+    li {
+        padding-right: 5px;
+    }
+
+    #idData {
+        margin-right: 8px;
+        padding: 4px 0 0 25px;
     }
 
     #idDado{
@@ -649,175 +650,423 @@ footer > p {
 
     #idTabela02 {
         display: grid;
-        grid-template-rows: repeat(4, 1fr) repeat(3, 2fr);
-        grid-template-columns: repeat(9, 1fr);
-        visibility: visible;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 30px 35px) 25px 230px;
         width: 90vw;
-        height: 500px;
-        margin: 20px 20px 0 20px;
+        margin: 10px 10px 0 0;
         text-align: center;
     }
 
+    #idCapaP {
+        grid-column: 1;
+        grid-row: 1 / 5;
+        margin: auto;
+        padding: 0;
+    }
+
+    #idSituaP {
+        grid-column: 2;
+        grid-row: 2 / 4;
+        margin: auto;
+        padding: 0;
+        text-align: center;
+    }
+
+    #idLivroP01 {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    #idLivroP02 {
+        grid-column: 3 / 5;
+        grid-row: 2;
+    }
+
+    #idAutorP01 {
+        grid-column: 3;
+        grid-row: 3;
+    }
+
+    #idAutorP02 {
+        grid-column: 3 / 5;
+        grid-row: 4;
+    }
+
+    #idEditoraP01 {
+        grid-column: 1;
+        grid-row: 5;
+    }
+
+    #idEditoraP02 {
+        grid-column: 1 / 3;
+        grid-row: 6;
+    }
+
+    #idCompraP01 {
+        grid-column: 3;
+        grid-row: 5;
+    }
+
+    #idCompraP02 {
+        grid-column: 3 / 5;
+        grid-row: 6;
+        text-align: center;
+    }
+
+    #idIsbnP01 {
+        grid-column: 1;
+        grid-row: 7;
+    }
+
+    #idIsbnP02 {
+        grid-column: 1 / 3;
+        grid-row: 8;
+        text-align: center;
+    }
+
+    #idEdicaoP01 {
+        grid-column: 3;
+        grid-row: 7;
+    }
+
+    #idEdicaoP02 {
+        grid-column: 3;
+        grid-row: 8;
+        text-align: center;
+    }
+
+    #idAnoP01 {
+        grid-column: 4;
+        grid-row: 7;
+    }
+
+    #idAnoP02 {
+        grid-column: 4;
+        grid-row: 8;
+        text-align: center;
+    }
+
+    #idSinopseP01 {
+        grid-column: 1;
+        grid-row: 9;
+    }
+
+    #idSinopseP02 {
+        grid-column: 1 / 3;
+        grid-row: 10;
+    }
+
+    #idOpiniaoP01 {
+        grid-column: 3;
+        grid-row: 9;
+    }
+
+    #idOpiniaoP02 {
+        grid-column: 3 / 5;
+        grid-row: 10;
+    }
+
     .dadosP01 {
-        padding: 15px 5px 0 0;
-        text-align: right;
+        padding: 10px 0 0 0;
+        text-align: left;
         font-weight: bold;
     }
 
     .dadosP02 {
-        padding: 15px 0 0 5px;
+        padding: 0 0 0 5px;
         text-align: left;
     }
 
     .dadosP01, .dadosP02 {
         font-size: var(--fontSize1);
         color: var(--cor7);
-    }
-
-    #idCapaP {
-        grid-row: 1 / 4;
-        grid-column: 1;
-        margin: 0;
-        padding: 12px 0 0 0;
-    }
-
-    #idSituaP {
-        padding: 0;
-        margin: 0;
-    }
-
-    #idLivroP01 {
-        grid-row: 1;
-        grid-column: 2;
-    }
-
-    #idLivroP02 {
-        grid-row: 1;
-        grid-column: 3 / 6;
-    }
-
-    #idAutorP01 {
-        grid-row: 2;
-        grid-column: 2;
-    }
-
-    #idAutorP02 {
-        grid-row: 2;
-        grid-column: 3 / 6;
-    }
-
-    #idEditoraP01 {
-        grid-row: 3;
-        grid-column: 2;
-    }
-
-    #idEditoraP02 {
-        grid-row: 3;
-        grid-column: 3 / 6;
-    }
-
-    #idTituloR01 {
-        grid-row: 2;
-        grid-column: 2;
-    }
-
-    #idTituloR02 {
-        grid-row: 2;
-        grid-column: 3 / 6;
-    }
-
-    #idAutorR01 {
-        grid-row: 3;
-        grid-column: 2;
-    }
-    #idAutorR02 {
-        grid-row: 3;
-        grid-column: 3;
-    }
-
-    #idEditoraR01 {
-        grid-row: 3;
-        grid-column: 4;
-    }
-
-    #idEditoraR02 {
-        grid-row: 3;
-        grid-column: 5;
-    }
-
-    #idCompraP01 {
-        grid-row: 1;
-        grid-column: 6;
-    }
-
-    #idCompraP02 {
-        grid-row: 1;
-        grid-column: 7 / 10;
-    }
-
-    #idIsbnP01 {
-        grid-row: 2;
-        grid-column: 6;
-    }
-
-    #idIsbnP02 {
-        grid-row: 2;
-        grid-column: 7 / 10;
-    }
-
-    #idEdicaoP01 {
-        grid-row: 3;
-        grid-column: 6;
-    }
-
-    #idEdicaoP02 {
-        grid-row: 3;
-        grid-column: 7;
-    }
-
-    #idAnoP01 {
-        grid-row: 3;
-        grid-column: 8;
-    }
-
-    #idAnoP02 {
-        grid-row: 3;
-        grid-column: 9;
-    }
-
-    #idSinopseP01 {
-        grid-row: 4;
-        grid-column: 2;
-    }
-
-    #idSinopseP02 {
-        grid-row: 5 / 8;
-        grid-column: 2 / 6;
-    }
-
-    #idOpiniaoP01 {
-        grid-row: 4;
-        grid-column: 6;        
-    }
-
-    #idOpiniaoP02 {
-        grid-row: 5 / 8;
-        grid-column: 6 / 10;        
-    }
+        margin-bottom: 0;
+    }    
 
     #idSinopseP02, #idOpiniaoP02 {
-        padding: 15px 10px 10px 10px;
+        padding: 5px 10px 0 10px;
         text-align: justify;
         text-indent: 20px;
+        margin: 0;
     }
 
     #idAltera {
         grid-column: 1;
         grid-row: 4;
+        padding: 0 5px 0 20px;
+    }
+
+    #idAltera > h3 {
+        text-align: left;
+    }
+
+    input {
+        width: 90%;
+    }
+    
+    #idForm {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 60px) repeat(2, 200px) 70px 60px;
+        height: 900px;
+    }
+    
+    label {
+        width: 100%;
+    }
+    
+    #idItem01 {
+        grid-column: 1;
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        margin-top: -5px;
+    }
+    #idArea01 {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    #idArea02 {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    #idItem02 {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    #idItem03 {
+        grid-column: 1;
+        grid-row: 3;
+    }
+    
+    #idItem04 {
+        grid-column: 1;
+        grid-row: 4;
+    }
+    
+    #idItem05 {
+        grid-column: 1;
+        grid-row: 5;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+    
+    #idArea03 {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    #idArea04 {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    #idItem06 {
+        grid-column: 1;
+        grid-row: 6;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+    
+    #idArea05 {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    #idArea06 {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .input01 {
+        width: 80%;
+    }
+    
+    #idItem07 {
+        grid-column: 1;
+        grid-row: 7;
+    }
+
+    #idItem08 {
+        grid-column: 1;
+        grid-row: 8;
+    }
+
+    #idSinopse, #idOpiniao {
+        width: 90%;
+    }
+
+    #idItem09 {
+        grid-column: 1;
+        grid-row: 9;
+        display: grid;
+        grid-template-columns: 120px repeat(3, 1fr);
+        grid-template-rows: 65px;
+        text-align: center;
+        margin: auto;
+        padding: 0;
+    }
+    
+    #idSituacao {
+        grid-column: 1;
+        grid-row: 1;
+        margin: auto;
+    }
+    
+    #idArea07 {
+        grid-column: 2;
+        grid-row: 1;
+        margin: auto;
+        padding: 0 20px 0 0;
+        text-align: center;
+    }
+
+    #idArea08 {
+        grid-column: 3;
+        grid-row: 1;
+        margin: auto;
+        padding: 0 20px 0 0;
+        text-align: center;
+    }
+    
+    #idArea09 {
+        grid-column: 4;
+        grid-row: 1;
+        margin: auto;
+        padding: 0 20px 0 0;
+        text-align: center;
+    }
+
+    #idItem10 {
+        grid-column: 1;
+        grid-row: 10;
+    }
+
+    #idItem10 > input {
+        width: 150px;
+        height: 25px;
+    }
+
+    #idEmprest {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 60px;
+        height: 130px;
+    }
+
+    #idItem11 {
+        grid-column: 1;
+        grid-row: 1;
+        margin-right: 10px;
+    }
+
+    .situa {
+        width: 70%;
+    }
+
+    #idItem13 {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    #idSituaNome {
+        width: 80%;
+    }
+
+    .situa, #idSituaNome {
+        height: 15px;
+        margin: 0;
+        padding: 5px 10px;
+    }
+
+    #idItem14 {
+        grid-column: 1 / 3;
+        grid-row: 2;
+    }
+
+    #idItem14 > #idButEmprest > button {
+        width: 150px;
+        height: 25px;
+    }
+
+    #idFormForum {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 60px 160px 60px;
+    }
+    
+    #idForum01 {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    #idForum02 {
+        grid-column: 1;
+        grid-row: 2;
+        margin-left: 0;
+    }
+
+    #idForum01 > input, #idDetalhe {
+        width: 90%;
+    }
+
+    #idForum03 {
+        grid-column: 1;
+        grid-row: 3;
+        margin: auto;
+        padding: 0;
+    }
+
+    #idForum03 > input {
+        width: 80px;
+        height: 25px;
     }
 
     footer {
         grid-column: 1;
         grid-row: 5;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    main {
+        grid-template-rows: 100px 30px 550px 1380px 50px;
+    }
+
+    h1 {
+        padding-top: 20px;
+    }
+
+    #idIdent {
+        margin: 10px 0 0 60vw;
+    }
+
+    ul {
+        display: block;
+        padding: 7px 0 0 10px;
+    }
+
+    #idData {
+        margin-right: 8px;
+        padding: 6px 0 0 25px;
+    }
+
+    #idTabela02 {
+        grid-template-rows: repeat(4, 25px 30px) 25px 230px;
+    }
+    
+    #idForm {
+        grid-template-rows: repeat(6, 50px) repeat(2, 200px) 70px 60px;
+        height: 840px;
+    }
+
+    #idFormForum {
+        grid-template-rows: 50px 160px 60px;
     }
 }

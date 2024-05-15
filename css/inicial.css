@@ -5,7 +5,7 @@
 main {
     display: grid;
     grid-template-columns: 10vw 80vw 10vw;
-    grid-template-rows: 140px 40px 715px 50px;
+    grid-template-rows: 140px 40px 850px 50px;
 }
 
 header {
@@ -28,8 +28,7 @@ p {
 }
 
 #idIdent {
-    margin: 10px 0 0 75vw;
-    
+    margin: 10px 0 0 75vw;    
 }
 
 .ident {
@@ -64,7 +63,7 @@ a:hover {
 }
 
 #idData {
-    margin: -20px 12vw 0 0;
+    margin: -20px 10vw 0 0;
     font-size: var(--fontSize1);
     text-align: right;
     color: var(--cor7);
@@ -74,11 +73,12 @@ section {
     grid-column: 2;
     grid-row: 3;
     display: grid;
-    grid-template-rows: 1fr 5fr 1fr;
     grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 0.5fr 2fr 0.25fr;
     background: none;
     background-image: url("imagens/estante.png");
     background-size: contain;
+    align-items: center;
 }
 
 #idApresenta {
@@ -110,16 +110,47 @@ footer > p {
     color: var(--cor7);
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1360px){
     main {
-        display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 140px 40px 715px 50px;
+    }
+
+    header {
+        grid-column: 1;
+    }
+
+    ul {
+        display: block;
+        padding: 8px 0 0 10px;
+    }
+
+    section {
+        grid-column: 1;
+    }
+
+    menu {
+        grid-column: 1;
+    }
+
+    footer {
+        grid-column: 1;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 100px 30px 1420px 50px;
     }
 
     header {
         grid-column: 1;
         grid-row: 1;
+        padding-top: 10px;
+    }
+
+    #idIdent {
+        margin: 1px 0 0 75vw;    
     }
 
     menu {
@@ -127,13 +158,20 @@ footer > p {
         grid-row: 2;
     }
 
+    li {
+        padding-right: 5px;
+    }
+
     #idData {
-        padding-top: 5px;
+        margin-right: 8px;
+        padding: 4px 0 0 25px;
     }
 
     section {
         grid-column: 1;
         grid-row: 3;
+        grid-template-columns: 1fr 350px 1fr;
+        grid-template-rows: 0.25fr 2fr 0.5fr;
     }
 
     footer {
@@ -142,15 +180,9 @@ footer > p {
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 600px) {
     main {
-        display: grid;
-        grid-template: 100px 30px 715px 50px / 1fr;
-    }
-
-    header {
-        grid-column: 1;
-        grid-row: 1;
+        grid-template-rows: 100px 30px 900px 50px;
     }
 
     h1 {
@@ -161,23 +193,16 @@ footer > p {
         margin: 10px 0 0 60vw;        
     }
 
-    menu {
-        grid-column: 1;
-        grid-row: 2;
+    ul {
+        padding: 7px 0 0 10px;
     }
 
-    ul {
-        display: block;
-        padding-top: 7px;
+    #idData {
+        margin-right: 8px;
+        padding: 6px 0 0 25px;
     }
 
     section {
-        grid-column: 1;
-        grid-row: 3;
-    }
-
-    footer {
-        grid-column: 1;
-        grid-row: 4;
+        grid-template-columns: 1fr 300px 1fr;
     }
 }

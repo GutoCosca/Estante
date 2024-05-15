@@ -18,7 +18,6 @@
         $logado = sessao($_SESSION['user']);
         $ativo = new Atividade();
         $ativo->tempo();
-        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
     }
     else {
         logout();
@@ -38,9 +37,10 @@
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
                 <li><a href="forum.php">Forum</a></li>
+                <li><a href="livros.php">Voltar</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
-            <p id="idData"><?=$horario?></p>
+            <p id="idData"></p>
         </menu>
         <?php
             if (isset($_REQUEST['acao'])){
@@ -96,6 +96,7 @@
                 );
                 $dados->buscar($_REQUEST['buscaCodigo']);
                 $tblDados = mysqli_fetch_array($dados->getTbl());
+                $descricao ="Livro: ".$tblDados['livro']." - Autor: ".$tblDados['autor'];
                 $checkEstante = '';
                 $checkEmprestar = '';
                 $checkExtarviado = '';
@@ -162,7 +163,7 @@
             <!-- Exibe os dados completo do livro (media screen > 1024px) -->
             <table id="idTabela01">
                 <tr class="visual">
-                    <td class="capa" id="idCapa"><?=$capa?></td>
+                    <td class="capa" id="idCapa" alt="<?=$descricao?>"><?=$capa?></td>
                     <td class="capa" colspan="3"><?=$situa?></td>
                 </tr>
                 <tr class="visual">
@@ -239,52 +240,52 @@
                         <input type="file" name="capa"  id="capaBotao">
                     </div>
                     <div id="idArea02">
-                        <input type="checkbox" name="ebook" value="1" <?=$checkEbook?> id="idEbook">
-                        <label for="ebook">eBooK</label>
+                        <input type="checkbox" name="ebook" value="1" id="idEbook" <?=$checkEbook?> id="idEbook">
+                        <label for="idEbook">eBooK</label>
                     </div>
                 </div>
                 <div id="idItem02">
-                    <label for="livro">Nome do Livro:</label>
-                    <input type="text" name="livro" id="" value="<?=$tblDados['livro']?>">
+                    <label for="idLivro">Nome do Livro:</label>
+                    <input type="text" name="livro" id="idLivro" value="<?=$tblDados['livro']?>">
                 </div>
                 <div id="idItem03">
-                    <label for="autor">Nome do Autor</label>
-                    <input type="text" name="autor" id="" value="<?=$tblDados['autor']?>">
+                    <label for="idAutor">Nome do Autor</label>
+                    <input type="text" name="autor" id="idAutor" value="<?=$tblDados['autor']?>">
                 </div>
                 <div id="idItem04">
-                    <label for="editora">Nome da Editora:</label>
-                    <input type="text" name="editora" id="" value="<?=$tblDados['editora']?>">
+                    <label for="idEditora">Nome da Editora:</label>
+                    <input type="text" name="editora" id="idEditora" value="<?=$tblDados['editora']?>">
                 </div>
                 <div id="idItem05">
                     <div id="idArea03">
-                        <label for="edicao">Edição:</label>
-                        <input type="text" name="edicao" class="input01" id="" value="<?=$tblDados['edicao']?>">
+                        <label for="idEdicao">Edição:</label>
+                        <input type="text" name="edicao" class="input01" id="idEdicao" value="<?=$tblDados['edicao']?>">
                     </div>
                     <div id="idArea04">
-                        <label for="ano">Ano:</label>
-                        <input type="text" name="ano" class="input01" id="" value="<?=$tblDados['ano']?>">
+                        <label for="idAno">Ano:</label>
+                        <input type="text" name="ano" class="input01" id="idAno" value="<?=$tblDados['ano']?>">
                     </div>
                 </div>
                 <div id="idItem06">
                     <div id="idArea05">
-                        <label for="isbn">ISBN:</label>
-                        <input type="text" name="isbn" class="input01" id="" value="<?=$tblDados['isbn']?>">
+                        <label for="idIsbn">ISBN:</label>
+                        <input type="text" name="isbn" class="input01" id="idIsbn" value="<?=$tblDados['isbn']?>">
                     </div>
                     <div id="idArea06">
-                        <label for="compra">Compra:</label>
-                        <input type="date" name="compra" class="input01" id="" value="<?=$tblDados['compra']?>">
+                        <label for="idCompra">Compra:</label>
+                        <input type="date" name="compra" class="input01" id="idCompra" value="<?=$tblDados['compra']?>">
                     </div>
                 </div>
                 <div id="idItem07">
-                    <label for="sinopse">Sinopse:</label>
-                    <textarea name="sinopse" id="" spellcheck="off"><?=$tblDados['sinopse']?></textarea>
+                    <label for="idSinopse">Sinopse:</label>
+                    <textarea name="sinopse" id="idSinopse" spellcheck="off"><?=$tblDados['sinopse']?></textarea>
                 </div>
                 <div id="idItem08">
-                    <label for="opiniao">Opinião:</label>
-                    <textarea name="opiniao" id="" ><?=$tblDados['opiniao']?></textarea>
+                    <label for="idOpiniao">Opinião:</label>
+                    <textarea name="opiniao" id="idOpiniao" ><?=$tblDados['opiniao']?></textarea>
                 </div>
                 <div id="idItem09" <?=$displayEbook?>>
-                    <label class="areas" for="situacao" id="idSituacao">Situação do Livro:</label>
+                    <label class="areas" for="idSituacao" id="idSituacao">Situação do Livro:</label>
                     <div class="areas" id="idArea07">
                         <input type="radio" name="situacao" <?=$checkEstante?> id="idOpcao01" value="0">
                         <label for="estante">Estante</label>
@@ -300,7 +301,6 @@
                 </div>
                 <div id="idItem10">
                     <input type="submit" value="Alterar">
-                    <button class="botao"><a id="idVoltar" href="livros.php">Voltar</a></button>
                 </div>
             </form>
                 <!-- Informação de Emprestimos -->
@@ -315,18 +315,18 @@
                     <p class="situa" id="idSituaNome"><?=$nome?></p>
                 </div>
                 <div class="emprestar" id="idItem14">
-                    <button type="submit"><a id="idButEmprest" href="emprestar.php?acao=emprestLivro&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>">Emprestar</a></button>
+                <a id="idButEmprest" href="emprestar.php?acao=emprestLivro&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>"><button type="submit">Emprestar</button></a>
                 </div>
             </div>
             <!-- Criar forum -->
             <h3>Criar Forum</h3>
             <form action="<?=$_SERVER['PHP_SELF']?>?acao=editarLivro&buscaCodigo=<?=$tblDados['id_livros']?>" method="post" id="idFormForum">
                 <div class="forum" id="idForum01">
-                    <label for="topico">Topico:</label>
+                    <label for="idTopico">Topico:</label>
                     <input type="text" name="topico" id="idTopico">
                 </div>
                 <div class="forum" id="idForum02">
-                    <label for="detalhe">Detalhe:</label>
+                    <label for="idDetalhe">Detalhe:</label>
                     <textarea name="detalhe" id="idDetalhe" cols="10" rows="10"></textarea>
                 </div>
                 <div class="forum" id="idForum03">
@@ -351,6 +351,28 @@
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>
         </footer>
-    </main>    
+    </main>
+    <script language="javascript">
+
+        function data(tela) {
+            if (tela.matches) {
+                semana = new Array("Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab");
+                mes = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+            else {
+                semana = new Array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado");
+                mes = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+        }
+        var tela = window.matchMedia("(max-width: 1024px)");
+        data(tela);
+        tela.addEventListener("change", function() {
+            data(tela);
+        })
+    </script>
 </body>
 </html>

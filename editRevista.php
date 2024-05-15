@@ -18,7 +18,6 @@
         $logado = sessao($_SESSION['user']);
         $ativo = new Atividade();
         $ativo->tempo();
-        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
     }
     else {
         logout();
@@ -38,9 +37,10 @@
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
                 <li><a href="forum.php">Forum</a></li>
+                <li><a href="revistas.php">Voltar</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
-            <p id="idData"><?=$horario?></p>
+            <p id="idData"></p>
         </menu>
         <?php
             if (isset($_REQUEST['acao'])){
@@ -97,6 +97,7 @@
                 );
                 $dados->buscar($_REQUEST['buscaCodigo']);
                 $tblDados = mysqli_fetch_array($dados->getTbl());
+                $descricao ="Revista: ".$tblDados['revista']." - Titulo: ".$tblDados['titulo']." - Numero: ".$tblDados['numero'];
                 $checkEstante = '';
                 $checkEmprestar = '';
                 $checkExtarviado = '';
@@ -170,7 +171,7 @@
             <!-- Exibe os dados completo do livro (media screen > 1024px) -->
             <table id="idTabela01">
                 <tr class="visual">
-                    <td class="capa" id="idCapa"><?=$capa?></td>
+                    <td class="capa" id="idCapa" alt="<?=$descricao?>"><?=$capa?></td>
                     <td class="capa" colspan="3"><?=$situa?></td>
                 </tr>
                 <tr class="visual">
@@ -297,11 +298,11 @@
                 </div>
                 <div id="idItem07">
                     <label for="sinopse">Sinopse:</label>
-                    <textarea name="sinopse" id="" spellcheck="off"><?=$tblDados['sinopse']?></textarea>
+                    <textarea name="sinopse" id="idSinopse" spellcheck="off"><?=$tblDados['sinopse']?></textarea>
                 </div>
                 <div id="idItem08">
                     <label for="opiniao">Opinião:</label>
-                    <textarea name="opiniao" id="" ><?=$tblDados['opiniao']?></textarea>
+                    <textarea name="opiniao" id="idOpiniao" ><?=$tblDados['opiniao']?></textarea>
                 </div>
                 <div id="idItem09" <?=$displayEbook?>>
                     <label class="areas" for="situacao" id="idSituacao">Situação da Revista:</label>
@@ -320,7 +321,6 @@
                 </div>
                 <div id="idItem10">
                     <input type="submit" value="Alterar">
-                    <button class="botao"><a id="idVoltar" href="livros.php">Voltar</a></button>
                 </div>
             </form>
                 <!-- Informação de Emprestimos -->
@@ -335,7 +335,7 @@
                     <p class="situa" id="idSituaNome"><?=$nome?></p>
                 </div>
                 <div class="emprestar" id="idItem14">
-                    <button type="submit"><a id="idButEmprest" href="emprestar.php?acao=emprestRevista&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>">Emprestar</a></button>
+                <a id="idButEmprest" href="emprestar.php?acao=emprestRevista&buscaCodigo=<?=$_REQUEST['buscaCodigo']?>"><button type="submit">Emprestar</button></a>
                 </div>
             </div>
             <!-- Criar forum -->
@@ -371,6 +371,28 @@
         <footer>
             <p>Desenvolvido por Gustavo Coscarello</p>
         </footer>
-    </main>    
+    </main>
+    <script language="javascript">
+
+        function data(tela) {
+            if (tela.matches) {
+                semana = new Array("Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab");
+                mes = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+            else {
+                semana = new Array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado");
+                mes = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+        }
+        var tela = window.matchMedia("(max-width: 1024px)");
+        data(tela);
+        tela.addEventListener("change", function() {
+            data(tela);
+        })
+    </script>     
 </body>
 </html>

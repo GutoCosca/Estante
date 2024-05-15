@@ -75,7 +75,7 @@
     }
     $limitResp = ($pagResp -1) *5;
 ?>
-<body>
+<body onload="susup()">
     <main>
         <header>
             <h1>ESTANTE VIRTUAL</h1>
@@ -93,14 +93,20 @@
             </ul>
             <p id="idData"><?=$horario?></p>
         </menu>
-        <!-- Define o forum  -->
+        <!-- Menu Tipo de Forum  -->
             <section id="idForumLista">
-                <nav id="idCondicoes">
-                    <a href="<?=$condi?>forum=pessoal<?=$reqResp?>"><button type="button" class="botao botaoCond botaoEsq botaoAlto" id="idBotao01" onclick="botaoCondicao('#idBotao01', '#idBotao02')">Meus Forums</button></a>
-                    <a href="<?=$condi?>forum=outros<?=$reqResp?>"><button type="button" class="botao botaoCond botaoDir botaoAlto" id="idBotao02" onclick="botaoCondicao('#idBotao02', '#idBotao01')">Outro Foruns</button></a>
-                    <a href="?condicao=abertos<?=$foru?><?=$reqResp?>"><button type="button" class="botao botaoCond botaoEsq botaoBaixo" id="idBotao03" onclick="botaoCondicao('#idBotao03', '#idBotao04')">Abertos</button></a>
-                    <a href="?condicao=fechados<?=$foru?><?=$reqResp?>"><button type="button" class="botao botaoCond botaoDir botaoBaixo" id="idBotao04" onclick="botaoCondicao('#idBotao04', '#idBotao03')">Fechados</button></a>
-                </nav>
+                <menu class="subMenu" id="idSubmenu01" onmouseover="compl01()" onmouseout="compl02()">
+                    <ul>
+                        <li><a href="<?=$condi?>forum=pessoal<?=$reqResp?>" onclick="botaoCondicao('#idBotao01', '#idBotao02')">Meus Forums</a></li>
+                        <li><a href="<?=$condi?>forum=outros<?=$reqResp?>" onclick="botaoCondicao('#idBotao02', '#idBotao01')">Outros Foruns</a></li>
+                    </ul>
+                </menu>
+                <menu class="subMenu" id="idSubmenu02">
+                    <ul>
+                        <li><a href="?condicao=abertos<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao03', '#idBotao04')">Abertos</a></li>
+                        <a href="?condicao=fechados<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao04', '#idBotao03')">Fechados</a></li>
+                    </ul>
+                </menu>
                 <!-- Lista o forum -->
                 <?php
                     if (isset($_REQUEST['condicao']) && $_REQUEST['condicao'] == "fechados") {
@@ -137,8 +143,7 @@
                         $totPagForum = ceil($count[0]/8);
                         $listaPerg->listar();
                     ?>
-                    <table class="tabelaForum">
-                    
+                    <table class="tabelaForum">                    
                     <?php
                         while ($tblListaPerg = mysqli_fetch_array($listaPerg->getTbl())) {
                             $dtAbre = date('d-m-Y', strtotime($tblListaPerg['dt_aberta']));
@@ -214,7 +219,7 @@
                         }
                     ?>
                     </table>
-                
+                    <!-- Seletor de Paginas -->
                     <?php
                         if ($count[0] > 8) {
                             $totPagiForum = $totPagForum;
@@ -317,41 +322,22 @@
         </footer>
     </main>
     <script language="javascript">
-        var condi = "<?php echo $condJS?>";
-        var foru = "<?php echo $forumJS?>"
-        if (foru == 'outros') {
-            document.querySelector('#idBotao01').style.boxShadow = 'var(--sombraAltoRelevo)';
-            document.querySelector('#idBotao02').style.boxShadow = 'var(--sombraBaixoRelevo)';
-            document.querySelector('#idBotao01').style.backgroundImage = 'var(--botaoAltoRelevo)';
-            document.querySelector('#idBotao02').style.backgroundImage = 'var(--botaoBaixoRelevo)';
-        }
-        else {
-            document.querySelector('#idBotao01').style.boxShadow = 'var(--sombraBaixoRelevo)';
-            document.querySelector('#idBotao02').style.boxShadow = 'var(--sombraAltoRelevo)';
-            document.querySelector('#idBotao01').style.backgroundImage = 'var(--botaoBaixoRelevo)';
-            document.querySelector('#idBotao02').style.backgroundImage = 'var(--botaoAltoRelevo)';
+
+        var menu = document.getElementsByClassName('subMenu');
+
+        function susup() {
+            document.querySelector('#idSubmenu01').style.marginTop = '0px';
+            document.querySelector('#idSubmenu01').style.transition = 'margin-top 1s linear 1s';
         }
 
-        if (condi == 'fechados') {
-            document.querySelector('#idBotao03').style.boxShadow = 'var(--sombraAltoRelevo)';
-            document.querySelector('#idBotao04').style.boxShadow = 'var(--sombraBaixoRelevo)';
-            document.querySelector('#idBotao03').style.backgroundImage = 'var(--botaoAltoRelevo)';
-            document.querySelector('#idBotao04').style.backgroundImage = 'var(--botaoBaixoRelevo)';
-        }
-        else {
-            document.querySelector('#idBotao03').style.boxShadow = 'var(--sombraBaixoRelevo)';
-            document.querySelector('#idBotao04').style.boxShadow = 'var(--sombraAltoRelevo)';
-            document.querySelector('#idBotao03').style.backgroundImage = 'var(--botaoBaixoRelevo)';
-            document.querySelector('#idBotao04').style.backgroundImage = 'var(--botaoAltoRelevo)';
+        function compl01() {
+            document.querySelector('#idSubmenu02').style.marginTop = '0px';
+            document.querySelector('#idSubmenu02').style.transition = 'margin-top 1s linear .5s';
         }
 
-        function botaoCondicao(botao01, botao02) {
-            var btn01 = document.querySelector(botao01);
-            var btn02 = document.querySelector(botao02);
-            btn01.style.boxShadow = 'var(--sombraBaixoRelevo)';
-            btn01.style.backgroundImage = 'var(--botaoBaixoRelevo)'
-            btn02.style.boxShadow = 'var(--sombraAltoRelevo)';
-            btn02.style.backgroundImage = 'var(--botaoAltoRelevo)'
+        function compl02() {
+            document.querySelector('#idSubmenu02').style.marginTop = '-30px';
+            document.querySelector('#idSubmenu02').style.transition = 'margin-top 1s linear 2s';
         }
     </script>
 </body>

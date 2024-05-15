@@ -35,21 +35,38 @@
     --sombra1: 3px 3px 1px var(--cor7);
     --sombra2: 6px 5px #00000073;
     --sombra3: 2px 2px 1px var(--cor7);
-    
-    --sombraAltoRelevo: -1.5px -1.5px #000000 inset;
-    --sombraBaixoRelevo: 1.5px 1.5px #000000 inset;
 
-    --botaoAltoRelevo: linear-gradient(170deg, #ffe4c4, #966633 75%);
-    --botaoBaixoRelevo: linear-gradient(350deg, #ffe4c4, #966633 75%);
+    /* Botão Alto/Baixo Relevo */
+    --botaoCorBaixo: #c7a682ea;
+
+    --sombraAltoRelevo: -3px 3px 4px #81582dad, 2px -2px 4px #d4b08ac2 ;
+    --sombraBaixoRelevo: -2px 2px 3px #ffffffc0;
+    
+    --botaoAltoRelevo: linear-gradient(75deg, #fdc178, #966633 75%);
+    --botaoBaixoRelevo: none;
+
+    --botaoBordaAlto: 1px solid #c08341;
+    --botaoBordaBaixo: 2px solid #755028af;
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1024px) {
     :root {
-    --fontSize0: 0.7em;
-    --fontSize1: 0.8em;
-    --fontSize2: 1em;
-    --fontSize3: 1.4em;
-    --fontSize4: 2.4em;
-    --fontSize5: 1.3em;
+        --fontSize0: 0.7em;
+        --fontSize1: 0.8em;
+        --fontSize2: 1em;
+        --fontSize3: 1.4em;
+        --fontSize4: 2.4em;
+        --fontSize5: 1.3em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        --fontSize0: 0.7em;
+        --fontSize1: 0.6em;
+        --fontSize2: 0.7em;
+        --fontSize3: 1.4em;
+        --fontSize4: 2.4em;
+        --fontSize5: 1.3em;
     }
 }

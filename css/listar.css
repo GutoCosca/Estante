@@ -5,7 +5,7 @@
 main {
     display: grid;
     grid-template-columns: 10vw 20vw 60vw 10vw;
-    grid-template-rows: 140px 40px 1300px 50px;
+    grid-template-rows: 140px 40px 1370px 50px;
 }
 
 header {
@@ -19,14 +19,16 @@ h1 {
     padding-top: 30px;
     font-size: var(--fontSize4);
     color: var(--cor0);
-    text-shadow: var(--sombra0);
-    
+    text-shadow: var(--sombra0);    
 }
 
 p {
-    padding-left: 35px;
     font-size: var(--fontSize1);
     color: var(--cor5);
+}
+
+p.adic {
+    margin: -8px 0 0 35px;
 }
 
 #idIdent {
@@ -35,7 +37,6 @@ p {
 }
 
 .ident {
-    padding: 0;
     text-align: center;
     color: var(--cor7);
 }
@@ -66,7 +67,8 @@ a:hover {
 }
 
 #idData {
-    margin: -20px 12vw 0 0;
+    margin: -20px 10vw 0 0;
+    font-size: var(--fontSize1);
     text-align: right;
     color: var(--cor7);
 }
@@ -74,7 +76,16 @@ a:hover {
 #idAdicionar {
     grid-column: 2;
     grid-row: 3;
-    background-color: var(--cor8)
+    background-color: var(--cor8);
+}
+
+#idAdicionar > menu {
+    margin-top: -40px;
+}
+
+#idSubmenu > ul {
+    padding: 5px 0 5px 0;
+    text-align: center;
 }
 
 #idAdicionar > h3 {
@@ -89,8 +100,8 @@ form {
 label {
     display: block;
     margin: 15px 0px 5px 0px;
+    padding-left: 15px;
     font-size: var(--fontSize1);
-    font-weight: bold;
 }
 
 .obrig::after {
@@ -114,7 +125,7 @@ input {
     max-width: 100px;
     min-width: 85px;
     height: 30px;
-    margin: 35px 0.9vw 0px;
+    margin: 20px 0.9vw;
     padding: 0px;
     font-size:var(--fontSize1);
     font-weight:bold;
@@ -127,7 +138,13 @@ input {
 }
 
 #idTitBusca {
-    margin-top: 10px;
+    padding: 15px 0px 5px 35px;
+}
+
+#idArea04 {
+    display: grid;    
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 60px;
 }
 
 #idArea05 {
@@ -137,34 +154,42 @@ input {
 select {
     display: inline;
     width: 6vw;
-    max-width: 100px;
+    max-width: 150px;
     height: 20px;
-    margin: 0 1.3vw 0px;
-    padding: 0px;
+    margin: 0 1.3vw 0 0;
+    padding: 0;
     font-size: var(--fontSize0);
     text-align: center;
     border-radius: 10px;
 }
 
 #idArea06 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 40px;
     margin-top: 25px;
+    padding-left: 15px;
 }
 
-#idArq {
-    display: inline-flex;
-    margin-top: 35px;
+#idArea07 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 40px;
+    margin-top: 25px;
+    padding-left: 15px;
 }
 
-#idArq > label {
-    width: 160px;
-    height: 20px;
+#idArea07 > label {
     margin: 0;
+    padding: 0;
+    text-align: left;
 }
 
-#idArq > input {
-    width: 20px;
-    padding: 0;
-    margin-left: 20px;
+#idArea08 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 60px;
+    margin: 0;
 }
 
 .optTexto {
@@ -172,7 +197,6 @@ select {
     padding: 5px 20px 0 1.5vw;
     color: var(--cor7);
 }
-
 /* Listar estante */
 #idListar {
     grid-column: 3;
@@ -185,6 +209,7 @@ select {
 
 #idTitEstante {
     margin-top: 15px;
+    margin-bottom: 5px;
     font-size: var(--fontSize3);
     color: var(--cor1);
     text-shadow: var(--sombra1);
@@ -270,63 +295,40 @@ footer {
 }
 
 footer > p {
-    padding-top: 15px;
+    padding-top: 20px;
     text-align: center;
     font-size: var(--fontSize2);
     color: var(--cor7);
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1360px){
     main {
-        display: grid;
         grid-template-columns: 25vw 75vw;
-        grid-template-rows: 140px 40px 1300px 50px;
     }
 
     header {
         grid-column: 1 / 3;
-        grid-row: 1;
     }
 
     menu {
         grid-column: 1 / 3;
-        grid-row: 2;
     }
-
-    #idData {
-        padding-top: 5px;
+    
+    ul {
+        display: block;
+        padding: 8px 0 0 10px;
     }
-
-    input {
-        width: 20vw;
-    }
-
+    /* Adicionar na estante */
     #idAdicionar {
         grid-column: 1;
-        grid-row: 3;
     }
-
-    #idArq01 > select {
-        width: 7.5vw;
-    }
-
-    #idArq > select {
-        min-width: 90px;
-        margin-left: 0px;
-    }
-
-    #idArq > label {
-        margin-left: 15px;
-    }
-
+    /* Listar estante */
     #idListar {
         grid-column: 2;
-        grid-row: 3;
     }
 
     footer {
         grid-column: 1 / 3;
-        grid-row: 4;
     }
 }
 
@@ -334,20 +336,17 @@ footer > p {
     main {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 100px 30px 450px 1300px 50px;
+        grid-template-rows: 100px 30px 460px 1270px 50px;
     }
 
     header {
         grid-column: 1;
         grid-row: 1;
-    }
-
-    h1 {
-        padding-top: 20px;
+        padding-top: 10px;
     }
 
     #idIdent {
-        margin: 10px 0 0 60vw;        
+        margin: 1px 0 0 75vw;        
     }
 
     menu {
@@ -355,9 +354,13 @@ footer > p {
         grid-row: 2;
     }
 
-    ul {
-        display: block;
-        padding-top: 7px;
+    li {
+        padding-right: 5px;
+    }
+
+    #idData {
+        margin-right: 8px;
+        padding: 4px 0 0 25px;
     }
 
     #idAdicionar {
@@ -365,12 +368,37 @@ footer > p {
         grid-row: 3;
     }
 
+    #idSubmenu {
+        margin-top: -20px;
+    }
+
+    #idSubmenu > ul {
+        padding-left: 10px;
+        text-align: justify;
+    }
+
+    #idSubmenu > ul > li {
+        padding-right: 40px;
+    }
+
     #idFormAdd {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 75px 75px 50px;
+        grid-template-rows: 50px 50px 50px;
         padding: 5px 0 0 15px;
-    }    
+    }
+
+    label {
+        margin: 3px 0px 3px 0px;
+        padding-left: 15px;
+    }
+
+    input {
+        width: 40vw;
+        height: 20px;
+        margin: 1px 0px 5px 0px;
+        padding-left: 10px;
+    }
     
     #idArea00 {
         grid-column: 1;
@@ -385,11 +413,6 @@ footer > p {
     #idArea02 {
         grid-column: 1;
         grid-row: 2;
-    }
-
-    input {
-        width: 40vw;
-        margin-left: 10px;
     }    
 
     #idArea03 {
@@ -400,60 +423,79 @@ footer > p {
     #idArea04 {
         grid-column: 1 / 3;
         grid-row: 3;
-        text-align: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
         margin-bottom: 10px;
+    }
+
+    #idArea04 > input, #idArea08 > input {
+        margin: auto;
     }
 
     .botao {
         width: 80px;
+        height: 20px;
         margin-top: 10px;
+        margin-bottom: 0;
         padding: 0;
     }
     
     #idTitBusca {
-        margin-top: -10px;
+        margin-top: -15px;
+        margin-bottom: -15px;
     }
 
     #idFormBusca {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 75px 50px;
-        margin-top: -15px;
+        grid-template-rows: 45px 40px 40px 40px;
+        margin-top: 5px;
+        padding-left: 15px;
     }
 
     #idArea05 {
-        grid-column: 1;
+        grid-column: 1 / 3;
         grid-row: 1;
-        margin: -10px 0 10px 0;
+        margin: -10px 0 5px 0;
+    }
+
+    #idLetra {
+        width: 100%;
+        max-width: 90%;
     }
 
     #idArea06 {
-        grid-column: 2;
-        grid-row: 1;
+        grid-column: 1 / 3;
+        grid-row: 2;
         display: grid;
-        grid-template: 1fr / 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 40px;
         margin: 0;
+        padding-bottom: 0;
+        padding-right: 25px;
         text-align: center;
     }
 
-    #idArq01 > select {
-        display: block;
-        width: 150px;
-        margin: 12.5px 0 0 7vw;
-    }
-
-    #idArq {
-        display: block;
-        margin: 12.5px 0 0 0 ;
-    }
-
-    #idArq > label {
+    .seletor, #idArea07 > label {
+        width: 200px;
+        max-width: 100%;
         margin: auto;
+        padding: 0;
     }
 
-    #idCondic {
-        width: 150px;
-        margin: 10px -25px 0 0;
+    #idArea07 {
+        grid-column: 1 / 3;
+        grid-row: 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 40px;
+        margin: 0;
+        padding-right: 25px;
+    }
+
+    #idArea07 > label {
+        text-align: center;
     }
     
     .optTexto {
@@ -462,10 +504,14 @@ footer > p {
         color: var(--cor7);
     }
 
-    #idArea07 {
+    #idArea08 {
         grid-column: 1 / 3;
-        grid-row: 2;
-        text-align: center;
+        grid-row: 4;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 40px;
+        margin: 0;
+        padding: 0;
     }
 
     #idListar {
@@ -474,11 +520,43 @@ footer > p {
     }
 
     nav {
-        margin-top: 10px;
+        margin: 8px 0 0 0;
+        text-align: center;
+    }
+
+    .pagi {
+        padding: 0 10px;
+    }
+
+    #idPaginas {
+        word-spacing: 5px;
     }
 
     footer {
         grid-column: 1;
         grid-row: 5;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    header > h1 {
+        padding-top: 20px;
+    }
+
+    #idIdent {
+        margin: 10px 0 0 60vw;        
+    }
+
+    ul {
+        padding: 7px 0 0 10px;
+    }
+
+    #idData {
+        margin-right: 8px;
+        padding: 6px 0 0 25px;
+    }
+
+    .seletor, #idArea07 > label {
+        width: 150px;
     }
 }

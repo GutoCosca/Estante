@@ -17,7 +17,6 @@
         $logado = sessao($_SESSION['user']);
         $ativo = new Atividade();
         $ativo->tempo();
-        $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
     }
     else {
         logout();
@@ -28,8 +27,26 @@
     else {
         $pag = 1;
     }
+
+    $menuAcao = "inicio";
+    if (isset($_REQUEST['acao'])) {
+        if ($_REQUEST['acao'] == 'addLivro') {
+        $menuAcao = 'adiciona';
+        }
+        elseif ($_REQUEST['acao'] == 'Buscar') {
+            $menuAcao = 'busca';
+        }
+    }
+    elseif (isset($_REQUEST['cond'])) {
+        if ($_REQUEST['cond'] == 'add') {
+            $menuAcao = 'adiciona';
+        }
+        elseif ($_REQUEST['cond'] == 'busc') {
+            $menuAcao = 'busca';
+        }
+    }
 ?>
-<body>
+<body  onload="submenu()">
     <main>
         <header>
             <h1>ESTANTE VIRTUAL</h1>
@@ -45,27 +62,32 @@
                 <li><a href="forum.php">Forum</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
-            <p id="idData"><?=$horario?></p>
+            <p id="idData"></p>
         </menu>
-        <section id="idAdicionar">
-            <h3>Adicionar Revistas</h3>
-            <p>*campos obrigatórios</p>
+        <section id="idAdicionar"><menu id="idSubmenu">
+                <ul>
+                    <li><a href="?cond=add" onclick="acao('adiciona')">Adicionar Revistas</a></li>
+                    <li><a href="?cond=busc" onclick="acao('busca')">Buscar Revistas</a></li>
+                </ul>
+            </menu>
+            <h3 class="adic">Adicionar Revistas</h3>
+            <p class="adic">*campos obrigatórios</p>
             <!-- Adicionar na estante -->
-            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addRevista" method="post" enctype="multipart/form-data" id="idFormAdd">
+            <form action="<?php $_SERVER['PHP_SELF']?>?acao=addRevista" method="post" enctype="multipart/form-data" id="idFormAdd" class="adic">
                 <div id="idArea00">
-                    <label for="revista" class="obrig">Nome da Revista:</label>
-                    <input type="text" name="revista" id="idlivro" required>
+                    <label for="idRevista" class="obrig">Nome da Revista:</label>
+                    <input type="text" name="revista" id="idRevista" required>
                 </div>
                 <div id="idArea01">
-                    <label for="numero" class="obrig">Numero:</label>
-                    <input type="text" name="numero" id="idAutor" required>
+                    <label for="idNumero" class="obrig">Numero:</label>
+                    <input type="text" name="numero" id="idNumero" required>
                 </div>
                 <div id="idArea02">
-                    <label for="titulo">Título:</label>
-                    <input type="text" name="titulo" id="idEditora">
+                    <label for="idTitulo">Título:</label>
+                    <input type="text" name="titulo" id="idTitulo">
                     </div>
                 <div id="idArea03">
-                    <label for="compra">Data da Compra:</label>
+                    <label for="idCompra">Data da Compra:</label>
                     <input type="date" name="compra" id="idCompra">
                 </div>
                 <div id="idArea04">
@@ -73,34 +95,32 @@
                     <input type="reset" value="Limpar" class="botao">
                 </div>
             </form>
-            <h3 id="idTitBusca">Buscar</h3>
+            <h3 id="idTitBusca" class="busc">Localizar Revista</h3>
             <!-- Busca detalhada -->
-            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="get" id="idFormBusca">
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="get" id="idFormBusca" class="busc">
                 <div id="idArea05">
-                    <label for="letra">Nome:</label>
+                    <label for="idLetra">Nome:</label>
                     <input type="text" name="letra" id="idLetra">
                 </div>
                 <div id="idArea06">
-                    <div id="idArq01">
-                        <select name="tipo" id="idTipo">
-                            <option value="revista">Revista</option>
-                            <option value="titulo">Título</option>
-                        </select>
-                        <select name="ordem" id="idOrdem">
-                            <option value="ASC">Crescente</option>
-                            <option value="DESC">Decrescente</option>
-                        </select>
-                    </div>
-                    <div id="idArq">
-                        <label for="condic" id="idCondic">Situação da Revista:</label>
-                        <select name="condic" id="idCondic">
-                            <option value="0">Estante</option>
-                            <option value="1">Emprestado</option>
-                            <option value="2">Extraviado</option>
-                        </select>
-                    </div>
+                    <select name="tipo" class="seletor" id="idTipo">
+                        <option value="revista">Revista</option>
+                        <option value="titulo">Título</option>
+                    </select>
+                    <select name="ordem" class="seletor" id="idOrdem">
+                        <option value="ASC">Crescente</option>
+                        <option value="DESC">Decrescente</option>
+                    </select>
                 </div>
                 <div id="idArea07">
+                    <label for="idCondic">Situação da Revista:</label>
+                    <select name="condic" class="seletor" id="idCondic">
+                        <option value="0">Estante</option>
+                        <option value="1">Emprestado</option>
+                        <option value="2">Extraviado</option>
+                    </select>
+                </div>
+                <div id="idArea08">
                     <input type="submit" name="acao" value="Buscar" class="botao">
                     <input type="reset" value="Limpar" class="botao">
                 </div>
@@ -121,7 +141,7 @@
                                 $_SESSION['id_user'],
                                 "revistas",
                                 $_POST['revista'],
-                                $_POST['numer'],
+                                $_POST['numero'],
                                 $_POST['titulo'],
                                 "","","","",
                                 $_POST['compra'],
@@ -197,6 +217,7 @@
                     </thead>
                     <?php
                             while ($tblLista = mysqli_fetch_array($listar->getTbl())) {
+                                $descricao ="Revista: ".$tblLista['revista']." - Titulo: ".$tblLista['titulo']." - Numero: ".$tblLista['numero'];
                                 if ($tblLista['compra'] != null ) {
                                     $compraBR = mesBR($tblLista['compra']) [0];
                                 }
@@ -211,7 +232,7 @@
                                 }
                     ?>
                     <tr>
-                        <td class="listaCapa" id="idCapa"><?=$capa?></td>
+                        <td class="listaCapa" id="idCapa" alt="<?=$descricao?>"><?=$capa?></td>
                         <td class="listaNome" id="idLivro"><a href="editRevista.php?acao=editarRevista&buscaCodigo=<?=$tblLista['id_revistas']?>"><?=$tblLista['revista']?></a></td>
                         <td class="listaNome" id="idAutor"><?=$tblLista['numero']?></td>
                         <td class="listaNome" id="idEditora"><?=$tblLista['titulo']?></td>
@@ -289,5 +310,67 @@
             <p>Desenvolvido por Gustavo Coscarello</p>
         </footer>
     </main>
+    <script language="javascript">
+        
+        var condAcao = "<?php echo $menuAcao?>";
+        var add = document.getElementsByClassName('adic');
+        var filt = document.getElementsByClassName('busc');
+        var menu = document.querySelector('#idSubmenu');
+        
+        if (condAcao == "adiciona") {
+            for (var i = 0; i < add.length; i++) {
+                add[i].style.display = 'block';
+            }
+        }
+        else if (condAcao == "busca") {
+            for (var i= 0; i < filt.length; i++) {
+                filt[i].style.display = 'block';
+            }
+        }
+
+        function submenu() {
+            menu.style.marginTop = '0px';
+            menu.style.transition = 'margin-top 1s linear 1s';
+        }
+
+        function acao(cond) {
+            if (cond == "adiciona") {
+                for (var i = 0; i < filt.length; i ++) {
+                    filt[i].style.dispay = 'none';
+                }
+                for (var i = 0; i < add.length; i++) {
+                    add[i].style.display= 'block';
+                }
+            }
+            else if (cond == "busca") {
+                for (var i = 0; i < add.length; i++){
+                    add[i].style.display = 'none';
+                }
+                for (var i = 0; i < filt.length; i++){
+                    filt[i].style.display = 'block';
+                }
+            }
+        }
+
+        function data(tela) {
+            if (tela.matches) {
+                semana = new Array("Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab");
+                mes = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+            else {
+                semana = new Array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado");
+                mes = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+                hoje = new Date;
+            document.querySelector('#idData').innerText = semana[hoje.getDay()] + " - " + hoje.getDate() + " de " + mes[hoje.getMonth()] + " de " + hoje.getFullYear();
+            }
+        }
+        var tela = window.matchMedia("(max-width: 1024px)");
+        data(tela);
+        tela.addEventListener("change", function() {
+            data(tela);
+        })
+    </script>
 </body>
 </html>

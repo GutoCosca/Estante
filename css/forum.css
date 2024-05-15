@@ -74,17 +74,24 @@ a:hover {
 #idForumLista {
     grid-column: 2;
     grid-row: 3;
-    display: grid;
+    /* display: grid;
     grid-template-columns: 1fr ;
-    grid-template-rows: 120px 1180px;
+    grid-template-rows: 80px 1220px; */
     background-color: var(--cor8)
 }
 
-#idCondicoes {
-    display: grid;
-    grid-template-rows: repeat(2, 50px);
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 10px;
+#idSubmenu01 {
+    margin-top: -40px;
+    position: relative;
+}
+
+#idSubmenu02 {
+    margin-top: -30px;
+}
+
+.subMenu > ul {
+    padding: 0 0 10px 0;
+    text-align: center;
 }
 
 .botao {
@@ -96,14 +103,17 @@ a:hover {
     font-weight: bold;
     text-align: center;
     color: var(--cor0);
-    background-color: var(--cor8);
+    background-color: var(--botaoCorBaixo);
     border-radius: 15px;
-    background-image: var(--botaoAltoRelevo);
+    border: var(--botaoBordaAlto);
     box-shadow: var(--sombraAltoRelevo);
+    background-image: var(--botaoAltoRelevo);
 }
 
 .botaoEsq {
-    box-shadow: var(--sombra4) inset;
+    box-shadow: var(--sombraBaixoRelevo);
+    border: var(--botaoBordaBaixo);
+    background-image: var(--botaoBaixoRelevo);
 }
 
 #idForumLista > div {
@@ -111,7 +121,6 @@ a:hover {
 }
 
 #idForumLista > h3 {
-    /* margin-top: 20px; */
     font-size: var(--fontSize3);
 }
 

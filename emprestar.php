@@ -31,6 +31,16 @@
         $pag = 1;
         $pg = "";
     }
+
+    if (isset ($_REQUEST['acao'])) {
+        if ($_REQUEST['acao'] == "emprestLivro") {
+            $site = "editLivro.php?acao=editarLivro&buscaCodigo=".$_REQUEST['buscaCodigo'];
+        }
+        elseif ($_REQUEST['acao'] == "emprestRevista") {
+            $site = "editRevista.php?acao=editarRevista&buscaCodigo=".$_REQUEST['buscaCodigo'];
+        }
+    }
+
 ?>
 <body>
     <main>
@@ -46,6 +56,7 @@
                 <li><a href="livros.php">Livros</a></li>
                 <li><a href="revistas.php">Revistas</a></li>
                 <li><a href="forum.php">Forum</a></li>
+                <li><a href="<?=$site?>">Voltar</a></li>
                 <li><a href="?acao=logout">Sair</a></li>
             </ul>
             <p id="idData"><?=$horario?></p>
@@ -61,8 +72,9 @@
             }
             if (isset ($_REQUEST['acao'])) {
                 if ($_REQUEST['acao'] == "emprestLivro") {
-                    $site = "editLivro.php?acao=editarLivro&buscaCodigo=".$_REQUEST['buscaCodigo'];
-                    $tipo = " do Livro";
+                    $requis = "Livro";
+                    $periodico = "livros";
+                    $tipo = "do Livro";
                     $dados = new Registros(
                         $_SESSION['id_user'],
                         "livros",
@@ -70,7 +82,8 @@
                     );
                 }
                 elseif ($_REQUEST['acao'] == "emprestRevista") {
-                    $site = "editRevista.php?acao=editarRevista&buscaCodigo=".$_REQUEST['buscaCodigo'];
+                    $requis = "Revista";
+                    $periodico = "revistas";
                     $tipo = "da Revista";
                     $dados = new Registros(
                         $_SESSION['id_user'],
@@ -78,8 +91,19 @@
                         "","","","","","",""
                     );
                 }
+                $teste = "edit".$requis.".php?acao=editar".$requis."&buscaCodigo=".$_REQUEST['buscaCodigo'];
+                
                 $dados->buscar($_REQUEST['buscaCodigo']);
                 $tblDados = mysqli_fetch_array($dados->getTbl());
+                if ($periodico === "livros") {
+                    $descricao ="Livro: ".$tblDados['livro']." - Autor: ".$tblDados['autor'];
+                }
+                elseif ($periodico === "revistas") {
+                    $descricao ="Revista: ".$tblDados['revista']." - Titulo: ".$tblDados['titulo']." - Numero: ".$tblDados['numero'];
+                }
+                else {
+                    $descricao = "";
+                }
                 $checkEstante = "";
                 $checkEmprestar = "";
                 $checkExtarviado = "";
@@ -118,7 +142,7 @@
                     <!-- Exibe os dados completo do livro (media screen > 1024px) -->
                     <table id="idTabela01">
                         <tr class="visua0l">
-                            <td class="capa" id="idCapa"><?=$capa?></td>
+                            <td class="capa" id="idCapa" alt="<?=$descricao?>"><?=$capa?></td>
                             <td class="capa" colspan="3"><?=$situa?></td>
                         </tr>
                         <tr class="visual">
@@ -189,7 +213,7 @@
                     $buscaLiv = "";
                     $buscaRev = $_REQUEST['buscaCodigo'];
                     ?>
-                    "<!-- Exibe os dados completo da revista (media screen > 1024px) -->
+                    <!-- Exibe os dados completo da revista (media screen > 1024px) -->
                     <table id="idTabela01">
                     <tr class="visual">
                             <td class="capa" id="idCapa"><?=$capa?></td>
@@ -334,7 +358,6 @@
                 <div class="itemEmprest" id="idItemEmprest04">
                     <input type="submit" name="emprestar" value="Alterar" class="botao">
                     <input type="submit" name="emprestar" value="Adicionar" class="botao">
-                    <a id="idVoltar" href="<?=$site?>"><button class="botao">Voltar</button></a>
                 </div>
             </form>
             <?php
