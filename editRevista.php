@@ -219,28 +219,28 @@
             </table>
             <!-- Exibe os dados completo da revista (media screen =< 1024px) -->
             <div id="idTabela02">
-                <p id="idCapaP"><?=$capa?></p>
-                <p id="idSituaP"><?=$situa?></p>
-                <p class="dadosP01" id="idLivroP01">REVISTA:</p>
-                <p class="dadosP02" id="idLivroP02"><?=$tblDados['revista']?></p>
+                <p id="idCapaR"><?=$capa?></p>
+                <p id="idSituaR"><?=$situa?></p>
+                <p class="dadosP01" id="idRevistaR01">REVISTA:</p>
+                <p class="dadosP02" id="idRevistaR02"><?=$tblDados['revista']?></p>
                 <p class="dadosP01" id="idTituloR01">TÍTULO:</p>
                 <p class="dadosP02" id="idTituloR02"><?=$tblDados['titulo']?></p>
                 <p class="dadosP01" id="idAutorR01">AUTOR:</p>
                 <p class="dadosP02" id="idAutorR02"><?=$tblDados['autor']?></p>
                 <p class="dadosP01" id="idEditoraR01">EDITORA:</p>
                 <p class="dadosP02" id="idEditoraR02"><?=$tblDados['editora']?></p>
-                <p class="dadosP01" id="idCompraP01">COMPRA:</p>
-                <p class="dadosP02" id="idCompraP02"><?=$compraBR?></p>
-                <p class="dadosP01" id="idIsbnP01">ISSN:</p>
-                <p class="dadosP02" id="idIsbnP02"><?=$tblDados['issn']?></p>
-                <p class="dadosP01" id="idEdicaoP01">NÚMERO:</p>
-                <p class="dadosP02" id="idEdicaoP02"><?=$tblDados['numero']?></p>
-                <p class="dadosP01" id="idAnoP01">ANO:</p>
-                <p class="dadosP02" id="idAnoP02"><?=$tblDados['ano']?></p>
-                <p class="dadosP01" id="idSinopseP01">SINOPSE:</p>
-                <p class="dadosP02" id="idSinopseP02"><?=$tblDados['sinopse']?></p>
-                <p class="dadosP01" id="idOpiniaoP01">OPINIÃO:</p>
-                <p class="dadosP02" id="idOpiniaoP02"><?=$tblDados['opiniao']?></p>
+                <p class="dadosP01" id="idCompraR01">COMPRA:</p>
+                <p class="dadosP02" id="idCompraR02"><?=$compraBR?></p>
+                <p class="dadosP01" id="idIssnR01">ISSN:</p>
+                <p class="dadosP02" id="idIssnR02"><?=$tblDados['issn']?></p>
+                <p class="dadosP01" id="idNumeroR01">Nº:</p>
+                <p class="dadosP02" id="idNumeroR02"><?=$tblDados['numero']?></p>
+                <p class="dadosP01" id="idAnoR01">ANO:</p>
+                <p class="dadosP02" id="idAnoR02"><?=$tblDados['ano']?></p>
+                <p class="dadosP01" id="idSinopseR01">SINOPSE:</p>
+                <p class="dadosP02" id="idSinopseR02"><?=$tblDados['sinopse']?></p>
+                <p class="dadosP01" id="idOpiniaoR01">OPINIÃO:</p>
+                <p class="dadosP02" id="idOpiniaoR02"><?=$tblDados['opiniao']?></p>
             </div>
         </section>
         <section id="idAltera">

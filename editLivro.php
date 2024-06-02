@@ -330,8 +330,8 @@
                     <textarea name="detalhe" id="idDetalhe" cols="10" rows="10"></textarea>
                 </div>
                 <div class="forum" id="idForum03">
-                    <input class="botao" type="reset" value="Limpar">
-                    <input class="botao" type="submit" value="Criar">
+                    <input class="botao" type="reset" value="Limpar" id="idFrmLimpar">
+                    <input class="botao" type="submit" value="Criar" id="idFrmCriar">
                 </div>
             </form>
             <?php 

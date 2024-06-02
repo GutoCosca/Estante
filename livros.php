@@ -66,12 +66,12 @@
             <p id="idData"></p>
         </menu>
         <section id="idAdicionar">
-            <menu id="idSubmenu">
+            <!-- <menu id="idSubmenu">
                 <ul>
                     <li><a href="?cond=add" onclick="acao('adiciona')">Adicionar Livros</a></li>
                     <li><a href="?cond=busc" onclick="acao('busca')">Buscar Livros</a></li>
                 </ul>
-            </menu>
+            </menu> -->
             <h3 class="adic">Adicionar Livros</h3>
             <p class="adic">*campos obrigatórios</p>
             <!-- Adicionar livro -->

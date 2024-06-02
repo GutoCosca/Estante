@@ -364,11 +364,14 @@ footer > p {
     }
 
     #idAdicionar {
+        display: grid;
+        grid-template-columns: 5vw 1fr 5vw;
         grid-column: 1;
         grid-row: 3;
     }
 
     #idSubmenu {
+        grid-column: 2;
         margin-top: -20px;
     }
 
@@ -381,10 +384,20 @@ footer > p {
         padding-right: 40px;
     }
 
+    #idAdicionar > h3 {
+        grid-column: 2;
+    }
+
+    #idAdicionar > p {
+        grid-column: 2;
+    }
+
     #idFormAdd {
+        grid-column: 2;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 50px 50px 50px;
+        margin: 0 1.5vw;
         padding: 5px 0 0 15px;
     }
 
@@ -447,10 +460,11 @@ footer > p {
     }
 
     #idFormBusca {
+        grid-column: 2;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 45px 40px 40px 40px;
-        margin-top: 5px;
+        margin: 5px 1.5vw 0 1.5vw;
         padding-left: 15px;
     }
 
@@ -471,17 +485,17 @@ footer > p {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 40px;
-        margin: 0;
-        padding-bottom: 0;
-        padding-right: 25px;
+        margin: 0; 
+        padding: 0;
         text-align: center;
     }
 
-    .seletor, #idArea07 > label {
-        width: 200px;
-        max-width: 100%;
-        margin: auto;
+    .seletor {
+        width: 20vw;
+        max-width: 150px;
+        margin: 0 10vw;
         padding: 0;
+        
     }
 
     #idArea07 {
@@ -491,7 +505,7 @@ footer > p {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 40px;
         margin: 0;
-        padding-right: 25px;
+        padding: 0;
     }
 
     #idArea07 > label {
@@ -556,7 +570,11 @@ footer > p {
         padding: 6px 0 0 25px;
     }
 
-    .seletor, #idArea07 > label {
-        width: 150px;
+    #idAdicionar {
+        display: block;
     }
+
+    /* .seletor, #idArea07 > label {
+        width: 130px;
+    } */
 }
