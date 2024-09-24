@@ -13,7 +13,7 @@
     --fontSize0: 0.8em;
     --fontSize1: 1em;
     --fontSize2: 1.2em;
-    --fontSize3: 1.8em;
+    --fontSize3: 1.7em;
     --fontSize4: 3.6em;
     --fontSize5: 1.6em;
 
@@ -52,7 +52,7 @@
 @media screen and (max-width: 1024px) {
     :root {
         --fontSize0: 0.7em;
-        --fontSize1: 0.8em;
+        --fontSize1: 0.75em;
         --fontSize2: 1em;
         --fontSize3: 1.4em;
         --fontSize4: 2.4em;

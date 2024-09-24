@@ -93,13 +93,13 @@ a:hover {
 
 th {
     padding-right: 5px;
-    font-size: var(--fontSize2);
+    font-size: var(--fontSize1);
     text-align: right;
 }
 
 td {
     padding-left: 5px;
-    font-size: var(--fontSize1);
+    font-size: var(--fontSize0);
     text-align: left;
 }
 
@@ -160,7 +160,7 @@ label, #idArea01 > p, .titulo {
     display: block;
     margin: 10px 0 2px;
     padding-left: 10px;
-    font-size: var(--fontSize2);
+    font-size: var(--fontSize1);
     font-weight: bold;
     color: var(--cor1);
     text-align: left;
@@ -590,7 +590,7 @@ footer > p {
     
     ul {
         display: block;
-        padding: 8px 0 0 10px;
+        padding: 10px 0 0 10px;
     }
 
     #idDado {
@@ -615,7 +615,7 @@ footer > p {
     main {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 100px 30px 600px 1450px 50px;
+        grid-template-rows: 100px 30px 600px 1500px 50px;
         margin-bottom: 0;
         padding-bottom: 0;
     }
@@ -642,7 +642,6 @@ footer > p {
     #idDado{
         grid-column: 1;
         grid-row: 3;
-        /* padding: 0 20px; */
     }
 
     #idTabela01 {
@@ -1086,7 +1085,7 @@ footer > p {
     #idFormForum {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 60px 160px 60px;
+        grid-template-rows: 60px 180px 60px;
         margin: 0 1.5vw;
     }
     
@@ -1173,12 +1172,13 @@ footer > p {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: 1fr;
+        margin: 0;
     }
 
     #idItemEmprest04 > .botao {
         width: 150px;
         height: 25px;
-        margin: 0;
+        margin: auto;
         padding: 0;
     }
 
