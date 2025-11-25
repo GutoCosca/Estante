@@ -1,3 +1,5 @@
+-- Active: 1752684501792@@127.0.0.1@3306@mysql
+-- Active: 1752684501792@@127.0.0.1@3306@biblioteca
 -- Criação do BD Biblioteca e suas tabelas e atributos
 -- MySQL
 CREATE DATABASE IF NOT EXISTS biblioteca;
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS logins (
 
 CREATE TABLE IF NOT EXISTS livros (
     id_livros int PRIMARY KEY AUTO_INCREMENT,
-    id_usuarios int
+    id_usuarios int,
     livro varchar(200) NOT NULL,
     autor varchar(50) NOT NULL,
     editora varchar(30),
@@ -35,12 +37,12 @@ CREATE TABLE IF NOT EXISTS livros (
     opiniao varchar(1000),
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
-    capa varchar(20),
+    capa varchar(20)
 );
 
 CREATE TABLE IF NOT EXISTS revistas (
     id_revistas int PRIMARY KEY AUTO_INCREMENT,
-    id_usuarios int
+    id_usuarios int,
     revista varchar(200) NOT NULL,
     numero int NOT NULL,
     titulo varchar(200) NOT NULL,
@@ -52,7 +54,7 @@ CREATE TABLE IF NOT EXISTS revistas (
     opiniao varchar(1000),
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
-    capa varchar(20),
+    capa varchar(20)
 );
 
 CREATE TABLE IF NOT EXISTS emprestimo (
@@ -69,8 +71,8 @@ CREATE TABLE IF NOT EXISTS forum_pergunta (
     id_pergunta int PRIMARY KEY AUTO_INCREMENT,
     id_usuarios int,    
     id_livros int,
-    id_revistas int
-    topico varchar(255) NOT NULL,
+    id_revistas int,
+    topico varchar(250),
     detalhe longtext,
     dt_aberta date NOT NULL,
     hr_aberta time NOT NULL,
@@ -105,9 +107,9 @@ REFERENCES forum_pergunta (id_pergunta);
 ALTER TABLE forum_resposta ADD FOREIGN KEY(id_usuarios)
 REFERENCES usuarios (id_usuarios);
 
-CREATE VIEW if NOT EXISTS listauser (id_usuarios, username, nome, email) AS
+CREATE VIEW listauser (id_usuarios, username, nome, email) AS
 SELECT usuarios.id_usuarios, usuarios.usuario, usuarios.nome, usuarios.email FROM usuarios;
 
-CREATE VIEW IF NOT EXISTS acessos (id_logins, id_usuarios, usuarios, dataIn, horaIn, dataOut, horaOut) AS
+CREATE VIEW acessos (id_logins, id_usuarios, usuarios, dataIn, horaIn, dataOut, horaOut) AS
 SELECT logins.id_logins, logins.id_usuarios, usuarios.usuario, logins.dataIn, logins.horaIn, logins.dataOut, logins.horaOut FROM logins
 INNER JOIN usuarios ON logins.id_usuarios = usuarios.id_usuarios;
