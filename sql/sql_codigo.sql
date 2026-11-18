@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome varchar(180) NOT NULL,
     senha varchar(250) NOT NULL,
     email varchar(120) NOT NULL,
-    dt_nasc date
+    dt_nasc date,
+    admin boolean NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS logins (
@@ -35,6 +36,8 @@ CREATE TABLE IF NOT EXISTS livros (
     isbn varchar(20),
     sinopse varchar(1000),
     opiniao varchar(1000),
+    ebook boolean NOT NULL DEFAULT FALSE,
+    arqempresta boolean NOT NULL DEFAULT FALSE,
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20)
@@ -52,6 +55,8 @@ CREATE TABLE IF NOT EXISTS revistas (
     issn varchar(20),
     sinopse varchar(1000),
     opiniao varchar(1000),
+    ebook boolean NOT NULL DEFAULT FALSE,
+    arqempresta boolean NOT NULL DEFAULT FALSE,
     arqmorto boolean NOT NULL DEFAULT FALSE,
     compra date,
     capa varchar(20)
@@ -77,14 +82,15 @@ CREATE TABLE IF NOT EXISTS forum_pergunta (
     dt_aberta date NOT NULL,
     hr_aberta time NOT NULL,
     dt_fecha date,
-    hr_fecha time 
+    hr_fecha time,
+    fechado boolean NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS forum_resposta (
     id_resposta int PRIMARY KEY AUTO_INCREMENT,
     id_pergunta int,
     id_usuarios int,    
-    respoata longtext,
+    resposta longtext,
     dt date NOT NULL,
     hr time NOT NULL,
     fechado boolean NOT NULL DEFAULT FALSE
@@ -113,3 +119,8 @@ SELECT usuarios.id_usuarios, usuarios.usuario, usuarios.nome, usuarios.email FRO
 CREATE VIEW acessos (id_logins, id_usuarios, usuarios, dataIn, horaIn, dataOut, horaOut) AS
 SELECT logins.id_logins, logins.id_usuarios, usuarios.usuario, logins.dataIn, logins.horaIn, logins.dataOut, logins.horaOut FROM logins
 INNER JOIN usuarios ON logins.id_usuarios = usuarios.id_usuarios;
+
+
+-- Banco já existente, criado com a versão antiga deste script? Rode sql/atualizar.sql
+-- Para tornar um usuário administrador (acesso à analise.php):
+-- UPDATE usuarios SET admin = TRUE WHERE usuario = 'seu_usuario';

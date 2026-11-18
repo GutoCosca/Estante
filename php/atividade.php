@@ -9,13 +9,14 @@
         public function setLast_time($last_time) {
                 $this->last_time = $last_time;
         }
-        
+
+        // Encerra a sessão após 30 minutos sem atividade
         public function tempo() {
-            $this->getLast_time($_SESSION['last_time']);
-            if (isset($_SESSION['last_time']) && (time() - $_SESSION['last_time'] > 1800)) {
-                session_unset();
-                session_destroy();
-                header('location:principal.html');
+            if (isset($_SESSION['last_time'])) {
+                $this->setLast_time($_SESSION['last_time']);
+            }
+            if ($this->getLast_time() != null && (time() - $this->getLast_time() > 1800)) {
+                logout();
             }
             $_SESSION['last_time'] = time();
         }

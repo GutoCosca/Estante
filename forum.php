@@ -1,357 +1,144 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/forum.css">
-        <title>Estante Virtual</title>
-    </head>
-    <?php
-        require_once ('php/atividade.php');
-        require_once ('php/registros.php');
-        require_once ('php/forum.php');
-        require_once ('php/funcao.php');
-        if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'logout') {
-            logout();
-        }
-        session_start();
-        if (isset($_SESSION['id_user'])) {
-            $logado = sessao($_SESSION['user']);
-            $ativo = new Atividade();
-            $ativo->tempo();
-            $horario = semanaBR(date('l'))." - ".mesBR(date('Y-m-d'))[1];
-        }
-        else {
-            logout();
-        }
-        if (isset($_GET['condicao'])) {
-            $condi = "?condicao=".$_GET['condicao']."&";
-            $condJS = $_GET['condicao'];
-            if (isset($_GET['forum'])) {
-                $foru = "&forum=".$_GET['forum'];
-                $requisicao = "?condicao=".$_GET['condicao']."&forum=".$_GET['forum']."&";
-                $forumJS = $_GET['forum'];
-            }
-            else {
-                $foru = "";
-                $requisicao = "?condicao=".$_GET['condicao']."&";
-                $forumJS = "";
-            }
-        }
-        else {
-            $condi = "?";
-            $condJS = "";
-            if (isset($_GET['forum'])) {
-                $foru = "&forum=".$_GET['forum'];
-                $requisicao = "?forum=".$_GET['forum']."&";
-                $forumJS = $_GET['forum'];
-            }
-            else {
-                $foru = "";
-                $requisicao = "?";
-                $forumJS = "";
-            }
-        }
+<?php
+    require_once ('php/funcao.php');
+    require_once ('php/forum.php');
+    exigirLogin();
 
-        if (isset($_GET['tipo'])) {
-            $reqResp = "&tipo=".$_GET['tipo']."&topico=".$_GET['topico'];
-        }    
-        else {
-            $reqResp = "";
-        }    
+    $idUser = (int)$_SESSION['id_user'];
+    $porPagina = 8;
 
-        if (isset($_GET['pagForum']) && $_GET['pagForum'] != null) {
-            $pagForum = $_GET['pagForum'];
-            $reqPagForum = "&pagForum=".$_GET['pagForum'];
+    // Filtros atuais (mantidos nos links)
+    $estado = array(
+        'forum' => (($_GET['forum'] ?? '') === 'outros') ? 'outros' : 'pessoal',
+        'condicao' => (($_GET['condicao'] ?? '') === 'fechados') ? 'fechados' : 'abertos',
+        'pagForum' => isset($_GET['pagForum']) ? max(1, (int)$_GET['pagForum']) : 1
+    );
+    $topicoId = isset($_GET['topico']) ? (int)$_GET['topico'] : null;
+
+    // Monta um link do fórum trocando só o que for informado
+    function linkForum($estado, $mudar = array(), $topico = null) {
+        $parametros = array_merge($estado, $mudar);
+        if ($topico) {
+            $parametros['topico'] = $topico;
         }
-        else {
-            $pagForum = 1;
-            $reqPagForum = "";
+        return 'forum.php?'.http_build_query($parametros);
+    }
+
+    // Nome e capa do livro/revista de uma pergunta
+    function periodicoDaPergunta($pergunta) {
+        if ($pergunta['id_livros'] != null) {
+            $registro = new Registros("", "livros", "", "", "", "", "", "", "");
+            $registro->buscar($pergunta['id_livros']);
+            $dados = mysqli_fetch_assoc($registro->getTbl());
+            return array('Livro', $dados ? $dados['livro'] : '', $dados['capa'] ?? null, $dados ? ('Autor: '.$dados['autor']) : '');
         }
-        $limitForum = ($pagForum -1) *8;
-        if (isset($_GET['pagResp']) && $_GET['pagResp'] != null) {
-            $pagResp = $_GET['pagResp'];
+        if ($pergunta['id_revistas'] != null) {
+            $registro = new Registros("", "revistas", "", "", "", "", "", "", "");
+            $registro->buscar($pergunta['id_revistas']);
+            $dados = mysqli_fetch_assoc($registro->getTbl());
+            return array('Revista', $dados ? ($dados['revista'].' nº '.$dados['numero']) : '', $dados['capa'] ?? null, $dados ? $dados['titulo'] : '');
         }
-        else {
-            $pagResp = 1;
+        return array('', '', null, '');
+    }
+
+    $fechar = ($estado['condicao'] === 'fechados') ? 1 : 0;
+    $filtroUsuario = ($estado['forum'] === 'outros') ? "<> ".$idUser : "= ".$idUser;
+
+    $lista = new Forum($filtroUsuario, "", "", "", "", $fechar, ($estado['pagForum'] - 1) * $porPagina);
+    $lista->total();
+    $total = (int)mysqli_fetch_array($lista->getTbl())[0];
+    $totalPaginas = max(1, (int)ceil($total / $porPagina));
+    $perguntas = array();
+    if ($total > 0) {
+        $lista->listar();
+        while ($linha = mysqli_fetch_assoc($lista->getTbl())) {
+            $linha['periodico'] = periodicoDaPergunta($linha);
+            $perguntas[] = $linha;
         }
-        $limitResp = ($pagResp -1) *5;
-    ?>
-    <body onload="susup()">
-        <main>
-            <header>
-                <h1>ESTANTE VIRTUAL</h1>
-                <div id="idIdent">
-                    <p class="ident"><?=$logado?></p>
-                </div>
-            </header>
-            <menu>
-                <ul>
-                    <li><a href="inicio.php">Início</a></li>
-                    <li><a href="livros.php">Livros</a></li>
-                    <li><a href="revistas.php">Revistas</a></li>
-                    <li><a href="forum.php">Forum</a></li>
-                    <li><a href="?acao=logout">Sair</a></li>
+    }
+
+    // Tópico aberto
+    $aberto = null;
+    if ($topicoId) {
+        $busca = new Forum("", "", "", "", "", "", "");
+        $busca->busca($topicoId);
+        $aberto = mysqli_fetch_assoc($busca->getTbl());
+        if ($aberto) {
+            $aberto['periodico'] = periodicoDaPergunta($aberto);
+        }
+    }
+
+    $titulo = (($estado['forum'] === 'outros') ? 'Outros Fóruns ' : 'Meus Fóruns ').(($fechar === 1) ? 'Fechados' : 'Abertos');
+
+    abrirPagina('Fórum', 'forum');
+    boasVindas();
+?>
+        <div class="grade-2 grade-larga">
+            <!-- Lista de tópicos -->
+            <section class="painel">
+                <nav class="abas" aria-label="De quem">
+                    <a class="aba<?=$estado['forum'] === 'pessoal' ? ' ativa' : ''?>" href="<?=h(linkForum($estado, array('forum' => 'pessoal', 'pagForum' => 1)))?>">Meus fóruns</a>
+                    <a class="aba<?=$estado['forum'] === 'outros' ? ' ativa' : ''?>" href="<?=h(linkForum($estado, array('forum' => 'outros', 'pagForum' => 1)))?>">Outros fóruns</a>
+                </nav>
+                <nav class="abas" aria-label="Situação">
+                    <a class="aba<?=$fechar === 0 ? ' ativa' : ''?>" href="<?=h(linkForum($estado, array('condicao' => 'abertos', 'pagForum' => 1)))?>">Abertos</a>
+                    <a class="aba<?=$fechar === 1 ? ' ativa' : ''?>" href="<?=h(linkForum($estado, array('condicao' => 'fechados', 'pagForum' => 1)))?>">Fechados</a>
+                </nav>
+                <h2 style="margin-bottom:16px"><?=$titulo?></h2>
+
+                <?php if ($total > 0) { ?>
+                <ul class="topicos">
+                    <?php foreach ($perguntas as $p) {
+                        $per = $p['periodico'];
+                        $id = (int)$p['id_pergunta'];
+                    ?>
+                    <li>
+                        <a class="topico<?=$id === $topicoId ? ' selecionado' : ''?>" href="<?=h(linkForum($estado, array(), $id))?>">
+                            <?php if ($per[2] != null) { ?>
+                            <span class="miniatura"><img src="capas/<?=h($per[2])?>" alt=""></span>
+                            <?php } else { ?>
+                            <span class="miniatura sem-capa cor-<?=$id % 6?>"></span>
+                            <?php } ?>
+                            <span>
+                                <span class="periodico"><?=$per[0]?><?=$per[1] !== '' ? ' · '.h($per[1]) : ''?></span><br>
+                                <span class="assunto"><?=h($p['topico'])?></span>
+                            </span>
+                            <span class="quando">
+                                <?=date('d/m/Y', strtotime($p['dt_aberta']))?><br><?=substr($p['hr_aberta'], 0, 5)?>
+                                <?php if ($fechar === 1 && $p['dt_fecha'] != null) { ?>
+                                <br>Fechado em <?=date('d/m/Y', strtotime($p['dt_fecha']))?>
+                                <?php } ?>
+                            </span>
+                        </a>
+                    </li>
+                    <?php } ?>
                 </ul>
-                <p id="idData" onload="data()"></p>
-            </menu>
-            <!-- Menu Tipo de Forum  -->
-                <section id="idForumLista">
-                    <div id="idSubForum00">
-                        <ul id="idSubForum01">
-                            <li><a href="<?=$condi?>forum=pessoal<?=$reqResp?>" onclick="botaoCondicao('#idBotao01', '#idBotao02')">Pessoal</a></li>
-                            <li><a href="<?=$condi?>forum=outros<?=$reqResp?>" onclick="botaoCondicao('#idBotao02', '#idBotao01')">Outros</a></li>
-                        </ul>
-                        <ul id="idSubForum02">
-                            <li><a href="?condicao=abertos<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao03', '#idBotao04')">Abertos</a></li>
-                            <li><a href="?condicao=fechados<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao04', '#idBotao03')">Fechados</a></li>
-                        </ul>
-                        <!-- <menu class="subMenu" id="idSubmenu01" onmouseover="compl01()" onmouseout="compl02()">
-                            <ul>
-                                <li><a href="<?=$condi?>forum=pessoal<?=$reqResp?>" onclick="botaoCondicao('#idBotao01', '#idBotao02')">Pessoal</a></li>
-                                <li><a href="<?=$condi?>forum=outros<?=$reqResp?>" onclick="botaoCondicao('#idBotao02', '#idBotao01')">Outros Foruns</a></li>
-                            </ul>
-                        </menu>
-                        <menu class="subMenu" id="idSubmenu02">
-                            <ul>
-                                <li><a href="?condicao=abertos<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao03', '#idBotao04')">Abertos</a></li>
-                                <a href="?condicao=fechados<?=$foru?><?=$reqResp?>" onclick="botaoCondicao('#idBotao04', '#idBotao03')">Fechados</a></li>
-                            </ul>
-                        </menu> -->
-                        <!-- Lista o forum -->
-                        <?php
-                            if (isset($_REQUEST['condicao']) && $_REQUEST['condicao'] == "fechados") {
-                                $fechar = 1;
-                                $tituloCompl = "Fechados";
-                            }
-                            else {
-                                $fechar = 0;
-                                $tituloCompl = "Abertos";
-                            }
+                <?php paginacao($estado['pagForum'], $totalPaginas, linkForum($estado, array('pagForum' => '')) ); ?>
+                <?php } else { ?>
+                <p class="subtitulo">Não há fóruns aqui. Para criar um, abra um livro ou revista da sua estante.</p>
+                <?php } ?>
+            </section>
 
-                            if(isset($_GET['forum']) && $_GET['forum'] == "outros") {
-                                $id_usuario = "<> ".$_SESSION['id_user'];
-                                $titulo = "Outros Fóruns ".$tituloCompl;
-                            }
-                            else {
-                                $id_usuario = "= ".$_SESSION['id_user'];
-                                $titulo = "Meus Fóruns ".$tituloCompl;
-                            }
-                            $listaPerg = new Forum (
-                                $id_usuario,
-                                "","","","",
-                                $fechar,
-                                $limitForum
-                            );
-                            $listaPerg->total();
-                            $count = mysqli_fetch_array($listaPerg->getTbl());
-                            
-                        ?>
-                        <h3 id="idTituloForum"><?=$titulo?></h3>
-                    </div>
-                    <div>
-                        <?php
-                        if ($count[0] > 0) {
-                            $totPagForum = ceil($count[0]/8);
-                            $listaPerg->listar();
-                        ?>
-                        <table class="tabelaForum">                    
-                        <?php
-                            while ($tblListaPerg = mysqli_fetch_array($listaPerg->getTbl())) {
-                                $dtAbre = date('d-m-Y', strtotime($tblListaPerg['dt_aberta']));
-                                $dtFecha = date('d-m-Y', strtotime($tblListaPerg['dt_fecha']));
-                                if ($tblListaPerg['id_livros'] != null) {
-                                    $periodico = "livro";
-                                    $tabela = "livros";
-                                    $id_periodico = "id_livros";
-                                    $tabelaTH = "LIVRO:";
-                                }
-                                elseif ($tblListaPerg['id_revistas'] != null) {
-                                    $periodico = "revista";
-                                    $tabela = "revistas";
-                                    $id_periodico = "id_revistas";
-                                    $tabelaTH = "REVISTA:";
-                                }
-
-                                $listaPeriodico = new Registros (
-                                    $tblListaPerg['id_usuarios'],
-                                    $tabela,
-                                    "","","","","","",""
-                                );
-                                $listaPeriodico->buscar($tblListaPerg["$id_periodico"]);
-                                $tblListaPeriodico = mysqli_fetch_array($listaPeriodico->getTbl());
-                                if ($periodico == "revista"){
-                                    $periodicoNome = $tblListaPeriodico['titulo']." - ".$tblListaPeriodico['revista']." nº ".$tblListaPeriodico['numero'];
-                                }
-                                else {
-                                    $periodicoNome = $tblListaPeriodico['livro'];
-                                }
-
-                                if ($tblListaPeriodico['capa'] != null) {
-                                    $capa = '<img src="capas/'.$tblListaPeriodico['capa'].'">';
-                                }
-                                else {
-                                    $capa = "";
-                                }
-                        ?>
-                            <tr>
-                                <td rowspan="4" style="border-bottom-style: double" id="idCelCapa"><?=$capa?></td>
-                                <th><?=$tabelaTH?></th>
-                                <th>ABERTURA</th>
-                            </tr>
-                            <tr>
-                                <td><?=$periodicoNome?></td>
-                        <?php
-                                if ($fechar == 0) {
-                        ?>
-                                <td class="data" rowspan="3" style="border-bottom-style: double"><?=$dtAbre."<br>".$tblListaPerg['hr_aberta']?></td>
-                            </tr>
-                            <tr>
-                                <th>TÓPICO:</th>
-                            </tr>
-                            <tr>
-                                <td style="border-bottom-style: double"><a href="<?=$requisicao?>tipo=<?=$periodico?>&topico=<?=$tblListaPerg['id_pergunta']?><?=$reqPagForum?>"><?=$tblListaPerg['topico']?></a></td>
-                            </tr>
-                        <?php
-                                }
-                                elseif ($fechar == 1) { 
-                        ?>
-                                <td class="data"><?=$dtAbre."<br>".$tblListaPerg['hr_aberta']?></td>
-                            </tr>
-                            <tr>
-                                <th>TÓPICO:</th>
-                                <th>FECHAMENTO:</th>
-                            </tr>
-                            <tr>
-                                <td style="border-bottom-style: double"><a href="<?=$requisicao?>tipo=<?=$periodico?>&topico=<?=$tblListaPerg['id_pergunta']?><?=$reqPagForum?>"><?=$tblListaPerg['topico']?></a></td>
-                                <td class="data" style="border-bottom-style: double"><?=$dtFecha."<br>".$tblListaPerg['hr_fecha']?></td>
-                            </tr>
-                        <?php
-                                }
-                            }
-                        ?>
-                        </table>
-                        <!-- Seletor de Paginas -->
-                        <?php
-                            if ($count[0] > 8) {
-                                $totPagiForum = $totPagForum;
-                                if ($pagForum > 1) {
-                                    $antForum = $pagForum - 1;
-                                }
-                                else {
-                                    $antForum = $pagForum;
-                                }
-
-                                if ($pagForum < $totPagiForum) {
-                                    $proxForum = $pagForum + 1;
-                                }
-                                else {
-                                    $proxForum = $pagForum;
-                                }
-
-                                $iniForum = "pagForum=1";
-
-                                if (isset($_GET['condicao']) || isset($_GET['forum']) || isset($_GET['tipo'])) {
-                                    $reqForumPag = $requisicao.$reqResp."&";
-                                }
-                                else {
-                                    $reqForumPag = "?";
-                                }
-                        ?>
-                        <nav id="idSeletorPag">
-                            <ul>
-                                <li class="pagi"><a href="<?=$reqForumPag?><?=$iniForum?>" class="paginacao"><<</a></li>
-                                <li class="pagi"><a href="<?=$reqForumPag?>pagForum=<?=$antForum?>" class="paginacao"><</a></li>
-                                <li class="pagi" id="idPagina">Página <?=$pagForum?> / <?=$totPagForum?></li>
-                                <li class="pagi"><a href="<?=$reqForumPag?>pagForum=<?=$proxForum?>" class="paginacao">></a></li>
-                                <li class="pagi"><a href="<?=$reqForumPag?>pagForum=<?=$totPagiForum?>" class="paginacao">>></a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                        <?php
-                            }
-                        }
-                        else {
-                        ?>
-                    <h3>Não há Forums</h3>
-                        <?php
-                        }
-                        ?>
-                </section>
-                <!-- Exibe o todo o forum selecionado -->
-                <section id="idForumResposta">
-                    <?php
-                        if(isset($_REQUEST['topico'])) {
-                            $listaPerg = new Forum("","","","","","","");
-                            $listaPerg->busca($_REQUEST['topico']);
-                            $tblPerg = mysqli_fetch_array($listaPerg->getTbl());
-                            $nome = $tblPerg['nome'];
-                            $data = date('d-m-Y',strtotime($tblPerg['dt_aberta']));
-                            $hora = $tblPerg['hr_aberta'];
-                            if ($tblPerg['id_livros'] != null) {
-                                $periodico = "LIVRO:";
-                                $listaPeriodico = new Registros("","livros","","","","","","","");
-                                $listaPeriodico->buscar($tblPerg['id_livros']);
-                                $tblPeriodico = mysqli_fetch_array($listaPeriodico->getTbl());
-                                $titulo = "LIVRO: ".$tblPeriodico['livro'];
-                                $autor = "Autor: ".$tblPeriodico['autor'];
-                                if($tblPeriodico['capa'] != null) {
-                                    $capa = $tblPeriodico['capa'];
-                                }
-                                else {
-                                    $capa = "";
-                                }
-                            }
-                            elseif ($tblPerg['id_revistas'] != null) {
-                                $periodico = "REVISTA:";
-                                if ($tblPerg['id_revistas'] != null) {
-                                    $periodico = "REVISTA:";
-                                    $listaPeriodico = new Registros("","revistas","","","","","","","");
-                                    $listaPeriodico->buscar($tblPerg['id_revistas']);
-                                    $tblPeriodico = mysqli_fetch_array($listaPeriodico->getTbl());
-                                    $titulo = "REVISTA: ".$tblPeriodico['revista']." - ".$tblPeriodico['titulo']." N.º".$tblPeriodico['numero'];
-                                }
-                            }
-                            else {
-                                $periodico = "";
-                                $titulo = "";
-                                $nome = "";
-                            }
-                    ?>
-                    <div>
-                        <h3><?=$titulo?></h3>
-                        <h3>TOPICO: <?=$tblPerg['topico']?></h3>
-                        <p><?=$tblPerg['detalhe']?></p>
-                        <h4>POR: <?=$nome?></h4>
-                        <p>DATA / HORA: <?=$data?> ÀS <?=$hora?></p>
-                    </div>
-                    <?php
-                        }
-                    ?>
-                </section>
-            <footer>
-                <p>Desenvolvido por Gustavo Coscarello</p>
-            </footer>
-        </main>
-        <script language="javascript">
-
-            var menu = document.getElementsByClassName('subMenu');
-
-            function susup() {
-                document.querySelector('#idSubmenu01').style.marginTop = '0px';
-                document.querySelector('#idSubmenu01').style.transition = 'margin-top 1s linear 1s';
-            }
-
-            function compl01() {
-                document.querySelector('#idSubmenu02').style.marginTop = '0px';
-                document.querySelector('#idSubmenu02').style.transition = 'margin-top 1s linear .5s';
-            }
-
-            function compl02() {
-                document.querySelector('#idSubmenu02').style.marginTop = '-30px';
-                document.querySelector('#idSubmenu02').style.transition = 'margin-top 1s linear 2s';
-            }
-        </script>
-    </body>
-    <script src="js/funcao.js"></script>
-</html>
+            <!-- Tópico selecionado -->
+            <section class="painel discussao">
+                <?php if ($aberto) { $per = $aberto['periodico']; ?>
+                <p class="selo"><?=$per[0] !== '' ? $per[0] : 'Tópico'?></p>
+                <h2 style="margin:12px 0 4px"><?=h($aberto['topico'])?></h2>
+                <?php if ($per[1] !== '') { ?>
+                <p class="subtitulo"><?=h($per[1])?><?=$per[3] !== '' ? ' — '.h($per[3]) : ''?></p>
+                <?php } ?>
+                <div class="bloco-texto">
+                    <p class="texto"><?=$aberto['detalhe'] != '' ? h($aberto['detalhe']) : '<span class="vazio">Sem detalhes.</span>'?></p>
+                </div>
+                <p class="meta">Por <strong><?=h($aberto['nome'])?></strong> em <?=date('d/m/Y', strtotime($aberto['dt_aberta']))?> às <?=substr($aberto['hr_aberta'], 0, 5)?></p>
+                <?php } elseif ($topicoId) { ?>
+                <h2>Tópico não encontrado</h2>
+                <p class="subtitulo">Escolha outro tópico na lista.</p>
+                <?php } else { ?>
+                <h2>Nenhum tópico selecionado</h2>
+                <p class="subtitulo">Escolha um tópico na lista para ler a discussão.</p>
+                <?php } ?>
+            </section>
+        </div>
+<?php
+    fecharPagina();
+?>

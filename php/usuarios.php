@@ -12,10 +12,10 @@
         private $senha;
 
         public function __construct($user, $pNome, $email, $pswor) {
-            $this->setUsuario(addslashes(trim($user)));
-            $this->setPrimNome(addslashes(trim($pNome)));
-            $this->setEmail(addslashes(trim($email)));
-            $this->setSenha(addslashes(trim($pswor)));
+            $this->setUsuario(trim((string)$user));
+            $this->setPrimNome(trim((string)$pNome));
+            $this->setEmail(trim((string)$email));
+            $this->setSenha(trim((string)$pswor));
         }
  
         public function getUsuario() {
@@ -50,23 +50,43 @@
                 $this->senha = $senha;
         }
         
+        // Validação no servidor (o JavaScript pode ser burlado)
         public function validacao() {
+            $tamUser = mb_strlen(($this->getUsuario()));
+            $tamNome = mb_strlen(($this->getPrimNome()));
+            $senha = $this->getSenha();
 
+            if ($tamUser < 3 || $tamUser > 12 || $tamNome < 3 || $tamNome > 12) {
+                return "Usuário e nome devem ter de 03 a 12 caracteres";
+            }
+            if (!filter_var(($this->getEmail()), FILTER_VALIDATE_EMAIL)) {
+                return "Email inválido";
+            }
+            if (strlen($senha) < 8 || strlen($senha) > 12 || !preg_match('/[A-Z]/', $senha) || !preg_match('/[a-z]/', $senha) || !preg_match('/[0-9]/', $senha) || !preg_match('/[\W_]/', $senha)) {
+                return "A senha não atende às regras";
+            }
+            return "";
         }
 
         public function cadastro() {
-            $sql = "SELECT usuario FROM usuarios WHERE usuario = '".$this->getUsuario()."'";
-            $conect = new Conexao($sql);
+            $erro = $this->validacao();
+            if ($erro != "") {
+                return $erro;
+            }
+
+            $conect = new Conexao("SELECT usuario FROM usuarios WHERE usuario = ? OR email = ?", array($this->getUsuario(), $this->getEmail()));
             $conect->conectar();
 
             if (mysqli_num_rows($conect->getResult()) === 0) {
-                $sql = "INSERT INTO usuarios (usuario, nome, senha, email) VALUES ('".$this->getUsuario()."','".$this->getPrimNome()."','".password_hash($this->getSenha(),PASSWORD_DEFAULT)."','".$this->getEmail()."')";
-                $conect = new Conexao($sql);
-                $conect->conectar($sql);
+                $conect = new Conexao(
+                    "INSERT INTO usuarios (usuario, nome, senha, email) VALUES (?, ?, ?, ?)",
+                    array($this->getUsuario(), $this->getPrimNome(), password_hash($this->getSenha(), PASSWORD_DEFAULT), $this->getEmail())
+                );
+                $conect->conectar();
                 $mensagem = "Usuário cadastrado com sucesso";
             }
             else {
-                $mensagem = "Usuário e Email já cadastrados";
+                $mensagem = "Usuário ou email já cadastrado";
             }
 
             return $mensagem;
@@ -99,8 +119,8 @@
         }
 
         public function validar() {
-            $sql = "SELECT * FROM usuarios WHERE usuario = '".$this->getUsuario()."'";
-            $conect = new Conexao($sql);
+            $mensagem = "";
+            $conect = new Conexao("SELECT * FROM usuarios WHERE usuario = ?", array($this->getUsuario()));
             $conect->conectar();
             $tblValida = mysqli_fetch_assoc($conect->getResult());
             
@@ -113,13 +133,19 @@
 
                 if ($userResult === $this->getUsuario()) {
                     if (password_verify($this->getSenha(), $senhaResult)) {
-                        header('location:inicio.php');
-                        session_start();
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+                        session_regenerate_id(true);
                         $_SESSION['user'] = $this->getUsuario();
+                        $_SESSION['nome'] = $tblValida['nome']; // usado no "Bem-vindo, ..." 
                         $_SESSION['id_user'] = $tblValida['id_usuarios'];
+                        $_SESSION['admin'] = (int)($tblValida['admin'] ?? 0); // 1 = pode ver analise.php
                         $_SESSION['dataIn'] = date('d-m-Y');
                         $_SESSION['horaIn'] = date('H:i:s');
                         $_SESSION['last_time'] = time();
+                        header('location:inicio.php');
+                        exit;
                     }
                     else {
                         $mensagem = "Usuário e senha inválidas";
@@ -150,10 +176,10 @@
         
         public function acesso() {
             $dt_in = date('Y-m-d', strtotime($_SESSION['dataIn']));
-            $data = date('Y-m-d');
-            $hora = date ('H:i:s');
-            $sql = "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES ('".$dt_in."', '".$_SESSION['horaIn']."', '$data', '$hora', '".$this->getId_user()."')";
-            $conect = new Conexao($sql);
+            $conect = new Conexao(
+                "INSERT INTO logins (dataIn, horaIn, dataOut, horaOut, id_usuarios) VALUES (?, ?, ?, ?, ?)",
+                array($dt_in, $_SESSION['horaIn'], date('Y-m-d'), date('H:i:s'), (int)$this->getId_user())
+            );
             $conect->conectar();
         }
     }
@@ -204,15 +230,13 @@
         }
 
         public function dados($id) {
-            $sql = "SELECT * FROM acessos WHERE id_usuarios = $id";
-            $conect = new Conexao($sql);
+            $conect = new Conexao("SELECT * FROM acessos WHERE id_usuarios = ? ORDER BY dataIn, horaIn", array((int)$id));
             $conect->conectar();
             $this->setListaDados($conect->getResult());
         }
         
         public function tempo($id) {
-            $sql = "SELECT * FROM acessos WHERE id_usuarios = $id";
-            $conect = new Conexao($sql);
+            $conect = new Conexao("SELECT * FROM acessos WHERE id_usuarios = ?", array((int)$id));
             $conect->conectar();
             $this->setListaDados($conect->getResult());
             $tempoD = 0;
@@ -229,7 +253,10 @@
                 $tempoM = $tempoM + $total[2];
             }
 
-            $this->setTempoTotal($tempoD + intdiv($tempoH,24)."dias ".($tempoH%24 + intdiv($tempoM,60))."h ".($tempoM%60)."min");
+            // normaliza minutos -> horas -> dias antes de montar o texto
+            $tempoH = $tempoH + intdiv($tempoM, 60);
+            $tempoD = $tempoD + intdiv($tempoH, 24);
+            $this->setTempoTotal($tempoD." dias ".($tempoH % 24)."h ".($tempoM % 60)."min");
         }
     }
 ?>

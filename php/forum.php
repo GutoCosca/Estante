@@ -19,12 +19,12 @@
 
         public function __construct($user, $idPeri, $peri, $top, $det, $fechar, $lmt) {
             $this->setId_usuarios($user);
-            $this->setId_periodico($idPeri);
-            $this->setTopico(addslashes($top));
-            $this->setDetalhe(addslashes($det));
+            $this->setId_periodico((int)$idPeri);
+            $this->setTopico((string)$top);
+            $this->setDetalhe((string)$det);
             $this->setPeriodico($peri);
-            $this->setFechado($fechar);
-            $this->setLimite($lmt);
+            $this->setFechado((int)$fechar);
+            $this->setLimite(($lmt === "" || $lmt === null) ? -1 : (int)$lmt);
         }
         
         public function getId_pergunta() {
@@ -157,51 +157,55 @@
 
         public function instrucao() {
             if ($this->getPeriodico() == "editarLivro") {
-                $this->setId_livros($this->getPeriodico());
                 $column = "id_livros";
             }
             elseif ($this->getPeriodico() == "editarRevista") {
-                $this->setId_revistas($this->getPeriodico());
                 $column = "id_revistas";
             }
             else {
-                $column="";
+                $column = "";
             }
 
-            if ($this->getId_usuarios() != null) {
-                $condic = "WHERE id_usuarios = ".$this->getId_usuarios();
-            }
-            else {
-                $condic = "";
-            }
+            // id_usuarios chega como "= 5" (meus fóruns) ou "<> 5" (outros fóruns)
+            $texto = trim((string)$this->getId_usuarios());
+            $operador = (strpos($texto, "<>") === 0) ? "<>" : "=";
+            $idUser = (int)preg_replace('/\D/', '', $texto);
+            $condic = " id_usuarios ".$operador." ?";
 
             if ($this->getLimite() >= 0) {
-                $limit = " LIMIT ".$this->getLimite().",8";
+                $limit = " LIMIT ?, 8";
             }
             else {
                 $limit = "";
             }
-            $resposta = array($column, $condic, $limit);
+            $resposta = array($column, $condic, $limit, $idUser);
             return $resposta;
         }
         
         public function abrir() {
             $instru = $this->instrucao();
+            if ($instru[0] == "" || trim($this->getTopico()) == "") {
+                return; // tópico vazio ou periódico desconhecido
+            }
             $this->setDt_aberta(date('Y-m-d'));
-            $this->setH_aberta(date('h:m:s'));
+            $this->setH_aberta(date('H:i:s')); // H = hora 00-23, i = minutos
             $this->setSql(
-                "INSERT INTO forum_pergunta (id_usuarios, ".$instru[0].", topico, detalhe, dt_aberta, hr_aberta) VALUES (".$this->getId_usuarios().", ".$this->getId_periodico().", '".$this->getTopico()."', '".$this->getDetalhe()."', '".$this->getDt_aberta()."', '".$this->getH_aberta()."')"
+                "INSERT INTO forum_pergunta (id_usuarios, ".$instru[0].", topico, detalhe, dt_aberta, hr_aberta) VALUES (?, ?, ?, ?, ?, ?)"
             );
-            $conect = new Conexao(($this->getSql()));
+            $conect = new Conexao($this->getSql(), array(
+                $instru[3], (int)$this->getId_periodico(), $this->getTopico(),
+                $this->getDetalhe(), $this->getDt_aberta(), $this->getH_aberta()
+            ));
             $conect->conectar();
             $this->setTbl($conect->getResult());
         }
 
         public function total() {
+            $instru = $this->instrucao();
             $this->setSql(
-                "SELECT COUNT(*) FROM forum_pergunta WHERE id_usuarios ".$this->getId_usuarios()." AND fechado = ".$this->getFechado()
+                "SELECT COUNT(*) FROM forum_pergunta WHERE".$instru[1]." AND fechado = ?"
             );
-            $conect = new Conexao($this->getSql());
+            $conect = new Conexao($this->getSql(), array($instru[3], (int)$this->getFechado()));
             $conect->conectar();
             $this->setTbl($conect->getResult());
         }
@@ -209,19 +213,23 @@
         public function listar() {
             $instru = $this->instrucao();
             $this->setSql(
-                "SELECT * FROM forum_pergunta WHERE id_usuarios ".$this->getId_usuarios() ." AND fechado = ".$this->getFechado()." ORDER BY dt_aberta DESC".$instru[2]
+                "SELECT * FROM forum_pergunta WHERE".$instru[1]." AND fechado = ? ORDER BY dt_aberta DESC, hr_aberta DESC".$instru[2]
             );
-            $conect = new Conexao($this->getSql());
+            $params = array($instru[3], (int)$this->getFechado());
+            if ($instru[2] != "") {
+                $params[] = (int)$this->getLimite();
+            }
+            $conect = new Conexao($this->getSql(), $params);
             $conect->conectar();
             $this->setTbl($conect->getResult());
         }
         
         public function busca ($perg) {
-            $this->setId_pergunta($perg);
+            $this->setId_pergunta((int)$perg);
             $this->setSql(
-                "SELECT forum_pergunta.*, usuarios.nome FROM forum_pergunta JOIN usuarios ON forum_pergunta.id_usuarios = usuarios.id_usuarios WHERE forum_pergunta.id_pergunta = ".$this->getId_pergunta()
+                "SELECT forum_pergunta.*, usuarios.nome FROM forum_pergunta JOIN usuarios ON forum_pergunta.id_usuarios = usuarios.id_usuarios WHERE forum_pergunta.id_pergunta = ?"
             );
-            $conect = new Conexao($this->getSql());
+            $conect = new Conexao($this->getSql(), array($this->getId_pergunta()));
             $conect->conectar();
             $this->setTbl($conect->getResult());
         }

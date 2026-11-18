@@ -1,6 +1,13 @@
 <?php
     require_once ('conexao.php');
     require_once ('registros.php');
+    require_once ('atividade.php');
+    require_once ('layout.php');
+
+    // Escapa texto para exibir com segurança no HTML (evita XSS)
+    function h($texto) {
+        return htmlspecialchars((string)($texto ?? ''), ENT_QUOTES, 'UTF-8');
+    }
 
     function mesBR($compra){
         $numDia = date('d',strtotime($compra));
@@ -12,56 +19,58 @@
     }
 
     function semanaBR($sema) {
-        switch ($sema) {
-            case 'Monday':
-                $semaBR = 'Segunda-feira';
-                break;
-
-            case 'Tuesday':
-                $semaBR = 'Terça-feira';
-                break;
-
-            case 'Wednesday':
-                $semaBR = 'Quarta-feira';
-                break;
-
-            case 'Thursday':
-                $semaBR = 'Quinta-feira';
-                break;
-            
-            case 'Friday':
-                $semaBR = 'Sexta-feira';
-                break;
-
-            case 'Saturday':
-                $semaBR = 'Sábado';
-                break;
-
-            case 'Sunday':
-                $semaBR = 'Domingo';
-                break;
-        }
-        return $semaBR;
+        $dias = array(
+            'Monday' => 'Segunda-feira',
+            'Tuesday' => 'Terça-feira',
+            'Wednesday' => 'Quarta-feira',
+            'Thursday' => 'Quinta-feira',
+            'Friday' => 'Sexta-feira',
+            'Saturday' => 'Sábado',
+            'Sunday' => 'Domingo'
+        );
+        return $dias[$sema] ?? '';
     }
 
     function siteErro () {
         header('location:login.php');
+        exit;
     }
 
     function sessao($user) {
-        if ($user != null) {
-            $resp = "Bem vindo ".$user;
+        if ($user == null) {
+            header('location:login.php');
+            exit;
         }
-
-        else {
-            header('locacion:login.php');
-        }
-                
-        return $resp;
+        return "Bem vindo ".h($user);
     }
 
     function logout () {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        // Registra o acesso (entrada/saída) na tabela logins
+        if (isset($_SESSION['id_user'], $_SESSION['dataIn'], $_SESSION['horaIn'])) {
+            $monitor = new Monitor($_SESSION['id_user']);
+            $monitor->acesso();
+        }
         session_unset();
         session_destroy();
-        header('location:principal.html');
+        header('location:index.html');
+        exit;
+    }
+
+    // Início padrão das páginas internas: trata o "Sair", exige login e
+    // encerra a sessão após 30 minutos sem atividade.
+    function exigirLogin() {
+        if (isset($_REQUEST['acao']) && $_REQUEST['acao'] == 'logout') {
+            logout();
+        }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id_user'])) {
+            logout();
+        }
+        $ativo = new Atividade();
+        $ativo->tempo();
     }

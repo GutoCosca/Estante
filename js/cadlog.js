@@ -10,8 +10,7 @@ const minusculaCad = document.querySelector('#idMinusCad');
 const numeroCad = document.querySelector('#idNumCad');
 const especialCad = document.querySelector('#idEspCad');
 const mensagem = document.querySelectorAll('.controleCad');
-const lista = document.querySelector('ul');
-const regra = lista.querySelectorAll('.regra');
+const regra = document.querySelectorAll('li.regra');
 const formulario = document.querySelectorAll('input');
 const formularioLog = document.querySelector('#idFormLog');
 const usuarioLog = document.querySelector('#idUserLog');
@@ -24,7 +23,9 @@ function testar(caso) {
     switch (caso){
         case 0:
             validaNome(usuarioCad, 'controleCad erro', 'controleCad', "Usuário inválido!!", "(Mínimo 03, máximo 12 caracteres)");
-            document.querySelector('#idUsuario').innerText = "";
+            // limpa a mensagem do servidor (ex.: "Usuário já cadastrado")
+            const msgServidor = document.querySelector('#idErro');
+            if (msgServidor) msgServidor.innerText = "";
             break;
         case 1:
             validaNome(nomeCad, 'controleCad erro', 'controleCad', "Nome inválido!!", "(Mínimo 03, máximo 12 caracteres)");
@@ -209,7 +210,7 @@ function erro(nome, classe, mensagem1, mensagem2) {
     const formControle = nome.parentElement;
     const small1 = formControle.querySelector('.atencao');
     const small2 = formControle.querySelector('.regra');
-    formControle.className = classe
+    formControle.classList.add('erro');
     small1.innerText = mensagem1;
     small2.innerText = mensagem2;
     return false;
@@ -217,7 +218,7 @@ function erro(nome, classe, mensagem1, mensagem2) {
 
 function sucesso(nome, classe) {
     const formControle = nome.parentElement;
-    formControle.className = classe;
+    formControle.classList.remove('erro');
     return true;
 }
 
@@ -231,7 +232,7 @@ function logar() {
 
 function testeLog() {
     if (!usuarioLog.value.trim() || !senhaLog.value.trim()) {
-        const smalllog = document.querySelector('#erro');
+        const smalllog = document.querySelector('#idErro');
         smalllog.style.visibility = 'visible';
         smalllog.style.color = '#aa0101'
         smalllog.style.textAlign ='center'
@@ -251,7 +252,7 @@ function acaoCadastro() {
         document.querySelector('.cadastro').style.visibility = 'hidden';
         //Remove as mensagens de erro
         mensagem.forEach(elementoMsn => {
-            elementoMsn.className = 'controleCad';
+            elementoMsn.classList.remove('erro');
         })
         //Retorna o texto da regra da senha para preto
         regra.forEach(elementoRegra => {
